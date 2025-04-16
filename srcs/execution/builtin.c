@@ -2,16 +2,7 @@
 #include "../includes/parser.h"
 #include "../includes/utils.h"
 
-int is_builtin(char *cmd)
-{
-    if (!cmd)
-        return 0;
-    return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "exit") ||
-            !ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "pwd") ||
-            !ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset") ||
-            !ft_strcmp(cmd, "env"));
-}
-void execute_builtin(t_command *cmd)
+void ex_cd_pwd(t_command *cmd)
 {
     char *cwd;
 
@@ -35,5 +26,34 @@ void execute_builtin(t_command *cmd)
         }
         printf("%s\n", cwd);
         free(cwd);
+    }
+}
+
+void ex_echo_env(t_command *cmd)
+{
+    int i;
+    int newline;
+
+    i = 1;
+    newline = 1;
+    if (cmd->args[0] && !ft_strcmp(cmd->args[0], "echo"))
+    {
+        if (cmd->args[1] && !ft_strcmp(cmd->args[1], "-n"))
+            (newline = 0, i++);
+        while (cmd->args[i])
+        {
+            printf("%s", cmd->args[i]);
+            if (cmd->args[i + 1])
+                printf(" ");
+            i++;
+        }
+        if (newline)
+            printf("\n");
+    }
+    if (cmd->args[0] && !ft_strcmp(cmd->args[0], "env"))
+    {
+        extern char **environ;
+        for (int j = 0; environ[j]; j++)
+            printf("%s\n", environ[j]);
     }
 }

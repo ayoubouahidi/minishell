@@ -2,14 +2,16 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I$(PWD)/includes -lreadline
+CFLAGS = -Wall -Wextra -Werror -I/home/elkharti/projects/minishell/includes
+LDFLAGS = -lreadline
 
-SRCS = srcs/main.c srcs/parsing/parser.c srcs/execution/builtin.c srcs/execution/utils/utils00.c
+SRCS = srcs/main.c srcs/parsing/parser.c srcs/execution/builtin.c \
+	srcs/execution/utils/utils00.c srcs/execution/executor.c
 
 OBJ = $(SRCS:.c=.o)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

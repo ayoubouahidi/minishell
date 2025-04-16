@@ -1,9 +1,8 @@
 #ifndef PARSER_H
-# define PARSER_H
+#define PARSER_H
 
-#include <stdlib.h>
-
-typedef struct s_command {
+typedef struct s_command
+{
     char **args;
     char *infile;
     char *outfile;
