@@ -1,33 +1,44 @@
-#include "../includes/parser.h"
-#include "../includes/minishell.h"
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "minishell.h"
 
-int main() {
-    while (1) {
-        char *line = readline("minishell$ ");
+static void init_data(t_data *data, char **envp)
+{
+    init_env(data, envp);
+    data->cmd = NULL;
+    data->exit_status = 0;
+    data->pid = 0;
+    data->is_child = false;
+}
+
+int main(int ac, char **av, char **envp)
+{
+    t_data  data;
+    char    *line;
+
+    (void)ac;
+    (void)av;
+    init_data(&data, envp);
+
+    while (1)
+    {
+        line = readline("minishell$ ");
         if (!line)
-            break;
-        if (*line)
-            add_history(line);
-
-        t_command *cmd = parse_line(line);
-        t_command *tmp = cmd;
-
-        while (tmp) {
-            if (tmp->args && tmp->args[0]) {
-                if (is_builtin(tmp->args[0]))
-                    execute_builtin(tmp);
-                // else
-                //     execute_external(tmp);
-            }
-            tmp = tmp->next;
+        {
+            ft_putstr_fd("exit\n", STDOUT_FILENO);
+            clean_exit(&data, data.exit_status);
         }
-
-        free_commands(cmd);
+        if (*line)
+        {
+            add_history(line);
+            data.cmd = parcer(line);
+            if (data.cmd)
+            {
+                // printf("test done\n");
+                executer(&data, envp);
+            }
+            free_cmd(data.cmd);
+            data.cmd = NULL;
+        }
         free(line);
     }
-    return 0;
+    return (0);
 }

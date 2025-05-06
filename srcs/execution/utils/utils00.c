@@ -1,20 +1,12 @@
-#include "../includes/utils.h"
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-int ft_strcmp(const char *s1, const char *s2)
+void free_all(t_data *data)
 {
-    while (*s1 && (*s1 == *s2))
+    if (data->cmd)
     {
-        s1++;
-        s2++;
+        for (int i = 0; data->cmd->args[i]; i++)
+            free(data->cmd->args[i]);
+        free(data->cmd->args);
+        free(data->cmd);
     }
-    return (*(unsigned char *)s1 - *(unsigned char *)s2);
-}
-
-int ft_strlen(const char *str)
-{
-    int len = 0;
-    while (str[len])
-        len++;
-    return len;
 }
