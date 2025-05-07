@@ -1,0 +1,14 @@
+total 68
+drwxr-xr-x 7 ayouahid 4221   159 May  7 13:21 [0m[01;34m.[0m
+drwxr-xr-x 8 ayouahid 4221   150 May  6 23:27 [01;34m..[0m
+-rw-r--r-- 1 ayouahid 4221   135 May  7 12:31 fil1
+-rw-r--r-- 1 ayouahid 4221     0 May  7 14:24 file2
+-rw-r--r-- 1 ayouahid 4221   585 May  6 20:00 file3
+-rw-r--r-- 1 ayouahid 4221     0 May  7 12:28 filetodel
+drwxr-xr-x 8 ayouahid 4221   163 May  7 10:19 [01;34m.git[0m
+drwxr-xr-x 2 ayouahid 4221    41 May  6 20:00 [01;34mincludes[0m
+drwxr-xr-x 2 ayouahid 4221  4096 May  6 20:04 [01;34mlibft[0m
+-rw-r--r-- 1 ayouahid 4221  1179 May  6 20:00 Makefile
+-rwxr-xr-x 1 ayouahid 4221 51144 May  7 13:21 [01;32mminishell[0m
+drwxr-xr-x 4 ayouahid 4221    52 May  6 20:04 [01;34mobjs[0m
+drwxr-xr-x 4 ayouahid 4221    52 May  6 20:00 [01;34msrcs[0m

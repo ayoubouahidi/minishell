@@ -9,17 +9,29 @@
 
 #define WHITESPACE " \t\n\r\f\v"
 
+// typedef struct s_command
+// {
+//     // char *cmd;
+//     char	**args;
+// 	char	*infile;
+// 	char	*outfile;
+// 	bool	is_append;
+// 	bool	is_heredoc;
+//     struct s_command *next;
+// } t_command;
 typedef struct s_command
 {
-    // char *cmd;
-    char **args;
-	char *infile;
-	char *outfile;
-    struct s_command *next;
-} t_command;
+	char	**args;
+	char	*infile;
+	char	*outfile;
+	bool	is_append;
+	bool	is_heredoc;
+	char	*del;
+	char	*appendfile;
+	struct s_command	*next;
+}	t_command;
 
-
-typedef enum  
+typedef enum
 {
    UNCLOSED_DOUBLE_Q,
    UNCLODES_SINFGLE_Q 
