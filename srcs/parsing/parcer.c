@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parcer.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/05/07 10:02:07 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +38,7 @@ void	printlist(t_command *head)
 	tmp = head;
 	while (tmp != NULL)
 	{
-		printf("  infile ==> %s\n outfile ==> %s\n", tmp->infile, tmp->outfile);
+		printf("command ========\n infile ==> %s\n outfile ==> %s\n , del ==> %s\n ============\n", tmp->infile, tmp->outfile, tmp->del);
 		tmp = tmp->next;
 	}
 }
@@ -348,72 +360,78 @@ char *to_arg(t_token* token, char *arg)
 // infile function u should check sysntaxe error
 
 
-char *infile(t_token **token, char *arg)
+char *infile(t_token *token, char *arg)
 {
 	int lenv;
 	int lenghtcommande;
 	char *new_commande;
-	
-	*token = (*token)->next;
-	if ((*token)->type != WORD)
+	// printf("test done");
+	token = (token)->next;
+	if ((token)->type != WORD)
 	{
-		printf("Syntaxe error \n : > should be like this > filename ");
+		printf("Syntaxe error \n : heredoc problem ");
 		return(NULL);
 	}
-	lenv = ft_strlen((*token)->value);
+	lenv = ft_strlen((token)->value);
 	lenghtcommande = ft_strlen(arg);
 	new_commande = (char *)malloc(lenghtcommande + 1 + lenv + 1);
 	if (arg)
 	{
         ft_strlcpy(new_commande, arg, lenghtcommande + 1); 
         new_commande[lenghtcommande] = ' '; 
-        ft_strlcpy(new_commande + lenghtcommande + 1, (*token)->value, lenv + 1);
+        ft_strlcpy(new_commande + lenghtcommande + 1, (token)->value, lenv + 1);
     }
 	else 
-        ft_strlcpy(new_commande, (*token)->value, lenv + 1); 
+        ft_strlcpy(new_commande, (token)->value, lenv + 1); 
     return (new_commande);
 }
+// heredoc function and APPEND
 
+bool	heredoc_check_append(t_token *token, char **del)
+{
+	token = (token)->next;
+	if ((token)->type != WORD)
+	{
+		printf("Syntaxe error : heredoc problem \n");
+		return(false);
+	}
+	*del = token->value;
+	return true;
+
+}
   
 // parser part
 
 
-t_command* parser_commande(t_token* token)
+t_command* parser_commande(t_token** tokendd)
 {
 	t_command *cmd;
 	// // t_command tmp;
+	// t_token *token = *tokendd;
 	char *args = NULL;
 	char *infile_file = NULL;
 	char *outfile_file = NULL;
+	char *del = NULL;
 
-	cmd = (t_command *)malloc(sizeof(t_command));	
-	// if(token->type == WORD)
-	// {
-	// 	args = to_arg(token, args);
-	// 	cmd->args = args;
-	// }
-	// 	// else if (token->type == INTPUT_RED)
-	// 	// 	cmd->infile = infile(token);
-	// if (token->type == ENDF)
-	// 	args = NULL;				
-	// cmd->next = NULL;
-	// return(cmd);
-
-	while (token && token->type != ENDF)
+	cmd = (t_command *)malloc(sizeof(t_command));
+	while (tokendd && (*tokendd)->type != ENDF && (*tokendd)->type != PIPE)
 	{
-		if(token->type == WORD)
-			args = to_arg(token, args);
-		else if (token->type == OUTPUT_RED)
-			infile_file = infile(&token, infile_file);
-		else if (token->type == INTPUT_RED)
-			outfile_file = infile(&token, outfile_file);
-		token = token->next;
+		if((*tokendd)->type == WORD)
+			args = to_arg((*tokendd), args);
+		else if ((*tokendd)->type == OUTPUT_RED)
+			infile_file = infile((*tokendd), infile_file);
+		else if ((*tokendd)->type == INTPUT_RED)
+			outfile_file = infile((*tokendd), outfile_file);
+		else if ((*tokendd)->type == HEREDOC)
+			cmd->is_heredoc = heredoc_check_append((*tokendd), &del);
+		else if ((*tokendd)->type == APPEND)
+			cmd->is_append = heredoc_check_append((*tokendd), &del);
+		(*tokendd) = (*tokendd)->next;
 	}
 	cmd->args = ft_split(args, ' ');
 	cmd->infile = infile_file;
 	cmd->outfile = outfile_file;
-	// infile_file = NULL;
-	// args = NULL;
+	cmd->del = del;
 	cmd->next = NULL;
 	return(cmd);
 }
@@ -425,7 +443,6 @@ t_command	*parcer(char *line)
 	t_token *token;
 	t_token *head_token;
 	t_lexer *lexer;
-	// t_token tmp;
 	t_command *commande;
 	t_command *head;
 
@@ -437,29 +454,30 @@ t_command	*parcer(char *line)
 		if (syntaxe_error(trim))
 		{
 			lexer = creat_lexer(trim);
-			// printf("token(%d, %s)", token->type, token->value);
 			while(1)
 			{
 				token = tokenize(lexer);
 				printf("token(%d, %s)\n", token->type, token->value);
-				// commande = parser_commande(token);
-				// printf("commande is ==>%s\n", commande->args);
 				ft_lstadd_back_token(&head_token, token);
 				if (token->type  == ENDF)
 					break;
 			}
-			// printlist(head_token);
-			commande = parser_commande(head_token);
-			ft_lstadd_back_cmd(&head, commande);
+			while (head_token && head_token->type != ENDF)
+			{
+				commande = parser_commande(&head_token);
+				ft_lstadd_back_cmd(&head, commande);
+				printf("value %s\n", head_token->value);
+				head_token = head_token->next;
+			}
 			printlist(head);
 			head_token = NULL;
-			head = NULL;
-			token = NULL;
 		}
 		else 
 		{
 			write(1, "Quotes Error !\n", 15);
 		}
-
 		return(commande);
 }
+
+
+
