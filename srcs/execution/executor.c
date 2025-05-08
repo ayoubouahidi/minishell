@@ -29,6 +29,8 @@ int execute_builtin(t_data *data)
         return ft_env(data, data->cmd->args);
     if (!ft_strcmp(cmd, "export"))
         return ft_export(data, data->cmd->args);
+    if (!ft_strcmp(cmd, "unset"))
+        return ft_unset(data, data->cmd->args);
     return 0;
 }
 
@@ -37,5 +39,5 @@ void executer(t_data *data, char **envp)
     (void)envp;
     if (is_builtin(data->cmd->args[0]))
         data->exit_status = execute_builtin(data);
-    // Add else clause here if you have external command execution
-}
+
+    }

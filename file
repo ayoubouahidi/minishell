@@ -1,0 +1,9 @@
+total 8
+drwxr-xr-x 6 elkharti candidates   87 May  7 11:28 .
+drwxr-xr-x 8 elkharti candidates  109 May  6 19:30 ..
+-rw-r--r-- 1 elkharti candidates    0 May  7 11:28 file
+drwxr-xr-x 7 elkharti candidates  147 May  6 19:30 .git
+drwxr-xr-x 2 elkharti candidates   41 May  6 19:29 includes
+drwxr-xr-x 2 elkharti candidates 4096 May  7 10:31 libft
+-rw-r--r-- 1 elkharti candidates 1222 May  7 10:29 Makefile
+drwxr-xr-x 4 elkharti candidates   52 May  6 19:29 srcs

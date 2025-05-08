@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-void free_cmd(t_cmd *cmd)
+void free_cmd(t_command *cmd)
 {
-    t_cmd   *tmp;
+    t_command   *tmp;
     int     i;
 
     while (cmd)
@@ -12,10 +12,6 @@ void free_cmd(t_cmd *cmd)
         while (cmd->args && cmd->args[i])
             free(cmd->args[i++]);
         free(cmd->args);
-        if (cmd->in_fd > 2)
-            close(cmd->in_fd);
-        if (cmd->out_fd > 2)
-            close(cmd->out_fd);
         free(cmd);
         cmd = tmp;
     }

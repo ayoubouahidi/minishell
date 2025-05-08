@@ -11,7 +11,6 @@
 
 typedef struct s_command
 {
-    // char *cmd;
     char **args;
 	char *infile;
 	char *outfile;

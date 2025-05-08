@@ -38,6 +38,8 @@ typedef struct s_env
 // 	char **outfile;
 //     bool            is_append;
 //     bool            is_heredoc;
+//     char *del;
+//     char **appendfile;
 //     struct s_command *next;
 // } t_command;
 
@@ -57,12 +59,13 @@ int     ft_exit(t_data *data, char **args);
 int     ft_pwd(t_data *data);
 int     ft_env(t_data *data, char **args);
 int     ft_export(t_data *data, char **args);
-int     ft_unset(t_data *data, char **args);
+int    ft_unset(t_data *data, char **args);
 
 /* Execution */
 void    executer(t_data *data, char **envp);
 int     execute_builtin(t_data *data);
 void    execute_external(t_data *data);
+
 
 /* Environment */
 void init_env(t_data *data, char **envp);
@@ -73,6 +76,7 @@ char *extract_value(char *str);
 char *get_env_value(t_env *env, const char *key);
 t_env *new_env_node(char *key, char *value);
 void sort_and_print_env(t_env *env);
+bool	is_valid_key(const char *key);
 
 /* Parsing */
 t_command   *parse_line(char *line);
