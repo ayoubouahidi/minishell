@@ -31,7 +31,6 @@ void add_env_node(t_env **env, t_env *new_node)
         tmp = tmp->next;
     tmp->next = new_node;
 }
-#include "minishell.h"
 
 static void	swap_env(t_env *a, t_env *b)
 {

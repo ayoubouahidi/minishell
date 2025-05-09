@@ -15,8 +15,8 @@
 # include <errno.h>
 # include <signal.h>
 # include "libft.h"
-
 #include "parser.h"
+
 # define SUCCESS 0
 # define FAILURE 1
 # define SYNTAX_ERROR 2
@@ -43,12 +43,21 @@ typedef struct s_env
 //     struct s_command *next;
 // } t_command;
 
+typedef struct s_pipe
+{
+    int pipe_fd[2];
+    pid_t pid_1;
+    pid_t pid_2;
+    char *path_1;
+    char *path_2;
+}           t_pipe;
 typedef struct s_data
 {
     t_env       *env;
     t_command   *cmd;
     int         exit_status;
     pid_t       pid;
+    t_pipe      *pipe;
     bool        is_child;
 }   t_data;
 
@@ -65,6 +74,8 @@ int    ft_unset(t_data *data, char **args);
 void    executer(t_data *data, char **envp);
 int     execute_builtin(t_data *data);
 void    execute_external(t_data *data);
+char *get_path(t_data *data, char *cmd);
+
 
 
 /* Environment */
