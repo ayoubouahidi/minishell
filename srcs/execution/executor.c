@@ -63,8 +63,10 @@ int external_command(t_data *data)
 void executer(t_data *data, char **envp)
 {
     (void)envp;
-    if (is_builtin(data->cmd->args[0]))
+    if (is_builtin(data->cmd->args[0]) && !data->cmd->next)
         data->exit_status = execute_builtin(data);
-    else
+    if (!is_builtin(data->cmd->args[0]) && !data->cmd->next)
         data->exit_status = external_command(data);
+    if (data->cmd && data->cmd->next)
+        execute_pipe(data);
 }

@@ -1,22 +1,5 @@
 #include "minishell.h"
 
-void free_cmd(t_command *cmd)
-{
-    t_command   *tmp;
-    int     i;
-
-    while (cmd)
-    {
-        tmp = cmd->next;
-        i = 0;
-        while (cmd->args && cmd->args[i])
-            free(cmd->args[i++]);
-        free(cmd->args);
-        free(cmd);
-        cmd = tmp;
-    }
-}
-
 void free_env(t_env *env)
 {
     t_env   *tmp;
@@ -45,7 +28,7 @@ void free_array(char **array)
 
 void clean_exit(t_data *data, int exit_code)
 {
-    free_cmd(data->cmd);
+    // free_cmd(data->cmd);
     free_env(data->env);
     exit(exit_code);
 }

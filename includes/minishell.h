@@ -74,7 +74,8 @@ int    ft_unset(t_data *data, char **args);
 void    executer(t_data *data, char **envp);
 int     execute_builtin(t_data *data);
 void    execute_external(t_data *data);
-char *get_path(t_data *data, char *cmd);
+char    *get_path(t_data *data, char *cmd);
+void    execute_pipe(t_data *data);
 
 
 
@@ -95,7 +96,7 @@ char    **split_pipes(const char *input);
 
 /* Memory */
 void	free_all_and_exit(t_data *data, int exit_code);
-void    free_cmd(t_command *cmd);
+// void    free_cmd(t_command *cmd);
 void    free_env(t_env *env);
 void    free_array(char **array);
 void    free_data(t_data *data);
