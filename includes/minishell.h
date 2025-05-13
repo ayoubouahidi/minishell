@@ -89,6 +89,7 @@ char *get_env_value(t_env *env, const char *key);
 t_env *new_env_node(char *key, char *value);
 void sort_and_print_env(t_env *env);
 bool	is_valid_key(const char *key);
+char **env_to_array(t_env *env);
 
 /* Parsing */
 t_command   *parse_line(char *line);

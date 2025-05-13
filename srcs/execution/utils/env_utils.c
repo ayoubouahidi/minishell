@@ -93,3 +93,36 @@ void	sort_and_print_env(t_env *env)
 	}
 	free_env(copy);
 }
+
+int	env_size(t_env *env)
+{
+	int i = 0;
+	while (env)
+	{
+		i++;
+		env = env->next;
+	}
+	return i;
+}
+
+char	**env_to_array(t_env *env)
+{
+	int		i = 0;
+	char	**arr;
+	char	*temp;
+
+	arr = malloc(sizeof(char *) * (env_size(env) + 1));
+	if (!arr)
+		return NULL;
+
+	while (env)
+	{
+		temp = ft_strjoin(env->key, "=");
+		arr[i] = ft_strjoin(temp, env->value);
+		free(temp);
+		i++;
+		env = env->next;
+	}
+	arr[i] = NULL;
+	return arr;
+}

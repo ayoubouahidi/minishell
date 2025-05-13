@@ -36,18 +36,24 @@ int external_command(t_data *data)
     pid_t pid_ch;
     char *path;
 
-    path = get_path(data, data->cmd->args[0]);
+    if (access(data->cmd->args[0], X_OK) == 0)
+        path = ft_strdup(data->cmd->args[0]);
+    else
+        path = get_path(data, data->cmd->args[0]);
+
     if (!path)
     {
         perror("command not found");
         return 127;
     }
+
     pid_ch = fork();
     if (pid_ch == -1)
         return (perror("fork"), 1);
     if (pid_ch == 0)
     {
-        if (execve(path, data->cmd->args, NULL) == -1)
+        char **envp = env_to_array(data->env);
+        if (execve(path, data->cmd->args, envp) == -1)
         {
             perror("execve");
             exit(1);
@@ -55,13 +61,14 @@ int external_command(t_data *data)
     }
     else
         waitpid(pid_ch, &data->exit_status, 0);
-
     free(path);
     return WEXITSTATUS(data->exit_status);
 }
 
+
 void executer(t_data *data, char **envp)
 {
+
     (void)envp;
     if (is_builtin(data->cmd->args[0]) && !data->cmd->next)
         data->exit_status = execute_builtin(data);
