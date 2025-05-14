@@ -43,15 +43,17 @@ int external_command(t_data *data)
 
     if (!path)
     {
-        perror("command not found");
+        fprintf(stderr, "minishell: %s: command not found\n", data->cmd->args[0]);
         return 127;
     }
 
     pid_ch = fork();
     if (pid_ch == -1)
         return (perror("fork"), 1);
+
     if (pid_ch == 0)
     {
+        setup_redirections(data->cmd);
         char **envp = env_to_array(data->env);
         if (execve(path, data->cmd->args, envp) == -1)
         {
@@ -61,19 +63,39 @@ int external_command(t_data *data)
     }
     else
         waitpid(pid_ch, &data->exit_status, 0);
+
     free(path);
     return WEXITSTATUS(data->exit_status);
 }
 
-
 void executer(t_data *data, char **envp)
 {
-
     (void)envp;
+
+    if (!data->cmd)
+        return;
+    if (!data->cmd->args || !data->cmd->args[0])
+    {
+        setup_redirections(data->cmd);
+        return;
+    }
     if (is_builtin(data->cmd->args[0]) && !data->cmd->next)
+    {
+        int stdin_copy = dup(STDIN_FILENO);
+        int stdout_copy = dup(STDOUT_FILENO);
+        setup_redirections(data->cmd);
         data->exit_status = execute_builtin(data);
-    if (!is_builtin(data->cmd->args[0]) && !data->cmd->next)
+        dup2(stdin_copy, STDIN_FILENO);
+        dup2(stdout_copy, STDOUT_FILENO);
+        close(stdin_copy);
+        close(stdout_copy);
+        return;
+    }
+    if (!data->cmd->next)
+    {
         data->exit_status = external_command(data);
-    if (data->cmd && data->cmd->next)
-        execute_pipe(data);
+        return;
+    }
+    execute_pipe(data);
 }
+

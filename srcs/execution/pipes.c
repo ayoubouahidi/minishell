@@ -1,101 +1,89 @@
 #include "minishell.h"
 
-static void setup_redirections(t_command *cmd)
+static pid_t	create_pipe_and_fork(t_command *cmd, int *fd)
 {
-    int fd;
-
-    if (cmd->infile)
-    {
-        fd = open(cmd->infile, O_RDONLY);
-        if (fd == -1)
-        {
-            perror("infile");
-            exit(1);
-        }
-        dup2(fd, STDIN_FILENO);
-        close(fd);
-    }
-
-    if (cmd->outfile)
-    {
-        int flags = O_WRONLY | O_CREAT | (cmd->is_append ? O_APPEND : O_TRUNC);
-        fd = open(cmd->outfile, flags, 0644);
-        if (fd == -1)
-        {
-            perror("outfile");
-            exit(1);
-        }
-        dup2(fd, STDOUT_FILENO);
-        close(fd);
-    }
+	if (cmd->next && pipe(fd) == -1)
+	{
+		perror("minishell: pipe");
+		exit(EXIT_FAILURE);
+	}
+	pid_t pid = fork();
+	if (pid == -1)
+	{
+		perror("minishell: fork");
+		exit(EXIT_FAILURE);
+	}
+	return (pid);
 }
 
-static void execute_child(t_data *data, int pre_fd, int *fd)
+static void	child_exec(t_data *data, t_command *cmd, int pre_fd, int *fd)
 {
-    char *path;
-    char **envp = env_to_array(data->env);
+	char *path;
 
-    if (pre_fd != 0)
-    {
-        dup2(pre_fd, STDIN_FILENO);
-        close(pre_fd);
-    }
-
-    if (data->cmd->next && !data->cmd->outfile)
-        dup2(fd[1], STDOUT_FILENO);
-
-    close(fd[0]);
-    close(fd[1]);
-
-    setup_redirections(data->cmd);
-
-    if (ft_strchr(data->cmd->args[0], '/') && access(data->cmd->args[0], X_OK) == 0)
-        path = ft_strdup(data->cmd->args[0]);
-    else
-        path = get_path(data, data->cmd->args[0]);
-
-    if (!path)
-    {
-        perror("command not found");
-        exit(127);
-    }
-
-    execve(path, data->cmd->args, envp);
-    perror("execve");
-    exit(1);
+	if (pre_fd != -1)
+	{
+		dup2(pre_fd, STDIN_FILENO);
+		close(pre_fd);
+	}
+	if (cmd->next)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+	}
+	setup_redirections(cmd);
+	path = get_path(data, cmd->args[0]);
+	if (!path)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putendl_fd(": command not found", 2);
+		exit(127);
+	}
+	execve(path, cmd->args, env_to_array(data->env));
+	perror("minishell: execve");
+	exit(126);
 }
 
-void execute_pipe(t_data *data)
+static void	update_parent_state(t_data *data)
 {
-    int fd[2];
-    int pre_fd = 0;
-    pid_t pid;
+	t_pipe *p = data->pipe;
 
-    while (data->cmd)
-    {
-        if (pipe(fd) == -1)
-        {
-            perror("pipe");
-            exit(1);
-        }
+	p->pids[p->i++] = p->pid;
+	if (p->pre_fd != -1)
+		close(p->pre_fd);
+	if (p->current->next)
+	{
+		close(p->fd[1]);
+		p->pre_fd = p->fd[0];
+	}
+	p->current = p->current->next;
+}
 
-        pid = fork();
-        if (pid == -1)
-        {
-            perror("fork");
-            exit(1);
-        }
-
-        if (pid == 0)
-            execute_child(data, pre_fd, fd);
-        else
-        {
-            close(fd[1]);
-            if (pre_fd != 0)
-                close(pre_fd);
-            pre_fd = fd[0];
-            waitpid(pid, &data->exit_status, 0);
-            data->cmd = data->cmd->next;
-        }
-    }
+void	execute_pipe(t_data *data)
+{
+	t_pipe  *p;
+    int     j;
+    int     status;
+    
+    p = data->pipe;
+	p->pre_fd = -1;
+	p->i = 0;
+	p->current = data->cmd;
+	while (p->current)
+	{
+		p->pid = create_pipe_and_fork(p->current, p->fd);
+		if (p->pid == 0)
+			child_exec(data, p->current, p->pre_fd, p->fd);
+		else
+			update_parent_state(data);
+	}
+    j = 0;
+	while (j < data->pipe->i)
+	{
+		waitpid(data->pipe->pids[j], &status, 0);
+		if (WIFEXITED(status) && j == data->pipe->i - 1)
+			data->exit_status = WEXITSTATUS(status);
+		j++;
+	}
 }

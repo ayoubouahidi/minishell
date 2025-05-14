@@ -45,19 +45,20 @@ typedef struct s_env
 
 typedef struct s_pipe
 {
-    int pipe_fd[2];
-    pid_t pid_1;
-    pid_t pid_2;
-    char *path_1;
-    char *path_2;
+    int			fd[2];
+	int			pre_fd;
+	pid_t		pids[1024];
+	int			i;
+	t_command	*current;
+	pid_t		pid;
 }           t_pipe;
 typedef struct s_data
 {
     t_env       *env;
     t_command   *cmd;
     int         exit_status;
-    pid_t       pid;
     t_pipe      *pipe;
+    pid_t       pid;
     bool        is_child;
 }   t_data;
 
@@ -77,6 +78,9 @@ void    execute_external(t_data *data);
 char    *get_path(t_data *data, char *cmd);
 void    execute_pipe(t_data *data);
 
+/* pipe && redirections*/
+char *get_file_name(char *files);
+void setup_redirections(t_command *cmd);
 
 
 /* Environment */

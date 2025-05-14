@@ -15,6 +15,7 @@ SRCS    = \
 	$(SRC_DIR)/execution/executor.c \
 	$(SRC_DIR)/execution/init_env.c \
 	$(SRC_DIR)/execution/pipes.c \
+	$(SRC_DIR)/execution/redirections.c \
 	$(SRC_DIR)/parsing/parcer.c \
 	$(SRC_DIR)/execution/builtin/ft_cd.c \
 	$(SRC_DIR)/execution/builtin/ft_echo.c \
