@@ -43,3 +43,43 @@ void free_all(t_data *data)
         free(data->cmd);
     }
 }
+void cleanup_child_resources(char *path, char **envp)
+{
+    free(path);
+    free_array(envp);
+}
+
+void free_cmd(t_command *cmd)
+{
+    t_command *tmp;
+
+    while (cmd)
+    {
+        tmp = cmd->next;
+
+        if (cmd->args)
+        {
+            int i = 0;
+            while (cmd->args[i])
+            {
+                free(cmd->args[i]);
+                i++;
+            }
+            free(cmd->args);
+        }
+
+        if (cmd->infile)
+            free(cmd->infile);
+        if (cmd->outfile)
+            free(cmd->outfile);
+        if (cmd->appendfile)
+            free(cmd->appendfile);
+
+    //    if (cmd->del)
+    //         free(cmd->del); 
+
+        free(cmd);
+
+        cmd = tmp;
+    }
+}

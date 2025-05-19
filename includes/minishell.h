@@ -14,8 +14,10 @@
 # include <stdbool.h>
 # include <errno.h>
 # include <signal.h>
-# include "libft.h"
+
+#include "libft.h"
 #include "parser.h"
+
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -45,23 +47,27 @@ typedef struct s_env
 
 typedef struct s_pipe
 {
-    int pipe_fd[2];
-    pid_t pid_1;
-    pid_t pid_2;
-    char *path_1;
-    char *path_2;
+
+    int			fd[2];
+	int			pre_fd;
+	pid_t		pids[1024];
+	int			i;
+	t_command	*current;
+	pid_t		pid;
 }           t_pipe;
 typedef struct s_data
 {
     t_env       *env;
     t_command   *cmd;
     int         exit_status;
+    t_pipe      *pipe;
     pid_t       pid;
     t_pipe      *pipe;
     bool        is_child;
 }   t_data;
 
 /* Builtins */
+int is_builtin(char *cmd);
 int     ft_cd(t_data *data, char **args);
 int     ft_echo(t_data *data, char **args);
 int     ft_exit(t_data *data, char **args);
@@ -70,13 +76,20 @@ int     ft_env(t_data *data, char **args);
 int     ft_export(t_data *data, char **args);
 int    ft_unset(t_data *data, char **args);
 
+
 /* Execution */
 void    executer(t_data *data, char **envp);
-int     execute_builtin(t_data *data);
 void    execute_external(t_data *data);
 char    *get_path(t_data *data, char *cmd);
+
+int execute_builtin(t_data *data);
 void    execute_pipe(t_data *data);
 
+/* pipe && redirections*/
+char *get_file_name(char *files);
+void setup_redirections(t_command *cmd);
+void init_pipe_struct(t_data *data);
+int setup_heredoc(t_command *cmd);
 
 
 /* Environment */
@@ -97,8 +110,12 @@ char    **split_pipes(const char *input);
 
 /* Memory */
 void	free_all_and_exit(t_data *data, int exit_code);
+void cleanup_child_resources(char *path, char **envp);
+
+
 // void    free_cmd(t_command *cmd);
 void    free_env(t_env *env);
+void free_cmd(t_command *cmd);
 void    free_array(char **array);
 void    free_data(t_data *data);
 void    clean_exit(t_data *data, int exit_code);

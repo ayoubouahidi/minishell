@@ -35,7 +35,7 @@ int main(int ac, char **av, char **envp)
                 // printf("test done\n");
                 executer(&data, envp);
             }
-            // free_cmd(data.cmd);
+            free_cmd(data.cmd);
             data.cmd = NULL;
         }
         free(line);

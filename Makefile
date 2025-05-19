@@ -15,18 +15,24 @@ SRCS    = \
 	$(SRC_DIR)/execution/executor.c \
 	$(SRC_DIR)/execution/init_env.c \
 	$(SRC_DIR)/execution/pipes.c \
+	$(SRC_DIR)/execution/herdoc.c \
+	$(SRC_DIR)/execution/redirections.c \
 	$(SRC_DIR)/parsing/parcer.c \
 	$(SRC_DIR)/execution/builtin/ft_cd.c \
 	$(SRC_DIR)/execution/builtin/ft_echo.c \
 	$(SRC_DIR)/execution/builtin/ft_env.c \
 	$(SRC_DIR)/execution/builtin/ft_exit.c \
 	$(SRC_DIR)/execution/builtin/ft_pwd.c \
+	$(SRC_DIR)/execution/builtin/ft_export.c \
+	$(SRC_DIR)/execution/builtin/ft_unset.c \
 	$(SRC_DIR)/execution/utils/free.c \
 	$(SRC_DIR)/execution/utils/utils00.c \
-	$(SRC_DIR)/execution/utils/env_utils.c \
+  $(SRC_DIR)/execution/utils/env_utils.c \
 	$(SRC_DIR)/execution/builtin/ft_export.c \
 	$(SRC_DIR)/execution/builtin/ft_unset.c \
 	$(SRC_DIR)/parsing/expantion.c \
+  $(SRC_DIR)/execution/utils/env_utils.c 
+
 
 
 
