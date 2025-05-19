@@ -471,7 +471,7 @@ t_command* parser_commande(t_token** tokendd)
 		} 
 		(*tokendd) = (*tokendd)->next;
 	}
-	printf("%s\n", args);
+	printf("args are ==> %s\n", args);
 	cmd->args = ft_split(args, ' ');
 	cmd->infile = infile_file;
 	cmd->outfile = outfile_file;
@@ -484,6 +484,7 @@ t_command* parser_commande(t_token** tokendd)
 t_command	*parcer(char *line)
 {
 	char	*trim;
+	char *expantion;
 	t_token *token;
 	t_token *head_token;
 	t_lexer *lexer;
@@ -502,6 +503,12 @@ t_command	*parcer(char *line)
 			{
 				token = tokenize(lexer);
 				printf("token(%d, %s)\n", token->type, token->value);
+				if(token->type == WORD)
+				{
+					expantion = expanation_token_env_var(token->value);
+					free(token->value);
+					token->value = expantion;
+				}
 				ft_lstadd_back_token(&head_token, token);
 				if (token->type  == ENDF)
 					break;
