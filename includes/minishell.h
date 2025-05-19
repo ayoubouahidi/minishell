@@ -14,8 +14,8 @@
 # include <stdbool.h>
 # include <errno.h>
 # include <signal.h>
-# include "libft.h"
-#include "parser.h"
+#include "libft.h"
+#include "parser.h" 
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -63,6 +63,7 @@ typedef struct s_data
 }   t_data;
 
 /* Builtins */
+int is_builtin(char *cmd);
 int     ft_cd(t_data *data, char **args);
 int     ft_echo(t_data *data, char **args);
 int     ft_exit(t_data *data, char **args);
@@ -71,16 +72,20 @@ int     ft_env(t_data *data, char **args);
 int     ft_export(t_data *data, char **args);
 int    ft_unset(t_data *data, char **args);
 
+
 /* Execution */
 void    executer(t_data *data, char **envp);
-int     execute_builtin(t_data *data);
 void    execute_external(t_data *data);
 char    *get_path(t_data *data, char *cmd);
+int execute_builtin(t_data *data);
 void    execute_pipe(t_data *data);
 
 /* pipe && redirections*/
 char *get_file_name(char *files);
 void setup_redirections(t_command *cmd);
+void init_pipe_struct(t_data *data);
+int setup_heredoc(t_command *cmd);
+
 
 
 /* Environment */
@@ -101,6 +106,9 @@ char    **split_pipes(const char *input);
 
 /* Memory */
 void	free_all_and_exit(t_data *data, int exit_code);
+void cleanup_child_resources(char *path, char **envp);
+
+
 // void    free_cmd(t_command *cmd);
 void    free_env(t_env *env);
 void    free_array(char **array);

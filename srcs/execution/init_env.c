@@ -69,7 +69,6 @@ char *extract_key(char *str)
 
     while (str[i] && str[i] != '=')
         i++;
-    
     char *key = malloc(i + 1);
     if (!key)
         return (NULL);

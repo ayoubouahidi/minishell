@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/05/14 15:45:30 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/05/19 09:36:47 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include "../../libft/libft.h"
 #include <stdbool.h>
+#include "parser.h"
+
 
 // void free_commands(t_command *cmd) {
 //     t_command *tmp;
@@ -31,46 +33,45 @@
 
 
 // linked list functions 
-#include "minishell.h"
 
-void	printlist(t_command *head)
-{
-	t_command	*tmp;
-	int			i;
+// void	printlist(t_command *head)
+// {
+// 	t_command	*tmp;
+// 	int			i;
 
-	tmp = head;
-	while (tmp)
-	{
-		printf("┌────────────────────────────────────────┐\n");
-		printf("│              Command Block             │\n");
-		printf("├────────────────────────────────────────┤\n");
+// 	tmp = head;
+// 	while (tmp)
+// 	{
+// 		printf("┌────────────────────────────────────────┐\n");
+// 		printf("│              Command Block             │\n");
+// 		printf("├────────────────────────────────────────┤\n");
 
-		printf("│ Infile      : %-25s│\n", tmp->infile ? tmp->infile : "(null)");
-		printf("│ Outfile     : %-25s│\n", tmp->outfile ? tmp->outfile : "(null)");
-		printf("│ AppendFile  : %-25s│\n", tmp->appendfile ? tmp->appendfile : "(null)");
-		printf("│ Delimiter   : %-25s│\n", tmp->del ? tmp->del : "(null)");
+// 		printf("│ Infile      : %-25s│\n", tmp->infile ? tmp->infile : "(null)");
+// 		printf("│ Outfile     : %-25s│\n", tmp->outfile ? tmp->outfile : "(null)");
+// 		printf("│ AppendFile  : %-25s│\n", tmp->appendfile ? tmp->appendfile : "(null)");
+// 		printf("│ Delimiter   : %-25s│\n", tmp->del ? tmp->del : "(null)");
 
-		printf("│ is_append   : %-25s│\n", tmp->is_append ? "true" : "false");
-		printf("│ is_heredoc  : %-25s│\n", tmp->is_heredoc ? "true" : "false");
+// 		printf("│ is_append   : %-25s│\n", tmp->is_append ? "true" : "false");
+// 		printf("│ is_heredoc  : %-25s│\n", tmp->is_heredoc ? "true" : "false");
 
-		printf("├─────────────── Arguments ──────────────┤\n");
-		i = 0;
-		if (tmp->args)
-		{
-			while (tmp->args[i])
-			{
-				printf("│ arg[%d]      : %-25s│\n", i, tmp->args[i]);
-				i++;
-			}
-		}
-		if (i == 0)
-			printf("│ No arguments provided.                 │\n");
+// 		printf("├─────────────── Arguments ──────────────┤\n");
+// 		i = 0;
+// 		if (tmp->args)
+// 		{
+// 			while (tmp->args[i])
+// 			{
+// 				printf("│ arg[%d]      : %-25s│\n", i, tmp->args[i]);
+// 				i++;
+// 			}
+// 		}
+// 		if (i == 0)
+// 			printf("│ No arguments provided.                 │\n");
 
-		printf("└────────────────────────────────────────┘\n\n");
+// 		printf("└────────────────────────────────────────┘\n\n");
 
-		tmp = tmp->next;
-	}
-}
+// 		tmp = tmp->next;
+// 	}
+// }
 
 
 
@@ -487,7 +488,7 @@ t_command* parser_commande(t_token** tokendd)
 		} 
 		(*tokendd) = (*tokendd)->next;
 	}
-	printf("%s\n", args);
+	// printf("%s\n", args);
 	cmd->args = ft_split(args, ' ');
 	cmd->infile = infile_file;
 	cmd->outfile = outfile_file;
@@ -517,7 +518,7 @@ t_command	*parcer(char *line)
 			while(1)
 			{
 				token = tokenize(lexer);
-				printf("token(%d, %s)\n", token->type, token->value);
+				// printf("token(%d, %s)\n", token->type, token->value);
 				ft_lstadd_back_token(&head_token, token);
 				if (token->type  == ENDF)
 					break;
@@ -526,10 +527,10 @@ t_command	*parcer(char *line)
 			{
 				commande = parser_commande(&head_token);
 				ft_lstadd_back_cmd(&head, commande);
-				printf("value %s\n", head_token->value);
+				// printf("value %s\n", head_token->value);
 				head_token = head_token->next;
 			}
-			printlist(head);
+			// printlist(head);
 			head_token = NULL;
 		}
 		else 

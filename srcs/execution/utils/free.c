@@ -43,3 +43,8 @@ void free_all(t_data *data)
         free(data->cmd);
     }
 }
+void cleanup_child_resources(char *path, char **envp)
+{
+    free(path);
+    free_array(envp);
+}
