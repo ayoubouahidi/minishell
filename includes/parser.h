@@ -74,4 +74,7 @@ void free_commands(t_command *cmd);
 t_command	*parcer(char *line);
 char	*ft_strtrim(char const *s1, char const *set);
 bool    syntaxe_error(char *str);
+
+char *expanation_token_env_var(char *str);
+
 #endif

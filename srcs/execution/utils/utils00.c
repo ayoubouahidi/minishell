@@ -65,4 +65,3 @@ char *get_file_name(char *files)
     file[i] = '\0';
     return file;
 }
-
