@@ -4,7 +4,6 @@ static int external_command(t_data *data);
 
 static int handle_builtin(t_data *data)
 {
-
     int stdin_copy = dup(STDIN_FILENO);
     int stdout_copy = dup(STDOUT_FILENO);
     int status;
@@ -18,7 +17,6 @@ static int handle_builtin(t_data *data)
     close(stdout_copy);
     
     return status;
-
 }
 
 static int execute_single_command(t_data *data)
@@ -31,7 +29,6 @@ static int execute_single_command(t_data *data)
 
 static int launch_external_command(t_data *data)
 {
-
     char *path;
     char **envp;
     pid_t pid_ch;
@@ -80,49 +77,11 @@ static int external_command(t_data *data)
         return 0;
     }
     return launch_external_command(data);
-
 }
-
-int external_command(t_data *data)
-{
-    pid_t pid_ch;
-    char *path;
-
-    if (access(data->cmd->args[0], X_OK) == 0)
-        path = ft_strdup(data->cmd->args[0]);
-    else
-        path = get_path(data, data->cmd->args[0]);
-
-    if (!path)
-    {
-        perror("command not found");
-        return 127;
-    }
-
-    pid_ch = fork();
-    if (pid_ch == -1)
-        return (perror("fork"), 1);
-    if (pid_ch == 0)
-    {
-        char **envp = env_to_array(data->env);
-        if (execve(path, data->cmd->args, envp) == -1)
-        {
-            perror("execve");
-            exit(1);
-        }
-    }
-    else
-        waitpid(pid_ch, &data->exit_status, 0);
-    free(path);
-    return WEXITSTATUS(data->exit_status);
-}
-
 
 void executer(t_data *data, char **envp)
 {
-
     (void)envp;
-
 
     if (!data->cmd || !data->cmd->args)
         return;
@@ -147,5 +106,3 @@ void executer(t_data *data, char **envp)
 
     execute_pipe(data);
 }
-
-

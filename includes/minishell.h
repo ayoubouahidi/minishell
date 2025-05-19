@@ -55,6 +55,7 @@ typedef struct s_pipe
 	t_command	*current;
 	pid_t		pid;
 }           t_pipe;
+
 typedef struct s_data
 {
     t_env       *env;
@@ -62,7 +63,7 @@ typedef struct s_data
     int         exit_status;
     t_pipe      *pipe;
     pid_t       pid;
-    t_pipe      *pipe;
+    // t_pipe      *pipe;
     bool        is_child;
 }   t_data;
 
