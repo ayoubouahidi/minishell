@@ -111,6 +111,7 @@ void cleanup_child_resources(char *path, char **envp);
 
 // void    free_cmd(t_command *cmd);
 void    free_env(t_env *env);
+void free_cmd(t_command *cmd);
 void    free_array(char **array);
 void    free_data(t_data *data);
 void    clean_exit(t_data *data, int exit_code);

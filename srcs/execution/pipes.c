@@ -1,19 +1,5 @@
 #include "minishell.h"
 
-void init_pipe_struct(t_data *data)
-{
-    data->pipe = malloc(sizeof(t_pipe));
-    if (!data->pipe)
-    {
-        perror("minishell: malloc");
-        exit(1);
-    }
-    data->pipe->pre_fd = -1;
-    data->pipe->i = 0;
-    data->pipe->current = data->cmd;
-    data->pipe->pid = 0;
-}
-
 static void safe_close(int fd)
 {
     if (fd >= 0)
@@ -38,7 +24,7 @@ static pid_t create_pipe_and_fork(int *fd, t_command *cmd)
     return pid;
 }
 
-static void setup_child(int pre_fd, int *fd, t_command *cmd)
+static void setup_child_io(int pre_fd, int *fd, t_command *cmd)
 {
     if (pre_fd != -1)
     {
@@ -72,7 +58,7 @@ static void execute_child(t_data *data, t_command *cmd)
     exit(126);
 }
 
-static void p_cleanup(int *pre_fd, int *fd, t_command **cmd)
+static void parent_cleanup(int *pre_fd, int *fd, t_command **cmd)
 {
     if (*pre_fd != -1)
         safe_close(*pre_fd);
@@ -81,32 +67,39 @@ static void p_cleanup(int *pre_fd, int *fd, t_command **cmd)
         safe_close(fd[1]);
         *pre_fd = fd[0];
     }
-    *cmd = (*cmd)->next;
 }
 
 void execute_pipe(t_data *data)
 {
-    int status;
-    int j;
-    
-    j = 0;
-    while (data->pipe->current)
-    {
-        data->pipe->pid = create_pipe_and_fork(data->pipe->fd, data->pipe->current);
-        data->pipe->pids[data->pipe->i++] = data->pipe->pid;
+    int fd[2];
+    int pre_fd = -1;
+    pid_t pids[128];
+    int i = 0;
+    t_command *current = data->cmd;
 
-        if (data->pipe->pid == 0)
+    while (current)
+    {
+        pid_t pid = create_pipe_and_fork(fd, current);
+        pids[i++] = pid;
+
+        if (pid == 0)
         {
-            setup_child(data->pipe->pre_fd, data->pipe->fd, data->pipe->current);
-            execute_child(data, data->pipe->current);
+            setup_child_io(pre_fd, fd, current);
+            execute_child(data, current);
         }
         else
-            p_cleanup(&data->pipe->pre_fd, data->pipe->fd, &data->pipe->current);
+        {
+            parent_cleanup(&pre_fd, fd, &current);
+            current = current->next;
+        }
     }
-    while (j < data->pipe->i)
+
+    int status;
+    int j = 0;
+    while (j < i)
     {
-        waitpid(data->pipe->pids[j], &status, 0);
-        if (WIFEXITED(status) && j == data->pipe->i - 1)
+        waitpid(pids[j], &status, 0);
+        if (WIFEXITED(status) && j == i - 1)
             data->exit_status = WEXITSTATUS(status);
         j++;
     }
