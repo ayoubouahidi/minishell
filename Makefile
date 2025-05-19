@@ -24,7 +24,10 @@ SRCS    = \
 	$(SRC_DIR)/execution/utils/free.c \
 	$(SRC_DIR)/execution/utils/utils00.c \
 	$(SRC_DIR)/execution/utils/env_utils.c \
-	$(SRC_DIR)/execution/builtin/ft_export.c
+	$(SRC_DIR)/execution/builtin/ft_export.c \
+	$(SRC_DIR)/execution/builtin/ft_unset.c \
+	$(SRC_DIR)/parsing/expantion.c \
+
 
 
 OBJS    = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

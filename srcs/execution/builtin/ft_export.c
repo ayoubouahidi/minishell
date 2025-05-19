@@ -52,21 +52,23 @@ int	ft_export(t_data *data, char **args)
 	if (!args[1])
 		return (sort_and_print_env(data->env), SUCCESS);
 	i = 1;
-	key = extract_key(args[i]);
 	while (args[i])
 	{
-		if (!ft_strchr(args[i], '=') || !is_valid_key(key))
-			free(key), print_invalid(args[i]);
-		else
+		key = extract_key(args[i]);
+		if (!is_valid_key(key))
+		{
+			print_invalid(args[i]);
+			free(key);
+		}
+		else if (ft_strchr(args[i], '='))
 		{
 			val = extract_value(args[i]);
-			if (!is_valid_key(key))
-				print_invalid(args[i]);
-			else
-				update_or_add_env(data, key, val);
-			free(key);
+			update_or_add_env(data, key, val);
 			free(val);
+			free(key);
 		}
+		else
+			free(key);
 		i++;
 	}
 	data->exit_status = SUCCESS;
