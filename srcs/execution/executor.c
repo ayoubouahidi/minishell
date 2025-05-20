@@ -1,79 +1,108 @@
 #include "../../includes/minishell.h"
 
-int is_builtin(char *cmd)
+static int external_command(t_data *data);
+
+static int handle_builtin(t_data *data)
 {
-    if (!cmd)
-        return 0;
-    return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "echo") ||
-            !ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "pwd") ||
-            !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "export") ||
-            !ft_strcmp(cmd, "unset"));
+    int stdin_copy = dup(STDIN_FILENO);
+    int stdout_copy = dup(STDOUT_FILENO);
+    int status;
+
+    setup_redirections(data->cmd);
+    status = execute_builtin(data);
+    
+    dup2(stdin_copy, STDIN_FILENO);
+    dup2(stdout_copy, STDOUT_FILENO);
+    close(stdin_copy);
+    close(stdout_copy);
+    
+    return status;
 }
 
-int execute_builtin(t_data *data)
+static int execute_single_command(t_data *data)
 {
-    char *cmd = data->cmd->args[0];
-
-    if (!ft_strcmp(cmd, "cd"))
-        return ft_cd(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "echo"))
-        return ft_echo(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "exit"))
-        return ft_exit(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "pwd"))
-        return ft_pwd(data);
-    if (!ft_strcmp(cmd, "env"))
-        return ft_env(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "export"))
-        return ft_export(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "unset"))
-        return ft_unset(data, data->cmd->args);
-    return 0;
+    if (is_builtin(data->cmd->args[0]))
+        return handle_builtin(data);
+    return external_command(data);
 }
 
-int external_command(t_data *data)
+
+static int launch_external_command(t_data *data)
 {
-    pid_t pid_ch;
     char *path;
+    char **envp;
+    pid_t pid_ch;
 
     if (access(data->cmd->args[0], X_OK) == 0)
         path = ft_strdup(data->cmd->args[0]);
     else
         path = get_path(data, data->cmd->args[0]);
-
+    
     if (!path)
     {
-        perror("command not found");
+        ft_putstr_fd("minishell: ", STDERR_FILENO);
+        ft_putstr_fd(data->cmd->args[0], STDERR_FILENO);
+        ft_putendl_fd(": command not found", STDERR_FILENO);
         return 127;
     }
 
     pid_ch = fork();
     if (pid_ch == -1)
-        return (perror("fork"), 1);
+    {
+        perror("minishell: fork");
+        free(path);
+        return 1;
+    }
+
     if (pid_ch == 0)
     {
-        char **envp = env_to_array(data->env);
-        if (execve(path, data->cmd->args, envp) == -1)
-        {
-            perror("execve");
-            exit(1);
-        }
+        setup_redirections(data->cmd);
+        envp = env_to_array(data->env);
+        execve(path, data->cmd->args, envp);
+        perror("minishell: execve");
+        cleanup_child_resources(path, envp);
+        exit(126);
     }
-    else
-        waitpid(pid_ch, &data->exit_status, 0);
+
+    waitpid(pid_ch, &data->exit_status, 0);
     free(path);
     return WEXITSTATUS(data->exit_status);
 }
 
+static int external_command(t_data *data)
+{
+    if (!data->cmd->args[0])
+    {
+        setup_redirections(data->cmd);
+        return 0;
+    }
+    return launch_external_command(data);
+}
 
 void executer(t_data *data, char **envp)
 {
-
     (void)envp;
+
+    if (!data->cmd || !data->cmd->args)
+        return;
+
+    if (!data->cmd->args[0])
+    {
+        setup_redirections(data->cmd);
+        return;
+    }
+
     if (is_builtin(data->cmd->args[0]) && !data->cmd->next)
-        data->exit_status = execute_builtin(data);
-    if (!is_builtin(data->cmd->args[0]) && !data->cmd->next)
-        data->exit_status = external_command(data);
-    if (data->cmd && data->cmd->next)
-        execute_pipe(data);
+    {
+        data->exit_status = handle_builtin(data);
+        return;
+    }
+
+    if (!data->cmd->next)
+    {
+        data->exit_status = execute_single_command(data);
+        return;
+    }
+
+    execute_pipe(data);
 }

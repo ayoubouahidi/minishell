@@ -16,6 +16,8 @@ int main(int ac, char **av, char **envp)
 
     (void)ac;
     (void)av;
+    
+    ft_memset(&data, 0, sizeof(t_data)); 
     init_data(&data, envp);
 
     while (1)
@@ -35,7 +37,7 @@ int main(int ac, char **av, char **envp)
                 // printf("test done\n");
                 executer(&data, envp);
             }
-            // free_cmd(data.cmd);
+            free_cmd(data.cmd);
             data.cmd = NULL;
         }
         free(line);

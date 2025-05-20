@@ -37,3 +37,34 @@ char *get_path(t_data *data, char *cmd)
     free_array(paths);
     return final_path;
 }
+
+char *get_file_name(char *files)
+{
+    char *file;
+    int start = 0;
+    int end = 0;
+    int i = 0;
+
+    if (!files)
+        return NULL;
+        
+    while (files[start] && files[start] == ' ')
+        start++;
+    end = start;
+    while (files[end] && files[end] != ' ')
+        end++;
+
+    if ((files[start] == '\'' && files[end - 1] == '\'') || 
+        (files[start] == '\"' && files[end - 1] == '\"'))
+    {
+        start++;
+        end--;
+    }
+    file = malloc(end - start + 1);
+    if (!file)
+        return NULL;
+    while (start < end)
+        file[i++] = files[start++];
+    file[i] = '\0';
+    return file;
+}

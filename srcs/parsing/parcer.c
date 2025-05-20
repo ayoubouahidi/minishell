@@ -16,6 +16,9 @@
 #include "../../libft/libft.h"
 #include <stdbool.h>
 
+#include "parser.h"
+
+
 // void free_commands(t_command *cmd) {
 //     t_command *tmp;
 //     while (cmd) {
@@ -31,37 +34,50 @@
 
 
 // linked list functions 
+
+
 void printlist(t_command *head)
 {
-	t_command *tmp;
-	int i;
+    t_command *tmp = head;
+    int i;
 
-	tmp = head;
-	while (tmp)
-	{
-		printf("┌────────────────────────────────────────┐\n");
-		printf("│              Command Block             │\n");
-		printf("├────────────────────────────────────────┤\n");
+    while (tmp)
+    {
+        printf("┌────────────────────────────────────────┐\n");
+        printf("│              Command Block             │\n");
+        printf("├────────────────────────────────────────┤\n");
 
-		printf("│ Infile   : %-28s │\n", tmp->infile ? tmp->infile : "(null)");
-		printf("│ Outfile  : %-28s │\n", tmp->outfile ? tmp->outfile : "(null)");
-		printf("│ Delimiter: %-28s │\n", tmp->del ? tmp->del : "(null)");
+        printf("│ Infile      : %-25s│\n", tmp->infile ? tmp->infile : "(null)");
+        printf("│ Outfile     : %-25s│\n", tmp->outfile ? tmp->outfile : "(null)");
+        printf("│ AppendFile  : %-25s│\n", tmp->appendfile ? tmp->appendfile : "(null)");
+        printf("│ Delimiter   : %-25s│\n", tmp->del ? tmp->del : "(null)");
 
-		printf("├─────────────── Arguments ──────────────┤\n");
-		i = 0;
-		while (tmp->args && tmp->args[i])
-		{
-			printf("│ arg[%d]   : %-28s │\n", i, tmp->args[i]);
-			i++;
-		}
-		if (i == 0)
-			printf("│ No arguments provided.                 │\n");
+        printf("│ is_append   : %-25s│\n", tmp->is_append ? "true" : "false");
+        printf("│ is_heredoc  : %-25s│\n", tmp->is_heredoc ? "true" : "false");
 
-		printf("└────────────────────────────────────────┘\n\n");
+        printf("├─────────────── Arguments ──────────────┤\n");
+        if (tmp->args)
+        {
+            for (i = 0; tmp->args[i]; i++)
+                printf("│ arg[%d]      : %-25s│\n", i, tmp->args[i]);
+        }
+        else
+        {
+            printf("│ No arguments provided.                 │\n");
+        }
 
-		tmp = tmp->next;
-	}
+        printf("└────────────────────────────────────────┘\n\n");
+
+        tmp = tmp->next;
+    }
 }
+
+
+
+
+
+
+
 
 
 
@@ -422,35 +438,48 @@ char *infile(t_token *token, char *arg)
 }
 // heredoc function and APPEND
 
-bool	heredoc_check_append(t_token *token, char **del)
+bool heredoc_check_append(t_token *token, char **del)
 {
-	token = (token)->next;
-	if ((token)->type != WORD)
-	{
-		printf("Syntaxe error : heredoc problem \n");
-		return(false);
-	}
-	*del = token->value;
-	return true;
-
+    token = token->next;
+    if ((token)->type != WORD)
+    {
+        printf("Syntaxe error: append or heredoc problem\n");
+        return false;
+    }
+    *del = token->value;
+    return true;
 }
-  
+
 // parser part
 
 
 t_command* parser_commande(t_token** tokendd)
 {
-	t_command *cmd;
-	// // t_command tmp;
-	// t_token *token = *tokendd;
-	char *args = NULL;
-	char *infile_file = NULL;
-	char *outfile_file = NULL;
-	char *del = NULL;
-	bool in_red = false;
+    t_command *cmd;
+    char *args = NULL;
+    char *infile_file = NULL;
+    char *outfile_file = NULL;
+    char *del = NULL;
+    bool in_red = false;
 
-	cmd = (t_command *)malloc(sizeof(t_command));
-	while (tokendd && (*tokendd)->type != ENDF && (*tokendd)->type != PIPE)
+    if (!tokendd || !*tokendd)
+        return NULL;
+
+    cmd = (t_command *)malloc(sizeof(t_command));
+    if (!cmd)
+        return NULL;
+    
+    // Initialize all fields to prevent undefined behavior
+    cmd->args = NULL;
+    cmd->infile = NULL;
+    cmd->outfile = NULL;
+    cmd->is_append = false;
+    cmd->is_heredoc = false;
+    cmd->del = NULL;
+    cmd->appendfile = NULL;
+    cmd->next = NULL;
+    
+    while (tokendd && (*tokendd)->type != ENDF && (*tokendd)->type != PIPE)
 	{
 		if((*tokendd)->type == WORD )
 		{
@@ -461,17 +490,25 @@ t_command* parser_commande(t_token** tokendd)
 		else{
 			in_red = true;
 			if ((*tokendd)->type == OUTPUT_RED)
-				infile_file = infile((*tokendd), infile_file);
+				outfile_file = infile((*tokendd), infile_file);
 			else if ((*tokendd)->type == INTPUT_RED)
-				outfile_file = infile((*tokendd), outfile_file);
+				infile_file = infile((*tokendd), outfile_file);
 			else if ((*tokendd)->type == HEREDOC)
 				cmd->is_heredoc = heredoc_check_append((*tokendd), &del);
+			
 			else if ((*tokendd)->type == APPEND)
-				cmd->is_append = heredoc_check_append((*tokendd), &del);
+			{
+				if (!heredoc_check_append((*tokendd), &del)) {
+					return NULL; 
+				}
+				cmd->appendfile = ft_strdup(del);  // Create a duplicate instead of using the same pointer
+				cmd->is_append = true;
+			}
 		} 
 		(*tokendd) = (*tokendd)->next;
 	}
-	printf("args are ==> %s\n", args);
+	// printf("%s\n", args);
+
 	cmd->args = ft_split(args, ' ');
 	cmd->infile = infile_file;
 	cmd->outfile = outfile_file;
@@ -502,6 +539,7 @@ t_command	*parcer(char *line)
 			while(1)
 			{
 				token = tokenize(lexer);
+
 				printf("token(%d, %s)\n", token->type, token->value);
 				if(token->type == WORD)
 				{
@@ -517,7 +555,7 @@ t_command	*parcer(char *line)
 			{
 				commande = parser_commande(&head_token);
 				ft_lstadd_back_cmd(&head, commande);
-				printf("value %s\n", head_token->value);
+				// printf("value %s\n", head_token->value);
 				head_token = head_token->next;
 			}
 			printlist(head);
@@ -529,5 +567,4 @@ t_command	*parcer(char *line)
 		}
 		return(head);
 }
-
 

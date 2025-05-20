@@ -107,22 +107,33 @@ int	env_size(t_env *env)
 
 char	**env_to_array(t_env *env)
 {
-	int		i = 0;
-	char	**arr;
-	char	*temp;
+    int     i = 0;
+    char    **arr;
+    char    *temp;
+    
+    if (!env)
+        return NULL;
+        
+    arr = malloc(sizeof(char *) * (env_size(env) + 1));
+    if (!arr)
+        return NULL;
 
-	arr = malloc(sizeof(char *) * (env_size(env) + 1));
-	if (!arr)
-		return NULL;
-
-	while (env)
-	{
-		temp = ft_strjoin(env->key, "=");
-		arr[i] = ft_strjoin(temp, env->value);
-		free(temp);
-		i++;
-		env = env->next;
-	}
-	arr[i] = NULL;
-	return arr;
+    while (env)
+    {
+        if (env->key && env->value) {
+            temp = ft_strjoin(env->key, "=");
+            if (temp) {
+                arr[i] = ft_strjoin(temp, env->value);
+                free(temp);
+                if (!arr[i]) {
+                    free_array(arr);
+                    return NULL;
+                }
+                i++;
+            }
+        }
+        env = env->next;
+    }
+    arr[i] = NULL;
+    return arr;
 }

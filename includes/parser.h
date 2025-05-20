@@ -29,7 +29,7 @@ typedef struct s_command
 	char	*del;
 	char	*appendfile;
 	struct s_command	*next;
-}	t_command;
+}				t_command;
 
 typedef enum
 {
@@ -71,8 +71,10 @@ typedef struct s_lexer
 
 t_command *parse_line(char *line);
 void free_commands(t_command *cmd);
-t_command	*parcer();
+t_command	*parcer(char *line);
 char	*ft_strtrim(char const *s1, char const *set);
 bool    syntaxe_error(char *str);
+
 char *expanation_token_env_var(char *str);
+
 #endif
