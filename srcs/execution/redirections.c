@@ -99,4 +99,3 @@ void setup_redirections(t_command *cmd)
 }
 
 
-

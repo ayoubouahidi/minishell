@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/05/20 11:42:49 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/05/12 20:04:48 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include "../../libft/libft.h"
 #include <stdbool.h>
+
 #include "parser.h"
 
 
@@ -33,6 +34,7 @@
 
 
 // linked list functions 
+
 
 void printlist(t_command *head)
 {
@@ -69,6 +71,11 @@ void printlist(t_command *head)
         tmp = tmp->next;
     }
 }
+
+
+
+
+
 
 
 
@@ -501,6 +508,7 @@ t_command* parser_commande(t_token** tokendd)
 		(*tokendd) = (*tokendd)->next;
 	}
 	// printf("%s\n", args);
+
 	cmd->args = ft_split(args, ' ');
 	cmd->infile = infile_file;
 	cmd->outfile = outfile_file;
@@ -513,6 +521,7 @@ t_command* parser_commande(t_token** tokendd)
 t_command	*parcer(char *line)
 {
 	char	*trim;
+	char *expantion;
 	t_token *token;
 	t_token *head_token;
 	t_lexer *lexer;
@@ -530,7 +539,14 @@ t_command	*parcer(char *line)
 			while(1)
 			{
 				token = tokenize(lexer);
-				// printf("token(%d, %s)\n", token->type, token->value);
+
+				printf("token(%d, %s)\n", token->type, token->value);
+				if(token->type == WORD)
+				{
+					expantion = expanation_token_env_var(token->value);
+					free(token->value);
+					token->value = expantion;
+				}
 				ft_lstadd_back_token(&head_token, token);
 				if (token->type  == ENDF)
 					break;

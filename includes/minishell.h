@@ -14,8 +14,10 @@
 # include <stdbool.h>
 # include <errno.h>
 # include <signal.h>
+
 #include "libft.h"
-#include "parser.h" 
+#include "parser.h"
+
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -45,6 +47,7 @@ typedef struct s_env
 
 typedef struct s_pipe
 {
+
     int			fd[2];
 	int			pre_fd;
 	pid_t		pids[1024];
@@ -52,6 +55,7 @@ typedef struct s_pipe
 	t_command	*current;
 	pid_t		pid;
 }           t_pipe;
+
 typedef struct s_data
 {
     t_env       *env;
@@ -59,6 +63,7 @@ typedef struct s_data
     int         exit_status;
     t_pipe      *pipe;
     pid_t       pid;
+    // t_pipe      *pipe;
     bool        is_child;
 }   t_data;
 
@@ -77,6 +82,7 @@ int    ft_unset(t_data *data, char **args);
 void    executer(t_data *data, char **envp);
 void    execute_external(t_data *data);
 char    *get_path(t_data *data, char *cmd);
+
 int execute_builtin(t_data *data);
 void    execute_pipe(t_data *data);
 
@@ -85,7 +91,6 @@ char *get_file_name(char *files);
 void setup_redirections(t_command *cmd);
 void init_pipe_struct(t_data *data);
 int setup_heredoc(t_command *cmd);
-
 
 
 /* Environment */
