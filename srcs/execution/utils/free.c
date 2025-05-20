@@ -72,14 +72,12 @@ void free_cmd(t_command *cmd)
             free(cmd->infile);
         if (cmd->outfile)
             free(cmd->outfile);
-        if (cmd->appendfile)
+        if (cmd->appendfile && cmd->appendfile != cmd->del)
             free(cmd->appendfile);
-
-    //    if (cmd->del)
-    //         free(cmd->del); 
+        if (cmd->del)
+            free(cmd->del);
 
         free(cmd);
-
         cmd = tmp;
     }
 }

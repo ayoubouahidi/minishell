@@ -45,6 +45,9 @@ char *get_file_name(char *files)
     int end = 0;
     int i = 0;
 
+    if (!files)
+        return NULL;
+        
     while (files[start] && files[start] == ' ')
         start++;
     end = start;
