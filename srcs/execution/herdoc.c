@@ -5,6 +5,9 @@ int setup_heredoc(t_command *cmd)
     int fd[2];
     char *line;
 
+    if (!cmd || !cmd->del)
+        return -1;
+    
     if (pipe(fd) == -1)
     {
         perror("pipe");

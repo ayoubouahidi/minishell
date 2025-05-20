@@ -56,24 +56,44 @@ void setup_redirections(t_command *cmd)
 {
     int fd;
 
+    // Handle output redirection first to ensure the file is created
+    if (cmd->outfile || cmd->appendfile)
+    {
+        fd = open_output_file(cmd);
+        if (dup2(fd, STDOUT_FILENO) == -1)
+        {
+            perror("dup2");
+            close(fd);
+            exit(1);
+        }
+        close(fd);
+    }
+
+    // Handle heredoc redirection
     if (cmd->is_heredoc)
     {
         fd = setup_heredoc(cmd);
         if (fd == -1)
             exit(1);
-        dup2(fd, STDIN_FILENO);
+        if (dup2(fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2");
+            close(fd);
+            exit(1);
+        }
         close(fd);
     }
+
+    // Handle input redirection
     if (cmd->infile)
     {
         fd = open_input_file(cmd->infile);
-        dup2(fd, STDIN_FILENO);
-        close(fd);
-    }
-    if (cmd->outfile || cmd->appendfile)
-    {
-        fd = open_output_file(cmd);
-        dup2(fd, STDOUT_FILENO);
+        if (dup2(fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2");
+            close(fd);
+            exit(1);
+        }
         close(fd);
     }
 }
