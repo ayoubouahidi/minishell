@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/05/12 20:04:48 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/05/22 09:17:08 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,41 +36,41 @@
 // linked list functions 
 
 
-void printlist(t_command *head)
-{
-    t_command *tmp = head;
-    int i;
+// void printlist(t_command *head)
+// {
+//     t_command *tmp = head;
+//     int i;
 
-    while (tmp)
-    {
-        printf("┌────────────────────────────────────────┐\n");
-        printf("│              Command Block             │\n");
-        printf("├────────────────────────────────────────┤\n");
+//     while (tmp)
+//     {
+//         printf("┌────────────────────────────────────────┐\n");
+//         printf("│              Command Block             │\n");
+//         printf("├────────────────────────────────────────┤\n");
 
-        printf("│ Infile      : %-25s│\n", tmp->infile ? tmp->infile : "(null)");
-        printf("│ Outfile     : %-25s│\n", tmp->outfile ? tmp->outfile : "(null)");
-        printf("│ AppendFile  : %-25s│\n", tmp->appendfile ? tmp->appendfile : "(null)");
-        printf("│ Delimiter   : %-25s│\n", tmp->del ? tmp->del : "(null)");
+//         printf("│ Infile      : %-25s│\n", tmp->infile ? tmp->infile : "(null)");
+//         printf("│ Outfile     : %-25s│\n", tmp->outfile ? tmp->outfile : "(null)");
+//         printf("│ AppendFile  : %-25s│\n", tmp->appendfile ? tmp->appendfile : "(null)");
+//         printf("│ Delimiter   : %-25s│\n", tmp->del ? tmp->del : "(null)");
 
-        printf("│ is_append   : %-25s│\n", tmp->is_append ? "true" : "false");
-        printf("│ is_heredoc  : %-25s│\n", tmp->is_heredoc ? "true" : "false");
+//         printf("│ is_append   : %-25s│\n", tmp->is_append ? "true" : "false");
+//         printf("│ is_heredoc  : %-25s│\n", tmp->is_heredoc ? "true" : "false");
 
-        printf("├─────────────── Arguments ──────────────┤\n");
-        if (tmp->args)
-        {
-            for (i = 0; tmp->args[i]; i++)
-                printf("│ arg[%d]      : %-25s│\n", i, tmp->args[i]);
-        }
-        else
-        {
-            printf("│ No arguments provided.                 │\n");
-        }
+//         printf("├─────────────── Arguments ──────────────┤\n");
+//         if (tmp->args)
+//         {
+//             for (i = 0; tmp->args[i]; i++)
+//                 printf("│ arg[%d]      : %-25s│\n", i, tmp->args[i]);
+//         }
+//         else
+//         {
+//             printf("│ No arguments provided.                 │\n");
+//         }
 
-        printf("└────────────────────────────────────────┘\n\n");
+//         printf("└────────────────────────────────────────┘\n\n");
 
-        tmp = tmp->next;
-    }
-}
+//         tmp = tmp->next;
+//     }
+// }
 
 
 
@@ -540,7 +540,7 @@ t_command	*parcer(char *line)
 			{
 				token = tokenize(lexer);
 
-				printf("token(%d, %s)\n", token->type, token->value);
+				// printf("token(%d, %s)\n", token->type, token->value);
 				if(token->type == WORD)
 				{
 					expantion = expanation_token_env_var(token->value);
@@ -558,7 +558,7 @@ t_command	*parcer(char *line)
 				// printf("value %s\n", head_token->value);
 				head_token = head_token->next;
 			}
-			printlist(head);
+			// printlist(head);
 			head_token = NULL;
 		}
 		else 
