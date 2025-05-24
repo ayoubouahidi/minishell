@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../../includes/minishell.h"
 
 bool	is_valid_key(const char *key)
 {

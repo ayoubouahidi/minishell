@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   print_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 16:31:39 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/05/24 16:50:45 by elkharti         ###   ########.fr       */
+/*   Created: 2025/05/19 15:44:04 by mdahani           #+#    #+#             */
+/*   Updated: 2025/05/24 16:16:03 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ctype.h>
-#include <stdio.h>
+#include "../../includes/minishell.h"
 
-int	ft_isalpha(int c)
+void	print_error(char *msg)
 {
-	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
+	int	i;
+
+	i = 0;
+	while (msg && msg[i])
+	{
+		write(2, &msg[i], 1);
+		i++;
+	}
 }

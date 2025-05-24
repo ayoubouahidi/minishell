@@ -1,20 +1,31 @@
 #include "../../../includes/minishell.h"
 
 /**
- * Safely extracts a filename from a string, handling NULL inputs
- * and trimming whitespace if necessary.
+ * Utility function to generate a temporary file name for heredoc
  */
-char *get_file_name(char *file_str)
+char *get_tmp_file(void)
 {
-    char *trimmed;
+    static int counter = 0;
+    char *num_str;
+    char *filename;
     
-    if (!file_str)
+    num_str = ft_itoa(counter++);
+    if (!num_str)
         return (NULL);
+    filename = ft_strjoin("/tmp/heredoc_", num_str);
+    free(num_str);
+    return (filename);
+}
+
+/**
+ * Setup heredoc functionality
+ */
+int setup_heredoc(t_command *cmd)
+{
+    // Basic implementation - you may need to adjust based on your heredoc logic
+    if (!cmd || !cmd->del)
+        return (-1);
     
-    // Trim whitespace and return a new string
-    trimmed = ft_strtrim(file_str, " \t\n\r\f\v");
-    if (!trimmed)
-        return (ft_strdup(file_str)); // Fallback if trim fails
-        
-    return trimmed;
+    // For now, return a simple file descriptor or implement your heredoc logic
+    return (open("/dev/stdin", O_RDONLY));
 }

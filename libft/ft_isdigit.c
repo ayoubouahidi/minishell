@@ -3,21 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 18:30:42 by ayouahid          #+#    #+#             */
-/*   Updated: 2024/10/21 18:30:55 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/05/24 16:51:04 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ctype.h>
 #include <stdio.h>
 
-int	ft_isdigit(int a)
+int	ft_isdigit(int c)
 {
-	if ((a >= 48 && a <= 57))
-	{
-		return (1);
-	}
-	return (0);
+	return (c >= '0' && c <= '9');
 }

@@ -1,6 +1,3 @@
 {
-  "files.associations": {
-    "*.ejs": "html",
-    "readline.h": "c"
-  }
+  "C_Cpp.errorSquiggles": "disabled"
 }

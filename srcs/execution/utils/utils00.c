@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../../includes/minishell.h"
 
 static char *search_path(char **paths, char *cmd)
 {

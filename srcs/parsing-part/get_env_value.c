@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   get_env_value.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 16:31:39 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/05/24 16:50:45 by elkharti         ###   ########.fr       */
+/*   Created: 2025/04/19 20:26:14 by mdahani           #+#    #+#             */
+/*   Updated: 2025/05/24 16:18:17 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ctype.h>
-#include <stdio.h>
+#include "../../includes/minishell.h"
+#include "../libft/libft.h"
 
-int	ft_isalpha(int c)
+char	*get_env_value(t_env *env, const char *key)
 {
-	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
+	while (env)
+	{
+		if (!ft_strcmp(env->key, key))
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
 }

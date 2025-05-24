@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   is_only_spaces.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 16:31:39 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/05/24 16:50:45 by elkharti         ###   ########.fr       */
+/*   Created: 2025/05/17 20:12:00 by mdahani           #+#    #+#             */
+/*   Updated: 2025/05/24 16:16:03 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ctype.h>
-#include <stdio.h>
+#include "../../includes/minishell.h"
 
-int	ft_isalpha(int c)
+int	is_only_spaces(char *input)
 {
-	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
+	int	i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] > 32)
+			return (0);
+		i++;
+	}
+	return (1);
 }
