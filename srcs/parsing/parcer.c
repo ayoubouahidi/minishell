@@ -518,7 +518,7 @@ t_command* parser_commande(t_token** tokendd)
 }
 
 
-t_command	*parcer(char *line)
+t_command	*parcer(char *line, t_env *envp)
 {
 	char	*trim;
 	char *expantion;
@@ -543,7 +543,7 @@ t_command	*parcer(char *line)
 				printf("token(%d, %s)\n", token->type, token->value);
 				if(token->type == WORD)
 				{
-					expantion = expanation_token_env_var(token->value);
+					expantion = expanation_token_env_var(token->value , envp);
 					free(token->value);
 					token->value = expantion;
 				}

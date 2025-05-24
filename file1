@@ -1,0 +1,14 @@
+total 140
+drwxr-xr-x 9 ayouahid candidates    160 May 24 11:34 .
+drwxr-xr-x 8 ayouahid candidates    150 May  6 23:27 ..
+-rw-r--r-- 1 ayouahid candidates      0 May 24 11:34 file1
+drwxr-xr-x 8 ayouahid candidates   4096 May 24 11:30 .git
+drwxr-xr-x 2 ayouahid candidates     41 May 24 11:30 includes
+drwxr-xr-x 2 ayouahid candidates   4096 May 24 11:30 libft
+-rw-r--r-- 1 ayouahid candidates   1329 May 24 11:30 Makefile
+-rwxr-xr-x 1 ayouahid candidates 117912 May 24 11:34 minishell
+drwxr-xr-x 4 ayouahid candidates     52 May 24 11:34 objs
+drwxr-xr-x 2 ayouahid candidates     28 May 24 11:30 src
+drwxr-xr-x 5 ayouahid candidates     71 May 24 11:30 srcs
+-rwxr-xr-x 1 ayouahid candidates  11269 May 24 11:30 tester.js
+drwxr-xr-x 2 ayouahid candidates     27 May 24 11:30 .vscode

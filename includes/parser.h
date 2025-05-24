@@ -6,6 +6,7 @@
 #include <readline/readline.h>  
 #include <readline/history.h>
 #include <unistd.h>
+#include "minishell.h"
 
 #define WHITESPACE " \t\n\r\f\v"
 
@@ -19,17 +20,17 @@
 // 	bool	is_heredoc;
 //     struct s_command *next;
 // } t_command;
-typedef struct s_command
-{
-	char	**args;
-	char	*infile;
-	char	*outfile;
-	bool	is_append;
-	bool	is_heredoc;
-	char	*del;
-	char	*appendfile;
-	struct s_command	*next;
-}				t_command;
+// typedef struct s_command
+// {
+// 	char	**args;
+// 	char	*infile;
+// 	char	*outfile;
+// 	bool	is_append;
+// 	bool	is_heredoc;
+// 	char	*del;
+// 	char	*appendfile;
+// 	struct s_command	*next;
+// }				t_command;
 
 typedef enum
 {
@@ -62,7 +63,7 @@ typedef struct s_lexer
 	char c;
 	unsigned int i;
 	char *content;
-}t_lexer;
+}	t_lexer;
 
 
 
@@ -71,10 +72,10 @@ typedef struct s_lexer
 
 t_command *parse_line(char *line);
 void free_commands(t_command *cmd);
-t_command	*parcer(char *line);
+t_command	*parcer(char *line, t_env *envp);
 char	*ft_strtrim(char const *s1, char const *set);
 bool    syntaxe_error(char *str);
 
-char *expanation_token_env_var(char *str);
+char *expanation_token_env_var(char *str,  t_env *envp);
 
 #endif

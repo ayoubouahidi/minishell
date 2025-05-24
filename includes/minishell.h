@@ -2,6 +2,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// #include "parser.h"
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
@@ -16,7 +17,6 @@
 # include <signal.h>
 
 #include "libft.h"
-#include "parser.h"
 
 
 # define SUCCESS 0
@@ -44,6 +44,18 @@ typedef struct s_env
 //     char **appendfile;
 //     struct s_command *next;
 // } t_command;
+
+typedef struct s_command
+{
+	char	**args;
+	char	*infile;
+	char	*outfile;
+	bool	is_append;
+	bool	is_heredoc;
+	char	*del;
+	char	*appendfile;
+	struct s_command	*next;
+}				t_command;
 
 typedef struct s_pipe
 {

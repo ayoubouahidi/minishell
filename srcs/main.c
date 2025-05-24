@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "parser.h"
 
 static void init_data(t_data *data, char **envp)
 {
@@ -31,7 +31,7 @@ int main(int ac, char **av, char **envp)
         if (*line)
         {
             add_history(line);
-            data.cmd = parcer(line);
+            data.cmd = parcer(line, data.env);
             if (data.cmd)
             {
                 // printf("test done\n");
