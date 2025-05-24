@@ -521,7 +521,7 @@ t_command* parser_commande(t_token** tokendd)
 t_command	*parcer(char *line, t_env *envp)
 {
 	char	*trim;
-	char *expantion;
+	// char *expantion;
 	t_token *token;
 	t_token *head_token;
 	t_lexer *lexer;
@@ -541,12 +541,13 @@ t_command	*parcer(char *line, t_env *envp)
 				token = tokenize(lexer);
 
 				printf("token(%d, %s)\n", token->type, token->value);
-				if(token->type == WORD)
-				{
-					expantion = expanation_token_env_var(token->value , envp);
-					free(token->value);
-					token->value = expantion;
-				}
+				expantion_remove_quotes(token, envp);
+				// if(token->type == WORD)
+				// {
+				// 	expantion = expanation_token_env_var(token->value , envp);
+				// 	free(token->value);
+				// 	token->value = expantion;
+				// }
 				ft_lstadd_back_token(&head_token, token);
 				if (token->type  == ENDF)
 					break;

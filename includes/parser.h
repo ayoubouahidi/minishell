@@ -77,5 +77,6 @@ char	*ft_strtrim(char const *s1, char const *set);
 bool    syntaxe_error(char *str);
 
 char *expanation_token_env_var(char *str,  t_env *envp);
+void	expantion_remove_quotes(t_token *token, t_env *envp);
 
 #endif

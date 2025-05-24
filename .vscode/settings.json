@@ -1,6 +1,7 @@
 {
   "files.associations": {
-    "*.ejs": "html",
-    "readline.h": "c"
-  }
+	"*.ejs": "html",
+	"readline.h": "c",
+	"minishell.h": "c"
+}
 }
