@@ -286,14 +286,46 @@ t_token* is_word(t_lexer *lexer)
 	t_lexer tmp;
 	int	count;
 	char *value;
+	bool quoted;
 
 	tmp = *lexer;
 	count = 0;
+	quoted = false;
 	while (ft_isalnum(tmp.c))
 	{
 		count++;
 		increment_using_index(&tmp);
 	}
+	// to handle export name="ayoub" 
+	// lenght counter
+	if (tmp.c == '=')
+	{
+		count++;
+		increment_using_index(&tmp);
+		if(tmp.c == '"')
+		{
+			increment_using_index(&tmp);
+			quoted = true;
+			while (tmp.c != '"')
+			{	
+				// printf("in token && quoted inside string ==> %c\n", tmp.c);
+
+				count++;
+				increment_using_index(&tmp);
+			}
+		}
+		else
+		{
+			while (ft_isalnum(tmp.c))
+			{
+				count++;
+				increment_using_index(&tmp);
+			}
+		}
+	}
+	if (quoted)
+		count = count + 2;
+	// finish
 	value = (char *)malloc(count + 1);	
 	count = 0;
 	while (ft_isalnum(lexer->c))
@@ -302,9 +334,46 @@ t_token* is_word(t_lexer *lexer)
 		count++;
 		increment_using_index(lexer);
 	}
+	// to handle export name="ayoub" 
+	if (lexer->c == '=')
+	{
+		value[count] = lexer->c;
+		count++;
+		increment_using_index(lexer);
+		if (lexer->c == '"')
+		{
+			value[count] = lexer->c;
+			count++;
+			increment_using_index(lexer);
+			while (lexer->c != '"')
+			{
+				value[count] = lexer->c;
+				printf("value is <%c>\n", value[count]);
+				count++;
+				increment_using_index(lexer);
+			}
+			value[count] = lexer->c;
+			count++;
+			increment_using_index(lexer);
+		}
+		else
+		{
+			while (ft_isalnum(lexer->c))
+			{
+				value[count] = lexer->c;
+				count++;
+				increment_using_index(lexer);
+			}
+		}
+	}
+
+
+	// finish
 	value[count] = '\0';
 	return (creat_token(WORD, value));
 }
+
+
 char *tostr(char c)
 {
 	char *val;
@@ -344,17 +413,33 @@ t_token* check_append(t_lexer* lexer)
 	}
 	return (creat_token(OUTPUT_RED, tostr('>')));
 }
+
+// t_token* retreive_key(lexer)
+// {
+// 	char *result;
+	
+
+// 	return (creat_token(WORD, result));
+// }
+
+
 // tokenize
 
 t_token	*tokenize(t_lexer *lexer) 
 {
+	bool isword;
+
+	isword = false;
 	while (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content))
 	{
 		if(lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n' || lexer->c == '\r' || lexer->c == '\f' || lexer->c == '\v')
 			while (lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n' || lexer->c == '\r' || lexer->c == '\f' || lexer->c == '\v')
 				increment_using_index(lexer);
 		if (ft_isalnum(lexer->c))
+		{
+			isword = true;
 			return (is_word(lexer));
+		}
 		if (lexer->c == '|')
 		{
 			increment_using_index(lexer);
@@ -364,8 +449,11 @@ t_token	*tokenize(t_lexer *lexer)
 			return (chech_herdoc(lexer));
 		if (lexer->c == '>')
 			return (check_append(lexer));
-		if(lexer->c == '"')
+		if(lexer->c == '"' && isword == false)
+		{
+			printf("hey im here\n");
 			return string_process(lexer);
+		}
 		increment_using_index(lexer);
 	}
 	
@@ -539,8 +627,8 @@ t_command	*parcer(char *line, t_env *envp)
 			while(1)
 			{
 				token = tokenize(lexer);
-
 				printf("token(%d, %s)\n", token->type, token->value);
+				// printf("test 0");
 				expantion_remove_quotes(token, envp);
 				// if(token->type == WORD)
 				// {

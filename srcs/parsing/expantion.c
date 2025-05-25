@@ -5,20 +5,121 @@
 #include <stdbool.h>
 #include "../../includes/parser.h"
 
+char *normal_var(int *i, char *result, t_env *envp)
+{
+
+	char *var;
+    char *env_var = NULL;
+    char *tmp;
+    t_env *tmp1;
+    int count = 0;
+    int pos;
+
+	(*i)++;
+	pos = *i;
+    while (result[*i] && ft_isalnum(result[*i]))
+	{
+		(*i)++;
+		count++;
+	}
+	var = ft_substr(result, pos, count);
+	tmp1 = envp;
+	while (tmp1)
+	{
+		if (!strcmp(tmp1->key, var))
+		{
+			env_var = tmp1->value;
+			printf("<<RERWRWEREREWRValue>> ==> %s\n", tmp1->value);
+			printf("test done ");
+			break;
+		}
+		tmp1 = tmp1->next;
+	}
+	printf("env_var ==> %s\n", env_var);
+	if (env_var)
+	{
+		tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + ft_strlen(env_var) + 1, sizeof(char));
+		ft_strlcpy(tmp, result, pos);
+		ft_strlcat(tmp, env_var, ft_strlen(tmp) + ft_strlen(env_var) + 1);
+		ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
+	}
+	else
+	{
+		tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + 1, sizeof(char));
+		ft_strlcpy(tmp, result, pos);
+		ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
+	}
+	free(var);
+	free(result); 
+    *i = pos - 1;
+	return tmp;	
+}
+
+char *expand_process(int *i, char *result, t_env *envp)
+{
+	// char *var;
+    // char *env_var = NULL;
+    // char *tmp;
+    // t_env *tmp1;
+    // int count = 0;
+    // int pos;
+
+    if (result[*i] == '$' && ft_isalpha(result[*i + 1]))
+    {
+		return (normal_var(i, result, envp));
+        // (*i)++;
+        // pos = *i;
+        // while (result[*i] && ft_isalnum(result[*i]))
+        // {
+        //     (*i)++;
+        //     count++;
+        // }
+        // var = ft_substr(result, pos, count);
+        // tmp1 = envp;
+        // while (tmp1)
+        // {
+        //     if (!strcmp(tmp1->key, var))
+        //     {
+        //         env_var = tmp1->value;
+        //         printf("<<RERWRWEREREWRValue>> ==> %s\n", tmp1->value);
+        //         printf("test done ");
+        //         break;
+        //     }
+        //     tmp1 = tmp1->next;
+        // }
+        // printf("env_var ==> %s\n", env_var);
+        // if (env_var)
+        // {
+        //     tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + ft_strlen(env_var) + 1, sizeof(char));
+        //     ft_strlcpy(tmp, result, pos);
+        //     ft_strlcat(tmp, env_var, ft_strlen(tmp) + ft_strlen(env_var) + 1);
+        //     ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
+        // }
+        // else
+        // {
+        //     tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + 1, sizeof(char));
+        //     ft_strlcpy(tmp, result, pos);
+        //     ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
+        // }
+        // free(var); // Don't forget to free the variable name
+        // free(result); // Free the old result
+        // *i = pos - 1;
+        // return tmp;
+    }
+    return result;
+}
 
 char *expanation_token_env_var(char *str, t_env *envp)
 {
 	char	*result;
-	char	*var;
-	char	*env_var;
-	char	*tmp;
+	// char	*var;
+	// char	*env_var;
+	// char	*tmp;
 	t_env	*tmp1;
-	// char	*key;
-	// char	*val;
 	int i;
 	int count;
-	int	pos;
-	int j;
+	// int	pos;
+	// int j;
 
 	
 	count = 0;
@@ -27,52 +128,45 @@ char *expanation_token_env_var(char *str, t_env *envp)
 	tmp1 = envp;
 	while (result[i] != '\0')
 	{
-		if (result[i] == '$' && ft_isalpha(result[i + 1]))
-		{
-			i++;
-			pos = i;
-			while (result[i] && ft_isalnum(result[i]) )
-			{
-				i++;
-				count++;
-			}
-			var = ft_substr(result, pos, count);
-			j = 0;
-			while (tmp1)
-			{
-				// printf("var ==> (%s)\n", var);
-				printf("env key ==> (%s)\n", tmp1->key);
-				if (strcmp(tmp1->key, var))
-				{
-					env_var = tmp1->value;
-					printf("<<Value>> ==> %s\n", tmp1->value);
-					printf("test done ");
-				}
-				else
-					env_var = NULL;
-				tmp1 = tmp1->next;
-			}
-
-			// env_var = getenv(var);
-			// env_var
-
-			printf("env_var ==> %s\n", env_var);
-			if (env_var)
-			{
-				tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + ft_strlen(env_var) + 1, sizeof(char));
-				ft_strlcpy(tmp, result, pos);
-				ft_strlcat(tmp, env_var, ft_strlen(tmp) + ft_strlen(env_var) + 1);
-				ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
-				result = tmp;
-			}
-			else
-			{
-				tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + 1, sizeof(char));
-				ft_strlcpy(tmp, result, pos);
-				ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
-				result = tmp;
-			}
-		}
+		result = expand_process(&i, result, tmp1);
+		// if (result[i] == '$' && ft_isalpha(result[i + 1]))
+		// {
+			// i++;
+			// pos = i;
+			// while (result[i] && ft_isalnum(result[i]) )
+			// {
+			// 	i++;
+			// 	count++;
+			// }
+			// var = ft_substr(result, pos, count);
+			// j = 0;
+			// while (tmp1)
+			// {
+			// 	if (!strcmp(tmp1->key, var))
+			// 	{
+			// 		env_var = tmp1->value;
+			// 		printf("<<RERWRWEREREWRValue>> ==> %s\n", tmp1->value);
+			// 		printf("test done ");
+			// 	}
+			// 	tmp1 = tmp1->next;
+			// }
+			// printf("env_var ==> %s\n", env_var);
+			// if (env_var)
+			// {
+			// 	tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + ft_strlen(env_var) + 1, sizeof(char));
+			// 	ft_strlcpy(tmp, result, pos);
+			// 	ft_strlcat(tmp, env_var, ft_strlen(tmp) + ft_strlen(env_var) + 1);
+			// 	ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
+			// 	result = tmp;
+			// }
+			// else
+			// {
+			// 	tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + 1, sizeof(char));
+			// 	ft_strlcpy(tmp, result, pos);
+			// 	ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
+			// 	result = tmp;
+			// }
+		// }
 		i++;
 	}
 	return (result);
@@ -82,6 +176,7 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 {
 	char *result;
 
+	// printf("test : done");
 	if(token->type == WORD)
 	{
 		result = expanation_token_env_var(token->value , envp);

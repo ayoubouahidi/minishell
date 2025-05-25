@@ -2,6 +2,18 @@
   "files.associations": {
 	"*.ejs": "html",
 	"readline.h": "c",
-	"minishell.h": "c"
+	"minishell.h": "c",
+	"charconv": "c",
+	"chrono": "c",
+	"optional": "c",
+	"format": "c",
+	"ratio": "c",
+	"system_error": "c",
+	"array": "c",
+	"functional": "c",
+	"tuple": "c",
+	"type_traits": "c",
+	"utility": "c",
+	"algorithm": "c"
 }
 }
