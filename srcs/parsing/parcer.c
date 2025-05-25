@@ -254,30 +254,37 @@ void	increment_using_index(t_lexer *lexer)
 	}
 }
 
-t_token *string_process(t_lexer *lexer)
+t_token *string_process(t_lexer *lexer, bool isdouble)
 {
 	t_lexer tmp;
 	int count;
 	char* value;
-	count = 0;
+	char stop;
 
+	count = 0;
+	stop = '\'';
+	if (isdouble)
+		stop = '"';
 	increment_using_index(lexer);
 	tmp = *lexer;
-	while (tmp.c != '"')
+	while (tmp.c != stop)
 	{
 		count++;
 		increment_using_index(&tmp);
 	}
-	value = (char *)malloc(count + 1);
+	value = (char *)malloc(count + 3);
 	count = 0;
-	while (lexer->c != '"')
+	value[count] = stop;
+	count++;
+	while (lexer->c != stop)
 	{
 		value[count] = lexer->c; 
 		increment_using_index(lexer);
 		count++;
 	}
 	increment_using_index(lexer);
-	value[count] = '\0';
+	value[count] = stop;
+	value[count + 1] = '\0';
 	return (creat_token(WORD, value));
 }
 
@@ -428,7 +435,9 @@ t_token* check_append(t_lexer* lexer)
 t_token	*tokenize(t_lexer *lexer) 
 {
 	bool isword;
+	bool isdouble;
 
+	isdouble = false;
 	isword = false;
 	while (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content))
 	{
@@ -449,10 +458,12 @@ t_token	*tokenize(t_lexer *lexer)
 			return (chech_herdoc(lexer));
 		if (lexer->c == '>')
 			return (check_append(lexer));
-		if(lexer->c == '"' && isword == false)
+		if((lexer->c == '"' || lexer->c == '\'') && isword == false)
 		{
+			if (lexer->c == '"')
+				isdouble = true;
 			printf("hey im here\n");
-			return string_process(lexer);
+			return string_process(lexer, isdouble);
 		}
 		increment_using_index(lexer);
 	}
