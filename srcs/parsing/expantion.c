@@ -68,16 +68,39 @@ char *squotes_expand(int *i, char* result)
 		(*i)++;
 		count++;
 	}
-	tmp = ft_calloc(ft_strlen(result) - 2, sizeof(char));
-	ft_strlcpy(tmp, result + 1, count + 1);
+	tmp = ft_calloc(count + 1, sizeof(char));
+	ft_strlcpy(tmp, result + pos, count + 1);
 	return (tmp);
 }
 
 
-char *double_quotes_expand(int *i, char* result, t_env *envp)
+// char *normal_case_dquotes(int *i , char  *result,t_env *envp)
+// {
+
+// }
+
+
+char *double_quotes_expand(int *i, char *result, t_env *envp)
 {
-	// (*i)++;
-	
+	char *tmp;
+
+
+	(*i)++;
+	while (result[*i] && result[*i] != '"')
+	{
+		if (result[*i] == '$' && ft_isalnum(result[*i + 1]))
+			tmp = normal_var(i, result, envp);
+		else if (result[*i] == '$' && result[*i] == '?')
+			tmp = ft_itoa(0); // a refaire
+		else {
+			tmp = ft_calloc(ft_strlen(result), sizeof(char));
+			ft_strlcpy(tmp, result , ft_strlen(result));
+			(*i)++;
+		}
+	}
+	if (result[*i])
+		(*i)++;
+	return (tmp);
 }
 
 char *expand_process(int *i, char *result, t_env *envp)
@@ -225,6 +248,58 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 
 
 
+
+// handle single quotes
+
+/*
+char *squotes_expand(char *result, int *i)
+{
+    int start_pos = *i;
+    int total_len = 0;
+    int in_quotes = 0;
+    char *expanded;
+    
+    // First, count the total length needed
+    while (result[start_pos + total_len] && 
+           (ft_isalnum(result[start_pos + total_len]) || 
+            result[start_pos + total_len] == '\'' ||
+            in_quotes))
+    {
+        if (result[start_pos + total_len] == '\'')
+        {
+            in_quotes = !in_quotes; // Toggle quote state
+        }
+        total_len++;
+    }
+    
+    // Allocate memory for the entire word
+    expanded = ft_calloc(total_len + 1, sizeof(char));
+    if (!expanded)
+        return NULL;
+    
+    // Copy characters, handling quoted sections
+    int j = 0;
+    in_quotes = 0;
+    
+    for (int pos = start_pos; pos < start_pos + total_len; pos++)
+    {
+        if (result[pos] == '\'')
+        {
+            in_quotes = !in_quotes; // Toggle quote state
+            // Skip the quote character itself
+        }
+        else
+        {
+            expanded[j++] = result[pos];
+        }
+    }
+    
+    expanded[j] = '\0';
+    *i += total_len; // Update position in the original string
+    
+    return expanded;
+}
+*/
 
 
 

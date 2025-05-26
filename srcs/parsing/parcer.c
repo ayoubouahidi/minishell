@@ -288,96 +288,176 @@ t_token *string_process(t_lexer *lexer, bool isdouble)
 	return (creat_token(WORD, value));
 }
 
+// t_token* is_word(t_lexer *lexer)
+// {
+// 	t_lexer tmp;
+// 	int	count;
+// 	char *value;
+// 	bool quoted;
+
+// 	tmp = *lexer;
+// 	count = 0;
+// 	quoted = false;
+// 	while (ft_isalnum(tmp.c))
+// 	{
+// 		count++;
+// 		increment_using_index(&tmp);
+// 	}
+// 	// to handle export name="ayoub" 
+// 	// lenght counter
+// 	if (tmp.c == '=')
+// 	{
+// 		count++;
+// 		increment_using_index(&tmp);
+// 		if(tmp.c == '"')
+// 		{
+// 			increment_using_index(&tmp);
+// 			quoted = true;
+// 			while (tmp.c != '"')
+// 			{	
+// 				// printf("in token && quoted inside string ==> %c\n", tmp.c);
+
+// 				count++;
+// 				increment_using_index(&tmp);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			while (ft_isalnum(tmp.c))
+// 			{
+// 				count++;
+// 				increment_using_index(&tmp);
+// 			}
+// 		}
+// 	}
+// 	if (quoted)
+// 		count = count + 2;
+// 	// finish
+// 	value = (char *)malloc(count + 1);	
+// 	count = 0;
+// 	while (ft_isalnum(lexer->c))
+// 	{
+// 		value[count] = lexer->c;
+// 		count++;
+// 		increment_using_index(lexer);
+// 	}
+// 	// to handle export name="ayoub" 
+// 	if (lexer->c == '=')
+// 	{
+// 		value[count] = lexer->c;
+// 		count++;
+// 		increment_using_index(lexer);
+// 		if (lexer->c == '"')
+// 		{
+// 			value[count] = lexer->c;
+// 			count++;
+// 			increment_using_index(lexer);
+// 			while (lexer->c != '"')
+// 			{
+// 				value[count] = lexer->c;
+// 				printf("value is <%c>\n", value[count]);
+// 				count++;
+// 				increment_using_index(lexer);
+// 			}
+// 			value[count] = lexer->c;
+// 			count++;
+// 			increment_using_index(lexer);
+// 		}
+// 		else
+// 		{
+// 			while (ft_isalnum(lexer->c))
+// 			{
+// 				value[count] = lexer->c;
+// 				count++;
+// 				increment_using_index(lexer);
+// 			}
+// 		}
+// 	}
+
+
+// 	// finish
+// 	value[count] = '\0';
+// 	return (creat_token(WORD, value));
+// }
+
 t_token* is_word(t_lexer *lexer)
 {
-	t_lexer tmp;
-	int	count;
-	char *value;
-	bool quoted;
+    t_lexer tmp;
+    int count;
+    char *value;
 
-	tmp = *lexer;
-	count = 0;
-	quoted = false;
-	while (ft_isalnum(tmp.c))
-	{
-		count++;
-		increment_using_index(&tmp);
-	}
-	// to handle export name="ayoub" 
-	// lenght counter
-	if (tmp.c == '=')
-	{
-		count++;
-		increment_using_index(&tmp);
-		if(tmp.c == '"')
-		{
-			increment_using_index(&tmp);
-			quoted = true;
-			while (tmp.c != '"')
-			{	
-				// printf("in token && quoted inside string ==> %c\n", tmp.c);
-
-				count++;
-				increment_using_index(&tmp);
-			}
-		}
-		else
-		{
-			while (ft_isalnum(tmp.c))
-			{
-				count++;
-				increment_using_index(&tmp);
-			}
-		}
-	}
-	if (quoted)
-		count = count + 2;
-	// finish
-	value = (char *)malloc(count + 1);	
-	count = 0;
-	while (ft_isalnum(lexer->c))
-	{
-		value[count] = lexer->c;
-		count++;
-		increment_using_index(lexer);
-	}
-	// to handle export name="ayoub" 
-	if (lexer->c == '=')
-	{
-		value[count] = lexer->c;
-		count++;
-		increment_using_index(lexer);
-		if (lexer->c == '"')
-		{
-			value[count] = lexer->c;
-			count++;
-			increment_using_index(lexer);
-			while (lexer->c != '"')
-			{
-				value[count] = lexer->c;
-				printf("value is <%c>\n", value[count]);
-				count++;
-				increment_using_index(lexer);
-			}
-			value[count] = lexer->c;
-			count++;
-			increment_using_index(lexer);
-		}
-		else
-		{
-			while (ft_isalnum(lexer->c))
-			{
-				value[count] = lexer->c;
-				count++;
-				increment_using_index(lexer);
-			}
-		}
-	}
-
-
-	// finish
-	value[count] = '\0';
-	return (creat_token(WORD, value));
+    tmp = *lexer;
+    count = 0;
+    
+    // First pass: count all characters in the word
+    while (ft_isalnum(tmp.c) || tmp.c == '=' || tmp.c == '"')
+    {
+        if (tmp.c == '"')
+        {
+            // Count the opening quote
+            count++;
+            increment_using_index(&tmp);
+            
+            // Count everything until closing quote
+            while (tmp.c != '"' && tmp.c != '\0')
+            {
+                count++;
+                increment_using_index(&tmp);
+            }
+            
+            // Count the closing quote if present
+            if (tmp.c == '"')
+            {
+                count++;
+                increment_using_index(&tmp);
+            }
+        }
+        else
+        {
+            count++;
+            increment_using_index(&tmp);
+        }
+    }
+    
+    // Allocate memory
+    value = (char *)malloc(count + 1);
+    if (!value)
+        return NULL;
+    
+    // Second pass: copy characters
+    count = 0;
+    
+    while (ft_isalnum(lexer->c) || lexer->c == '=' || lexer->c == '"' || lexer->c == '\'')
+    {
+        if (lexer->c == '"' || lexer->c == '\'')
+        {
+            // Copy the opening quote
+            value[count++] = lexer->c;
+            increment_using_index(lexer);
+            
+            // Copy everything until closing quote
+            while ((lexer->c != '"' || lexer->c == '\'') && lexer->c != '\0')
+            {
+                value[count++] = lexer->c;
+                increment_using_index(lexer);
+            }
+            
+            // Copy the closing quote if present
+            if (lexer->c == '"' || lexer->c == '\'')
+            {
+                value[count++] = lexer->c;
+                increment_using_index(lexer);
+            }
+        }
+        else
+        {
+            value[count++] = lexer->c;
+            increment_using_index(lexer);
+        }
+    }
+    
+    value[count] = '\0';
+    return (creat_token(WORD, value));
 }
 
 
@@ -462,7 +542,7 @@ t_token	*tokenize(t_lexer *lexer)
 		{
 			if (lexer->c == '"')
 				isdouble = true;
-			printf("hey im here\n");
+			// printf("hey im here\n");
 			return string_process(lexer, isdouble);
 		}
 		increment_using_index(lexer);
