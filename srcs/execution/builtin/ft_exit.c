@@ -37,7 +37,6 @@ int ft_exit(t_data *data, char **args)
     }
     else
         exit_code = ft_atoi(args[1]);
-    
     clean_exit(data, exit_code % 256);
     return (exit_code);
 }

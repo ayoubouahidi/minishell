@@ -24,7 +24,7 @@ static pid_t create_pipe_and_fork(int *fd, t_command *cmd)
     return pid;
 }
 
-static void setup_child_io(int pre_fd, int *fd, t_command *cmd)
+static void setup_child(int pre_fd, int *fd, t_command *cmd)
 {
     if (pre_fd != -1)
     {
@@ -71,36 +71,28 @@ static void parent_cleanup(int *pre_fd, int *fd, t_command **cmd)
 
 void execute_pipe(t_data *data)
 {
-    int fd[2];
-    int pre_fd = -1;
-    pid_t pids[128];
-    int i = 0;
-    t_command *current = data->cmd;
+	t_pipe	p;
+	int		status;
+	int		j;
 
-    while (current)
-    {
-        pid_t pid = create_pipe_and_fork(fd, current);
-        pids[i++] = pid;
-
-        if (pid == 0)
-        {
-            setup_child_io(pre_fd, fd, current);
-            execute_child(data, current);
-        }
-        else
-        {
-            parent_cleanup(&pre_fd, fd, &current);
-            current = current->next;
-        }
-    }
-
-    int status;
-    int j = 0;
-    while (j < i)
-    {
-        waitpid(pids[j], &status, 0);
-        if (WIFEXITED(status) && j == i - 1)
-            data->exit_status = WEXITSTATUS(status);
-        j++;
-    }
+	p.pre_fd = -1;
+	p.i = 0;
+	p.cur = data->cmd;
+	while (p.cur)
+	{
+		p.pid = create_pipe_and_fork(p.fd, p.cur);
+		p.pids[p.i++] = p.pid;
+		if (p.pid == 0)
+			setup_child(p.pre_fd, p.fd, p.cur), execute_child(data, p.cur);
+		else
+			parent_cleanup(&p.pre_fd, p.fd, &p.cur), p.cur = p.cur->next;
+	}
+	j = 0;
+	while (j < p.i)
+	{
+		waitpid(p.pids[j], &status, 0);
+		if (WIFEXITED(status) && j == p.i - 1)
+			data->exit_status = WEXITSTATUS(status);
+		j++;
+	}
 }

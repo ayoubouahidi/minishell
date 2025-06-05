@@ -45,14 +45,18 @@ int	ft_unset(t_data *data, char **args)
 {
 	int		i;
 	t_env	*found;
+	int		exit_status;
 
 	i = 1;
+	exit_status = SUCCESS;
 	while (args[i])
 	{
 		if (!is_valid_key(args[i]))
 		{
-			printf("unset: `%s': not a valid identifier\n", args[i]);
-			data->exit_status = 1;
+			ft_putstr_fd("unset: `", STDERR_FILENO);
+			ft_putstr_fd(args[i], STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			exit_status = FAILURE;
 		}
 		else
 		{
@@ -62,5 +66,6 @@ int	ft_unset(t_data *data, char **args)
 		}
 		i++;
 	}
-	return (SUCCESS);
+	data->exit_status = exit_status;
+	return (exit_status);
 }

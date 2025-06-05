@@ -1,70 +1,87 @@
-#include "minishell.h"
+#include "../../../includes/minishell.h"
 
-int ft_cd(t_data *data, char **args)
+static int	count_args(char **args)
 {
-    char    cwd[PATH_MAX];
-    char    *path;
-    char    *oldpwd;
+	int	count;
 
-    oldpwd = getcwd(NULL, 0);
-    if (!oldpwd)
-        return (perror("cd"), FAILURE);
-    
-    if (!args[1] || ft_strcmp(args[1], "~") == 0)
-        path = get_env_value(data->env, "HOME");
-    else if (ft_strcmp(args[1], "-") == 0)
-        path = get_env_value(data->env, "OLDPWD");
-    else
-        path = args[1];
-    
-    if (!path)
-        return (free(oldpwd), ft_putstr_fd("minishell: cd: HOME not set\n", 2), FAILURE);
-    
-    if (chdir(path) == -1)
-    {
-        free(oldpwd);
-        ft_putstr_fd("minishell: cd: ", 2);
-        perror(path);
-        return (FAILURE);
-    }
-    
-    update_env(data->env, "OLDPWD", oldpwd);
-    if (!getcwd(cwd, PATH_MAX))
-        return (free(oldpwd), perror("cd"), FAILURE);
-    update_env(data->env, "PWD", cwd);
-    
-    free(oldpwd);
-    data->exit_status = SUCCESS;
-    return (SUCCESS);
+	count = 0;
+	while (args[count])
+		count++;
+	return (count);
 }
 
-int is_builtin(char *cmd)
+static int	handle_cd_error(char *oldpwd, char *error_msg, t_data *data)
 {
-    if (!cmd)
-        return 0;
-    return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "echo") ||
-           !ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "pwd") ||
-           !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "export") ||
-           !ft_strcmp(cmd, "unset"));
+	free(oldpwd);
+	ft_putstr_fd(error_msg, 2);
+	data->exit_status = FAILURE;
+	return (FAILURE);
 }
 
-int execute_builtin(t_data *data)
+static char	*get_target_path(t_data *data, char **args, char *oldpwd)
 {
-    char *cmd = data->cmd->args[0];
+	char	*path;
 
-    if (!ft_strcmp(cmd, "cd"))
-        return ft_cd(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "echo"))
-        return ft_echo(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "exit"))
-        return ft_exit(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "pwd"))
-        return ft_pwd(data);
-    if (!ft_strcmp(cmd, "env"))
-        return ft_env(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "export"))
-        return ft_export(data, data->cmd->args);
-    if (!ft_strcmp(cmd, "unset"))
-        return ft_unset(data, data->cmd->args);
-    return 0;
+	if (!args[1] || ft_strcmp(args[1], "~") == 0)
+		path = get_env_value(data->env, "HOME");
+	else if (ft_strcmp(args[1], "-") == 0)
+	{
+		path = get_env_value(data->env, "OLDPWD");
+		if (!path)
+		{
+			handle_cd_error(oldpwd, "minishell: cd: OLDPWD not set\n", data);
+			return (NULL);
+		}
+	}
+	else
+		path = args[1];
+	if (!path)
+	{
+		handle_cd_error(oldpwd, "minishell: cd: HOME not set\n", data);
+		return (NULL);
+	}
+	return (path);
+}
+
+static int	change_directory(char *path, char *oldpwd, t_data *data)
+{
+	char	cwd[PATH_MAX];
+
+	if (chdir(path) == -1)
+	{
+		free(oldpwd);
+		ft_putstr_fd("minishell: cd: ", 2);
+		perror(path);
+		data->exit_status = FAILURE;
+		return (FAILURE);
+	}
+	update_env(data->env, "OLDPWD", oldpwd);
+	if (!getcwd(cwd, PATH_MAX))
+		return (free(oldpwd), perror("cd"), FAILURE);
+	update_env(data->env, "PWD", cwd);
+	return (SUCCESS);
+}
+
+int	ft_cd(t_data *data, char **args)
+{
+	char	*path;
+	char	*oldpwd;
+
+	if (count_args(args) > 2)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		data->exit_status = FAILURE;
+		return (FAILURE);
+	}
+	oldpwd = getcwd(NULL, 0);
+	if (!oldpwd)
+		return (perror("cd"), FAILURE);
+	path = get_target_path(data, args, oldpwd);
+	if (!path)
+		return (FAILURE);
+	if (change_directory(path, oldpwd, data) == FAILURE)
+		return (FAILURE);
+	free(oldpwd);
+	data->exit_status = SUCCESS;
+	return (SUCCESS);
 }

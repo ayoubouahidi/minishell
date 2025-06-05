@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 char *get_env_value(t_env *env, const char *key)
 {
@@ -53,7 +53,7 @@ char *extract_value(char *str)
         return (NULL);
     
     i++;
-    char *value = malloc(strlen(str + i) + 1);
+    char *value = malloc(ft_strlen(str + i) + 1);
     if (!value)
         return (NULL);
     while (str[i])
@@ -72,7 +72,6 @@ char *extract_key(char *str)
     char *key = malloc(i + 1);
     if (!key)
         return (NULL);
-
     i = 0;
     while (str[i] && str[i] != '=')
     {
@@ -88,13 +87,19 @@ void init_env(t_data *data, char **envp)
 {
     int i = 0;
     t_env *env = NULL;
+    char *key;
+    char *value;
 
     while (envp[i])
     {
-        char *key = extract_key(envp[i]);
-        char *value = extract_value(envp[i]);
-        if (key && value)
+        key = extract_key(envp[i]);
+        value = extract_value(envp[i]);
+        if (key)
+        {
             add_env_node(&env, new_env_node(key, value));
+            free(key);
+            free(value);
+        }
         i++;
     }
     data->env = env;

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../../includes/minishell.h"
 
 static char *search_path(char **paths, char *cmd)
 {
@@ -56,10 +56,7 @@ char *get_file_name(char *files)
 
     if ((files[start] == '\'' && files[end - 1] == '\'') || 
         (files[start] == '\"' && files[end - 1] == '\"'))
-    {
-        start++;
-        end--;
-    }
+        start++, end--;
     file = malloc(end - start + 1);
     if (!file)
         return NULL;
@@ -67,4 +64,34 @@ char *get_file_name(char *files)
         file[i++] = files[start++];
     file[i] = '\0';
     return file;
+}
+int is_builtin(char *cmd)
+{
+    if (!cmd)
+        return 0;
+    return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "echo") ||
+           !ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "pwd") ||
+           !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "export") ||
+           !ft_strcmp(cmd, "unset"));
+}
+
+int execute_builtin(t_data *data)
+{
+    char *cmd = data->cmd->args[0];
+
+    if (!ft_strcmp(cmd, "cd"))
+        return ft_cd(data, data->cmd->args);
+    if (!ft_strcmp(cmd, "echo"))
+        return ft_echo(data->cmd->args);
+    if (!ft_strcmp(cmd, "exit"))
+        return ft_exit(data, data->cmd->args);
+    if (!ft_strcmp(cmd, "pwd"))
+        return ft_pwd(data);
+    if (!ft_strcmp(cmd, "env"))
+        return ft_env(data, data->cmd->args);
+    if (!ft_strcmp(cmd, "export"))
+        return ft_export(data, data->cmd->args);
+    if (!ft_strcmp(cmd, "unset"))
+        return ft_unset(data, data->cmd->args);
+    return 0;
 }

@@ -28,8 +28,10 @@ void free_array(char **array)
 
 void clean_exit(t_data *data, int exit_code)
 {
-    // free_cmd(data->cmd);
-    free_env(data->env);
+    if (data->cmd)
+        free_cmd(data->cmd);
+    if (data->env)
+        free_env(data->env);
     exit(exit_code);
 }
 

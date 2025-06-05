@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../../includes/minishell.h"
 
 bool	is_valid_key(const char *key)
 {
@@ -43,34 +43,49 @@ static void	update_or_add_env(t_data *data, char *key, char *val)
 	add_env_node(&data->env, new_env_node(key, val));
 }
 
-int	ft_export(t_data *data, char **args)
+static int	process_export_arg(t_data *data, char *arg)
 {
 	char	*key;
 	char	*val;
-	int		i;
+
+	key = extract_key(arg);
+	if (!is_valid_key(key))
+	{
+		print_invalid(arg);
+		free(key);
+		return (FAILURE);
+	}
+	else if (ft_strchr(arg, '='))
+	{
+		val = extract_value(arg);
+		update_or_add_env(data, key, val);
+		free(val);
+		free(key);
+	}
+	else
+		free(key);
+	return (SUCCESS);
+}
+
+int	ft_export(t_data *data, char **args)
+{
+	int	i;
+	int	exit_status;
 
 	if (!args[1])
-		return (sort_and_print_env(data->env), SUCCESS);
+	{
+		sort_and_print_env(data->env);
+		data->exit_status = SUCCESS;
+		return (SUCCESS);
+	}
 	i = 1;
+	exit_status = SUCCESS;
 	while (args[i])
 	{
-		key = extract_key(args[i]);
-		if (!is_valid_key(key))
-		{
-			print_invalid(args[i]);
-			free(key);
-		}
-		else if (ft_strchr(args[i], '='))
-		{
-			val = extract_value(args[i]);
-			update_or_add_env(data, key, val);
-			free(val);
-			free(key);
-		}
-		else
-			free(key);
+		if (process_export_arg(data, args[i]) == FAILURE)
+			exit_status = FAILURE;
 		i++;
 	}
-	data->exit_status = SUCCESS;
-	return (SUCCESS);
+	data->exit_status = exit_status;
+	return (exit_status);
 }
