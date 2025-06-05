@@ -79,17 +79,15 @@ static int	handle_redirections(t_command *current_cmd, t_token **tokens)
 	ft_bzero(new_redir, sizeof(t_redirections));
 	new_redir->type = (*tokens)->type;
 	(*tokens) = (*tokens)->next;
-	if (!(*tokens) || (*tokens)->type == TOKEN_REDIRECT_IN
-		|| (*tokens)->type == TOKEN_REDIRECT_OUT
-		|| (*tokens)->type == TOKEN_APPEND || (*tokens)->type == TOKEN_HEREDOC)
+	if (!(*tokens) || (*tokens)->type != TOKEN_WORD)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
+		free(new_redir);
 		return (0);
+	}
 	new_redir->file = ft_strdup((*tokens)->value);
 	new_redir->quote_type = (*tokens)->quote_type;
 	add_redirections(current_cmd, new_redir);
-	if (new_redir->type == TOKEN_APPEND)
-		current_cmd->append = 1;
-	else if (new_redir->type == TOKEN_HEREDOC)
-		current_cmd->heredoc = 1;
 	return (1);
 }
 

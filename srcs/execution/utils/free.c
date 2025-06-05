@@ -54,6 +54,7 @@ void cleanup_child_resources(char *path, char **envp)
 void free_cmd(t_command *cmd)
 {
     t_command *tmp;
+    t_redirections *redir, *redir_tmp;
 
     while (cmd)
     {
@@ -70,14 +71,18 @@ void free_cmd(t_command *cmd)
             free(cmd->args);
         }
 
-        if (cmd->infile)
-            free(cmd->infile);
-        if (cmd->outfile)
-            free(cmd->outfile);
-        if (cmd->appendfile && cmd->appendfile != cmd->del)
-            free(cmd->appendfile);
-        if (cmd->del)
-            free(cmd->del);
+        if (cmd->here_doc_file)
+            free(cmd->here_doc_file);
+
+        redir = cmd->redirections;
+        while (redir)
+        {
+            redir_tmp = redir->next;
+            if (redir->file)
+                free(redir->file);
+            free(redir);
+            redir = redir_tmp;
+        }
 
         free(cmd);
         cmd = tmp;

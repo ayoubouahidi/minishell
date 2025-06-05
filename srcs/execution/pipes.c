@@ -41,21 +41,21 @@ static void setup_child(int pre_fd, int *fd, t_command *cmd)
 
 static void execute_child(t_data *data, t_command *cmd)
 {
-    char *path;
+	char *path;
 
-    setup_redirections(cmd);
-    path = get_path(data, cmd->args[0]);
-    if (!path)
-    {
-        ft_putstr_fd("minishell: ", STDERR_FILENO);
-        ft_putstr_fd(cmd->args[0], STDERR_FILENO);
-        ft_putendl_fd(": command not found", STDERR_FILENO);
-        exit(127);
-    }
-    execve(path, cmd->args, env_to_array(data->env));
-    perror("minishell: execve");
-    free(path);
-    exit(126);
+	setup_redirections(cmd);
+	path = get_path(data, cmd->args[0]);
+	if (!path)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+		ft_putendl_fd(": command not found", STDERR_FILENO);
+		exit(127);
+	}
+	execve(path, cmd->args, env_to_array(data->env));
+	perror("minishell: execve");
+	free(path);
+	exit(126);
 }
 
 static void parent_cleanup(int *pre_fd, int *fd, t_command **cmd)
