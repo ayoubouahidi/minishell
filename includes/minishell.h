@@ -139,7 +139,7 @@ char    *get_path(t_data *data, char *cmd);
 int execute_builtin(t_data *data);
 void    execute_pipe(t_data *data);
 int	execute_single_command(t_data *data);
-void setup_redirections(t_command *cmd);
+int	setup_redirections(t_command *cmd);
 
 /* Environment */
 void init_env(t_data *data, char **envp);

@@ -1,5 +1,18 @@
 #include "../../includes/minishell.h"
 
+static int is_empty_or_whitespace(char *str)
+{
+	if (!str)
+		return (1);
+	while (*str)
+	{
+		if (*str != ' ' && *str != '\t' && *str != '\n')
+			return (0);
+		str++;
+	}
+	return (1);
+}
+
 static int handle_input_redirection(t_redirections *redir)
 {
 	int fd;
@@ -10,7 +23,7 @@ static int handle_input_redirection(t_redirections *redir)
 	}
 	
 	// Check if file is valid
-	if (!redir->file || !redir->file[0])
+	if (is_empty_or_whitespace(redir->file))
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
 		return (-1);
@@ -40,9 +53,9 @@ static int handle_output_redirection(t_redirections *redir)
 	int flags;
 	
 	// Check if file is valid
-	if (!redir->file || !redir->file[0])
+	if (is_empty_or_whitespace(redir->file))
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: ambiguous redirect\n", STDERR_FILENO);
 		return (-1);
 	}
 	
@@ -94,12 +107,12 @@ static int handle_heredoc_redirection(t_command *cmd)
 	return (0);
 }
 
-void setup_redirections(t_command *cmd)
+int setup_redirections(t_command *cmd)
 {
 	t_redirections *redir;
 
 	if (!cmd || !cmd->redirections)
-		return;
+		return (0);
 	
 	// Process all redirections in order
 	redir = cmd->redirections;
@@ -108,21 +121,22 @@ void setup_redirections(t_command *cmd)
 		if (redir->type == TOKEN_REDIRECT_IN)
 		{
 			if (handle_input_redirection(redir) < 0)
-				exit(EXIT_FAILURE);
+				return (-1);
 		}
 		else if (redir->type == TOKEN_REDIRECT_OUT || redir->type == TOKEN_APPEND)
 		{
 			if (handle_output_redirection(redir) < 0)
-				exit(EXIT_FAILURE);
+				return (-1);
 		}
 		else if (redir->type == TOKEN_HEREDOC)
 		{
 			if (handle_heredoc_redirection(cmd) < 0)
-				exit(EXIT_FAILURE);
+				return (-1);
 		}
 		
 		redir = redir->next;
 	}
+	return (0);
 }
 
 

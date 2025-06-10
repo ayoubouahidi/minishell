@@ -10,7 +10,12 @@ static int	handle_builtin(t_data *data)
 
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
-	setup_redirections(data->cmd);
+	if (setup_redirections(data->cmd) < 0)
+	{
+		close(stdin_copy);
+		close(stdout_copy);
+		return (1);
+	}
 	status = execute_builtin(data);
 	dup2(stdin_copy, STDIN_FILENO);
 	dup2(stdout_copy, STDOUT_FILENO);
@@ -61,7 +66,8 @@ static int	launch_external_command(t_data *data)
 	}
 	if (pid_ch == 0)
 	{
-		setup_redirections(data->cmd);
+		if (setup_redirections(data->cmd) < 0)
+			exit(1);
 		envp = env_to_array(data->env);
 		execve(path, data->cmd->args, envp);
 		perror("minishell: execve");
@@ -77,7 +83,8 @@ static int	external_command(t_data *data)
 {
 	if (!data->cmd->args[0])
 	{
-		setup_redirections(data->cmd);
+		if (setup_redirections(data->cmd) < 0)
+			return (1);
 		return (0);
 	}
 	return (launch_external_command(data));
@@ -90,7 +97,8 @@ void	executer(t_data *data, char **envp)
 		return ;
 	if (!data->cmd->args[0])
 	{
-		setup_redirections(data->cmd);
+		if (setup_redirections(data->cmd) < 0)
+			data->exit_status = 1;
 		return ;
 	}
 	if (is_builtin(data->cmd->args[0]) && !data->cmd->next)
