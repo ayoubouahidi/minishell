@@ -254,37 +254,38 @@ void	increment_using_index(t_lexer *lexer)
 	}
 }
 
-t_token *string_process(t_lexer *lexer, bool isdouble)
+t_token *string_process(t_lexer *lexer)
 {
-	t_lexer tmp;
-	int count;
-	char* value;
-	char stop;
+	char *value;
+	int flag_single;
+	int flag_double;
+	size_t start;
 
-	count = 0;
-	stop = '\'';
-	if (isdouble)
-		stop = '"';
-	increment_using_index(lexer);
-	tmp = *lexer;
-	while (tmp.c != stop)
+	start = lexer->i;
+	flag_single = 0;
+	flag_double = 0;
+	while (lexer->c != '\0' && lexer->c != '|' && lexer->c != '<' && lexer->c != '>')
 	{
-		count++;
-		increment_using_index(&tmp);
-	}
-	value = (char *)malloc(count + 3);
-	count = 0;
-	value[count] = stop;
-	count++;
-	while (lexer->c != stop)
-	{
-		value[count] = lexer->c; 
+		if (lexer->c == '\'')
+		{
+			if (!flag_single)
+				flag_single++;
+			else
+				flag_single--;
+		}
+		if (lexer->c == '"')
+		{
+			if (!flag_double)
+				flag_double++;
+			else
+				flag_double--;
+		}
+		if (!flag_double && !flag_single && lexer->c == ' ')
+			break ;
 		increment_using_index(lexer);
-		count++;
 	}
-	increment_using_index(lexer);
-	value[count] = stop;
-	value[count + 1] = '\0';
+	value = ft_substr(lexer->content, start, lexer->i);
+	printf("walid : %s\n", value);
 	return (creat_token(WORD, value));
 }
 
@@ -380,7 +381,7 @@ t_token *string_process(t_lexer *lexer, bool isdouble)
 // 	return (creat_token(WORD, value));
 // }
 
-t_token* is_word(t_lexer *lexer)
+char *is_word(t_lexer *lexer)
 {
     t_lexer tmp;
     int count;
@@ -457,7 +458,7 @@ t_token* is_word(t_lexer *lexer)
     }
     
     value[count] = '\0';
-    return (creat_token(WORD, value));
+    return (value);
 }
 
 
@@ -514,7 +515,7 @@ t_token* check_append(t_lexer* lexer)
 
 t_token	*tokenize(t_lexer *lexer) 
 {
-	bool isword;
+	bool isword;	
 	bool isdouble;
 
 	isdouble = false;
@@ -524,11 +525,6 @@ t_token	*tokenize(t_lexer *lexer)
 		if(lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n' || lexer->c == '\r' || lexer->c == '\f' || lexer->c == '\v')
 			while (lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n' || lexer->c == '\r' || lexer->c == '\f' || lexer->c == '\v')
 				increment_using_index(lexer);
-		if (ft_isalnum(lexer->c))
-		{
-			isword = true;
-			return (is_word(lexer));
-		}
 		if (lexer->c == '|')
 		{
 			increment_using_index(lexer);
@@ -538,18 +534,14 @@ t_token	*tokenize(t_lexer *lexer)
 			return (chech_herdoc(lexer));
 		if (lexer->c == '>')
 			return (check_append(lexer));
-		if((lexer->c == '"' || lexer->c == '\'') && isword == false)
-		{
-			if (lexer->c == '"')
-				isdouble = true;
-			// printf("hey im here\n");
-			return string_process(lexer, isdouble);
+		else
+			return string_process(lexer);
 		}
-		increment_using_index(lexer);
+		// increment_using_index(lexer);
+		return (creat_token(ENDF, "END"));
 	}
 	
-	return (creat_token(ENDF, "END"));
-}
+
 
 
 

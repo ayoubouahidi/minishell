@@ -5,73 +5,137 @@
 #include <stdbool.h>
 #include "../../includes/parser.h"
 
-char *normal_var(int *i, char *result, t_env *envp)
-{
 
-	char *var;
-    char *env_var = NULL;
-    char *tmp;
-    t_env *tmp1;
+
+char *join_char(char *str, char c)
+{
+	char *newstr;
+	int i;
+
+	i = 0;
+	newstr = malloc(sizeof(char) * ft_strlen(str) + 2);
+	while (str[i] != '\0')
+	{
+		newstr[i] = str[i];
+		i++;
+	}
+	newstr[i] = c;
+	i++;
+	newstr[i] = '\0';
+	return (newstr);
+}
+
+char	*case_word(char	*result, int *i,char *final)
+{
+	final = join_char(final, result[*i]);
+	(*i)++;
+	return (final);
+}
+
+
+
+char *normal_var(int *i, char *result, t_env *envp, char *final)
+{
+    char *var;
+    char *tmp1;
     int count = 0;
     int pos;
+    char *new_final;
 
-	(*i)++;
-	pos = *i;
+    (*i)++;
+    pos = *i;
     while (result[*i] && ft_isalnum(result[*i]))
-	{
-		(*i)++;
-		count++;
-	}
-	var = ft_substr(result, pos, count);
-	tmp1 = envp;
-	while (tmp1)
-	{
-		if (!strcmp(tmp1->key, var))
-		{
-			env_var = tmp1->value;
-			break;
-		}
-		tmp1 = tmp1->next;
-	}
-	if (env_var)
-	{
-		tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + ft_strlen(env_var) + 1, sizeof(char));
-		ft_strlcpy(tmp, result, pos);
-		ft_strlcat(tmp, env_var, ft_strlen(tmp) + ft_strlen(env_var) + 1);
-		ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
-	}
-	else
-	{
-		tmp = ft_calloc(ft_strlen(result) - ft_strlen(var) + 1, sizeof(char));
-		ft_strlcpy(tmp, result, pos);
-		ft_strlcat(tmp, result + pos + count, ft_strlen(tmp) + ft_strlen(result + pos + count) + 1);
-	}
-	free(var);
-	free(result); 
-    *i = pos - 1;
-	return tmp;	
+    {
+        (*i)++;
+        count++;
+    }
+    var = ft_substr(result, pos, count);
+    tmp1 = get_env_value(envp, var);
+    free(var); // Free var after use
+    if (!tmp1)
+        tmp1 = ft_strdup("");
+    new_final = ft_strjoin(final, tmp1);
+    free(final);
+    free(tmp1);
+    return new_final;
 }
 
-
-char *squotes_expand(int *i, char* result)
+/*
+char *assemble_expanded_string(char *original, int quote_start,  int quote_end, char *expansion)
 {
-	int count;
-	char *tmp;
-	int pos;
+    char *before;
+    char *after;
+    char *result;
+    
+    before = ft_substr(original, 0, quote_start);
+    after = ft_strdup(original + quote_end);
+    
+    if (!before || !after) {
+        free(before);
+        free(after);
+        return NULL;
+    }
+    
+    result = ft_strjoin(before, expansion);
+    free(before);
+    if (!result) {
+        free(after);
+        return NULL;
+    }
+    
+    before = result;
+    result = ft_strjoin(result, after);
+    free(before);
+    free(after);
+    
+    return result;
+}
 
-	printf ("test\n");
+char *squotes_expand(int *i, char *result)
+{
+    int start;
+    char *extracted;
+    char *new_result;
+    
+    (*i)++; // Skip opening quote
+    start = *i;
+    
+    // Find closing quote
+    while (result[*i] && result[*i] != '\'')
+        (*i)++;
+    
+    if (!result[*i]) {
+        fprintf(stderr, "minishell: unmatched single quote\n");
+        return NULL; // Or handle error differently
+    }
+    
+    // Extract content between quotes
+    extracted = ft_substr(result, start, *i - start);
+    if (!extracted)
+        return NULL;
+    
+    // Create new string combining parts before/after quotes
+    new_result = assemble_expanded_string(result, start-1, *i+1, extracted);
+    free(extracted);
+    
+    (*i)--; // Adjust position since expand_process will increment
+    return new_result;
+}*/
+
+
+char *squotes_expand(int *i, char* result, char *final)
+{
 	(*i)++;
-	count = 0;
-	pos = *i;
 	while (result[*i] && result[*i] != '\'')
 	{
+		final = join_char(final, result[*i]);
 		(*i)++;
-		count++;
 	}
-	tmp = ft_calloc(count + 1, sizeof(char));
-	ft_strlcpy(tmp, result + pos, count + 1);
-	return (tmp);
+	if(result[*i])
+		(*i)++;
+	return (final);
 }
+
 
 
 // char *normal_case_dquotes(int *i , char  *result,t_env *envp)
@@ -80,62 +144,66 @@ char *squotes_expand(int *i, char* result)
 // }
 
 
-char *double_quotes_expand(int *i, char *result, t_env *envp)
+char *double_quotes_expand(int *i, char *result, t_env *envp, char *final)
 {
-	char *tmp;
-
-
 	(*i)++;
 	while (result[*i] && result[*i] != '"')
 	{
 		if (result[*i] == '$' && ft_isalnum(result[*i + 1]))
-			tmp = normal_var(i, result, envp);
+			final = normal_var(i, result, envp, final);
 		else if (result[*i] == '$' && result[*i] == '?')
-			tmp = ft_itoa(0); // a refaire
+			final = ft_itoa(0); // a refaire
 		else {
-			tmp = ft_calloc(ft_strlen(result), sizeof(char));
-			ft_strlcpy(tmp, result , ft_strlen(result));
+			final = join_char(final, result[*i]);
 			(*i)++;
-		}
+		}	
 	}
 	if (result[*i])
 		(*i)++;
-	return (tmp);
+	return (final);
 }
 
-char *expand_process(int *i, char *result, t_env *envp)
+char *expand_process(int *i, char *result, t_env *envp, char *final)
 {
-	// printf("result char ==> %c\n", result[*i]);
 	if (result[*i] == '\'')
-		return (squotes_expand(i, result));
-    else if (result[*i] == '$' && ft_isalpha(result[*i + 1]))
-		return (normal_var(i, result, envp));
+	{
+		final = squotes_expand(i, result, final);
+		printf("%d\n", *i);
+	}
+    else if (result[*i] == '$' && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'))
+	{
+		final = normal_var(i, result, envp, final);
+		printf("final : %s\n", final);
+	}
 	else if (result[*i] == '"')
-		return (double_quotes_expand(i, result, envp));
-    return result;
+		final = double_quotes_expand(i, result, envp, final);
+	else
+		final = case_word(result, i, final);
+	printf("final : %s\n", final);
+    return final;
 }
 
 char *expanation_token_env_var(char *str, t_env *envp)
 {
 	char	*result;
-
 	t_env	*tmp1;
+	char	*final;
 	int i;
 	int count;
 	// int	pos;
 	// int j;
 
-	
+
 	count = 0;
 	i = 0;
 	result = ft_strdup(str);
 	tmp1 = envp;
+	final = ft_strdup("");
+
 	while (result[i] != '\0')
-	{
-		result = expand_process(&i, result, tmp1);
-		i++;
-	}
-	return (result);
+		final = expand_process(&i, result, tmp1, final);
+	// printf("final in expand: %s\n", final);
+	return (final);
 }
 
 void	expantion_remove_quotes(t_token *token, t_env *envp)
@@ -148,6 +216,7 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 		result = expanation_token_env_var(token->value , envp);
 		free(token->value);
 		token->value = result;
+		// printf("result :%s\n", token->value);
 	}
 	// return (result);
 }
@@ -177,33 +246,34 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 // 			}
 // 			i++;
 // 		}
-// 		else
+// 		else'ayoub'abcd'ouahidi'ayoubOUAHIDIayoub'ayoub'ouahidillllllllllll''ayoub'ouahidi'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
 // 			result = ft_strjoin_char(result, limiter[i++]);
 // 	}
 // 	return (result);
 // }
 
-// static char	*process_of_expanding(char *word, int *i, char *result, t_env *env)
-// {
-// 	if (word[*i] == '\'')
-// 		result = case_of_squote(word, i, result);
-// 	else if (word[*i] == '$' && word[*i + 1] && (ft_isalpha(word[*i + 1])
-// 			|| word[*i + 1] == '_'))
-// 		result = case_of_normal_var(word, i, result, env);
-// 	else if (word[*i] == '"')
-// 		result = case_of_dquote(word, i, result, env);
-// 	else if (word[*i + 1] && word[*i] == '$' && word[*i + 1] == '\'')
-// 		result = case_of_var_with_next_char_squote(word, i, result);
-// 	else if (word[*i + 1] && word[*i] == '$' && word[*i + 1] == '\"')
-// 		result = case_of_var_with_next_char_dquote(word, i, result);
-// 	else if (word[*i] == '$' && word[*i + 1] && ft_isdigit(word[*i + 1]))
-// 		result = case_of_var_with_next_char_digit(word, i, result);
-// 	else if (word[*i] == '$' && word[*i + 1] && word[*i + 1] == '?')
-// 		result = case_of_var_with_exit_status(i, result);
-// 	else
-// 		result = case_of_word(word, i, result);
-// 	return (result);
-// }
+	// static char	*process_of_expanding(char *word, int *i, char *result, t_env *env)
+	// {
+	// 	if (word[*i] == '\'')
+	// 		result = case_of_squote(word, i, result);
+	// 	else if (word[*i] == '$' && word[*i + 1] && (ft_isalpha(word[*i + 1])
+	// 			|| word[*i + 1] == '_'))
+	// 		result = case_of_normal_var(word, i, result, env);
+	// 	else if (word[*i] == '"')
+	// 		result = case_of_dquote(word, i, result, env);
+	// 	else if (word[*i + 1] && word[*i] == '$' && word[*i + 1] == '\'')
+	// 		result = case_of_var_with_next_char_squote(word, i, result);
+	// 	else if (word[*i + 1] && word[*i] == '$' && word[*i + 1] == '\"')
+	// 		result = case_of_var_with_next_char_dquote(word, i, result);
+	// 	else if (word[*i] == '$' && word[*i + 1] && ft_isdigit(word[*i + 1]))
+	// 		result = case_of_var_with_next_char_digit(word, i, result);
+	// 	else if (word[*i] == '$' && word[*i + 1] && word[*i + 1] == '?')
+	// 		result = case_of_var_with_exit_status(i, result);
+	// 	else
+	// 		result = case_of_word(word, i, result);
+	// 	return (result);
+	// }
 
 // static char	*expand_variable_value(char *word, t_env *env, int *is_here_doc)
 // {
@@ -253,9 +323,7 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 
 /*
 char *squotes_expand(char *result, int *i)
-{
-    int start_pos = *i;
-    int total_len = 0;
+{	return (final);
     int in_quotes = 0;
     char *expanded;
     
@@ -265,25 +333,7 @@ char *squotes_expand(char *result, int *i)
             result[start_pos + total_len] == '\'' ||
             in_quotes))
     {
-        if (result[start_pos + total_len] == '\'')
-        {
-            in_quotes = !in_quotes; // Toggle quote state
-        }
-        total_len++;
-    }
-    
-    // Allocate memory for the entire word
-    expanded = ft_calloc(total_len + 1, sizeof(char));
-    if (!expanded)
-        return NULL;
-    
-    // Copy characters, handling quoted sections
-    int j = 0;
-    in_quotes = 0;
-    
-    for (int pos = start_pos; pos < start_pos + total_len; pos++)
-    {
-        if (result[pos] == '\'')
+        if (result[start_pos + total_len] == '\'')	return (final);
         {
             in_quotes = !in_quotes; // Toggle quote state
             // Skip the quote character itself
@@ -300,10 +350,4 @@ char *squotes_expand(char *result, int *i)
     return expanded;
 }
 */
-
-
-
-
-
-
-
+// echo 'ayoub'abcd'ouahidi'ayoubOUAHIDIayoub'ayoub'ouahidillllllllllll''ayoub'ouahidi'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
