@@ -230,7 +230,7 @@ t_token *creat_token(TYPE_TOKEN type, char *value)
 	return (token);
 }
 
-t_lexer *creat_lexer(char *content)
+t_lexer *creat_lexer(char *content)  // ls -la"fgrt"
 {
 	t_lexer *lexer;
 
@@ -251,6 +251,7 @@ void	increment_using_index(t_lexer *lexer)
 	{
 		lexer->i += 1;
 		lexer->c = lexer->content[lexer->i];
+		printf("this is i : %d\n", lexer->i);
 	}
 }
 
@@ -264,7 +265,7 @@ t_token *string_process(t_lexer *lexer)
 	start = lexer->i;
 	flag_single = 0;
 	flag_double = 0;
-	while (lexer->c != '\0' && lexer->c != '|' && lexer->c != '<' && lexer->c != '>')
+	while (lexer->c != '\0' )
 	{
 		if (lexer->c == '\'')
 		{
@@ -280,11 +281,12 @@ t_token *string_process(t_lexer *lexer)
 			else
 				flag_double--;
 		}
-		if (!flag_double && !flag_single && lexer->c == ' ')
+		if (!flag_double && !flag_single && (lexer->c == '|' || lexer->c == '<' || lexer->c == '>' || lexer->c == ' ') )
 			break ;
-		increment_using_index(lexer);
+		increment_using_index(lexer); //f"c |<>"d
 	}
 	value = ft_substr(lexer->content, start, lexer->i - start);
+	printf("walid : %s\n", value);
 	return (creat_token(WORD, value));
 }
 
@@ -524,6 +526,8 @@ t_token	*tokenize(t_lexer *lexer)
 		if(lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n' || lexer->c == '\r' || lexer->c == '\f' || lexer->c == '\v')
 			while (lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n' || lexer->c == '\r' || lexer->c == '\f' || lexer->c == '\v')
 				increment_using_index(lexer);
+		if(!ft_strchr("|<>", lexer->c))
+			return string_process(lexer);//f"ls"cat
 		if (lexer->c == '|')
 		{
 			increment_using_index(lexer);
@@ -533,8 +537,6 @@ t_token	*tokenize(t_lexer *lexer)
 			return (chech_herdoc(lexer));
 		if (lexer->c == '>')
 			return (check_append(lexer));
-		else
-			return string_process(lexer);
 		}
 		// increment_using_index(lexer);
 		return (creat_token(ENDF, "END"));
@@ -611,20 +613,23 @@ bool match_file(char *file)
 	return (true);
 }
 
-char *infile(t_token *token, char *arg)
+
+char *infile(t_token *token, char *arg, int *flag_err)
 {
 	int lenv;
 	int lenghtcommande;
 	char *new_commande;
 	// printf("test done");
-	if (!token || !token->next) {
+	if (!token || token->next->type == ENDF) {
         printf("Syntax error \n : unexpected end of input\n");
+		*flag_err = 1;
         return NULL;
     }
 	token = (token)->next;
 	if ((token)->type != WORD || !match_file((token->value)))
 	{
 		printf("Syntaxe error \n  ");
+		*flag_err = 1;
 		return(NULL);
 	}
 	lenv = ft_strlen((token)->value);
@@ -645,13 +650,19 @@ char *infile(t_token *token, char *arg)
 
 bool heredoc_check_append(t_token *token, char **del)
 {
+	t_token *prev;
+
+	prev = token; 
     token = token->next;
     if ((token)->type != WORD)
     {
         printf("Syntaxe error: append or heredoc problem\n");
         return false;
     }
-    *del = token->value;
+	if(prev->type == HEREDOC)
+    	*del = token->value;
+	// if(prev->type == APPEND)
+	// 	*del = token->value;
     return true;
 }
 
@@ -665,7 +676,9 @@ t_command* parser_commande(t_token** tokendd)
     char *infile_file = NULL;
     char *outfile_file = NULL;
     char *del = NULL;
+	char *append = NULL;
     bool in_red = false;
+	int flag_err = 0;
 
     if (!tokendd || !*tokendd)
         return NULL;
@@ -689,27 +702,25 @@ t_command* parser_commande(t_token** tokendd)
 		if((*tokendd)->type == WORD )
 		{
 			if(!in_red)
-				args = to_arg((*tokendd), args);// ls ffdg"  " g  
+				args = to_arg((*tokendd), args);//<< a   < d >> c > e  
 			in_red = false;
-
+			
 		}
 		else{
 			in_red = true;
 			if ((*tokendd)->type == OUTPUT_RED)
-				outfile_file = infile((*tokendd), infile_file);
+				outfile_file = infile((*tokendd), outfile_file, &flag_err);
 			else if ((*tokendd)->type == INTPUT_RED)
-				infile_file = infile((*tokendd), outfile_file);
+				infile_file = infile((*tokendd), infile_file, &flag_err);
 			else if ((*tokendd)->type == HEREDOC)
 				cmd->is_heredoc = heredoc_check_append((*tokendd), &del);
-			
 			else if ((*tokendd)->type == APPEND)
 			{
-				if (!heredoc_check_append((*tokendd), &del)) {
-					return NULL; 
-				}
-				cmd->appendfile = ft_strdup(del);  // Create a duplicate instead of using the same pointer
+				append = infile((*tokendd), append, &flag_err);
 				cmd->is_append = true;
 			}
+			if (flag_err == 1)
+				break;
 		} 
 		(*tokendd) = (*tokendd)->next;
 	}
@@ -718,6 +729,7 @@ t_command* parser_commande(t_token** tokendd)
 	cmd->infile = infile_file;
 	cmd->outfile = outfile_file;
 	cmd->del = del;
+	cmd->appendfile = append;
 	cmd->next = NULL;
 	return(cmd);
 }
@@ -732,7 +744,7 @@ t_command	*parcer(char *line, t_env *envp)
 	t_lexer *lexer;
 	t_command *commande;
 	t_command *head;
-
+	int 
 	head_token = NULL;
 	head = NULL;
 	token = NULL;

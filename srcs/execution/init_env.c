@@ -9,8 +9,6 @@ char *get_env_value(t_env *env, const char *key)
     {
         if (ft_strcmp(current->key, key) == 0)
 		{
-			printf("GET_ENV : %s\n",key);
-			printf("GET_ENV : %s\n",current->value);
             return (current->value);
 		}
         current = current->next;

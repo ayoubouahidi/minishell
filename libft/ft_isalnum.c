@@ -18,7 +18,7 @@ int	ft_isalnum(int a)
 {
 
 	// if (ft_isalpha(a) || ft_isdigit(a))
-	if (ft_isalpha(a) || ft_isdigit(a) || (a >= '#' && a <= '&') || (a >= '(' && a <= '.') || a == '{' || a == '}'|| a == '/' || a == '_')
+	if (ft_isalpha(a) || ft_isdigit(a)  || (a >= '(' && a <= '.') || a == '{' || a == '}'|| a == '/' || a == '_')
 		return (1);
 	return (0);
 }
