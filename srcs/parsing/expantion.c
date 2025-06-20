@@ -51,7 +51,7 @@ char *normal_var(int *i, char *result, t_env *envp, char *final)
     }
     var = ft_substr(result, pos, count);
     tmp1 = get_env_value(envp, var);
-    free(var); // Free var after use
+    free(var); 
     if (!tmp1)
         tmp1 = ft_strdup("");
     new_final = ft_strjoin(final, tmp1);
@@ -138,12 +138,6 @@ char *squotes_expand(int *i, char* result, char *final)
 
 
 
-// char *normal_case_dquotes(int *i , char  *result,t_env *envp)
-// {
-
-// }
-
-
 char *double_quotes_expand(int *i, char *result, t_env *envp, char *final)
 {
 	(*i)++;
@@ -152,11 +146,41 @@ char *double_quotes_expand(int *i, char *result, t_env *envp, char *final)
 		if (result[*i] == '$' && ft_isalnum(result[*i + 1]))
 			final = normal_var(i, result, envp, final);
 		else if (result[*i] == '$' && result[*i] == '?')
+		{
 			final = ft_itoa(0); // a refaire
-		else {
+			(*i) += 2;
+		}
+		else 
+		{
 			final = join_char(final, result[*i]);
 			(*i)++;
 		}	
+	}
+	if (result[*i])
+		(*i)++;
+	return (final);
+}
+
+char *next_char_squotes(char *result,int *i,char *final)
+{
+	(*i)++;
+	while (result[*i] && final[*i] != '\'')
+	{
+		result = join_char(result, final[*i]);
+		(*i)++;
+	}
+	if (result[*i])
+		(*i)++;
+	return (final);
+}
+
+char *next_char_dquotes(char *result,int *i,char *final)
+{
+	(*i)++;
+	while (result[*i] && final[*i] != '\"')
+	{
+		result = join_char(result, final[*i]);
+		(*i)++;
 	}
 	if (result[*i])
 		(*i)++;
@@ -177,6 +201,10 @@ char *expand_process(int *i, char *result, t_env *envp, char *final)
 	}
 	else if (result[*i] == '"')
 		final = double_quotes_expand(i, result, envp, final);
+	else if (result[*i] == '$' && result[*i] == '\'')
+		final = next_char_squotes(result, i, final);
+	else if (result[*i] == '$' && result[*i] == '"')
+		final = next_char_dquotes(result, i, final);
 	else
 		final = case_word(result, i, final);
 	printf("final : %s\n", final);
@@ -214,6 +242,8 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 	if(token->type == WORD)
 	{
 		result = expanation_token_env_var(token->value , envp);
+	
+		printf("--------------------\n%s--------------------------\n", result);
 		free(token->value);
 		token->value = result;
 		// printf("result :%s\n", token->value);

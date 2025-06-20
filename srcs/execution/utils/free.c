@@ -56,18 +56,18 @@ void free_cmd(t_command *cmd)
     while (cmd)
     {
         tmp = cmd->next;
-
+		
         if (cmd->args)
         {
-            int i = 0;
-            while (cmd->args[i])
-            {
-                free(cmd->args[i]);
-                i++;
-            }
+			int i = 0;
+				while (cmd->args[i])
+				{
+					free(cmd->args[i]);
+					i++;
+			}
             free(cmd->args);
         }
-
+		
         if (cmd->infile)
             free(cmd->infile);
         if (cmd->outfile)

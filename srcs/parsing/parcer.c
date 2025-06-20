@@ -273,7 +273,7 @@ t_token *string_process(t_lexer *lexer)
 			else
 				flag_single--;
 		}
-		if (lexer->c == '"')
+		if (lexer->c == '\"')
 		{
 			if (!flag_double)
 				flag_double++;
@@ -284,8 +284,7 @@ t_token *string_process(t_lexer *lexer)
 			break ;
 		increment_using_index(lexer);
 	}
-	value = ft_substr(lexer->content, start, lexer->i);
-	printf("walid : %s\n", value);
+	value = ft_substr(lexer->content, start, lexer->i - start);
 	return (creat_token(WORD, value));
 }
 
@@ -547,25 +546,60 @@ t_token	*tokenize(t_lexer *lexer)
 
 // some utils function of parse commande 
 
-char *to_arg(t_token* token, char *arg)
+int	len_of_2d_array(char **args)
 {
-	int lenv;
-	int lenghtcommande;
-	char *new_commande;
+	int i;
 
-	lenv = ft_strlen(token->value);
-	lenghtcommande = ft_strlen(arg);
-	new_commande = (char *)malloc(lenghtcommande + 1 + lenv + 1);
-	if (arg)
-	{
-        ft_strlcpy(new_commande, arg, lenghtcommande + 1); 
-        new_commande[lenghtcommande] = ' '; 
-        ft_strlcpy(new_commande + lenghtcommande + 1, token->value, lenv + 1);
-    } 
-	else 
-        ft_strlcpy(new_commande, token->value, lenv + 1); 
-    return (new_commande);
+	i = 0;
+	while (args && args[i])
+		i++;
+	return i;
+	
 }
+
+char	**to_arg(t_token* token, char **arg)
+{
+	char **result;
+	int i;
+
+	i = 0;
+	if(!arg)
+	{
+		result = malloc(sizeof(char *) + 2);
+		result[0] = ft_strdup(token->value);
+		result[1] = NULL;
+		return result;
+	}
+	result = malloc(sizeof(char *) * (len_of_2d_array(arg) + 2));
+	while (arg[i])
+	{
+		result[i] = arg[i];
+		i++;
+	}
+	result[i] = ft_strdup(token->value);
+	result[i + 1] = NULL;
+	return (result);
+}
+
+// char *to_arg(t_token* token, char *arg)
+// {
+// 	int lenv;
+// 	int lenghtcommande;
+// 	char *new_commande;
+
+// 	lenv = ft_strlen(token->value);
+// 	lenghtcommande = ft_strlen(arg);
+// 	new_commande = (char *)malloc(lenghtcommande + 1 + lenv + 1);
+// 	if (arg)
+// 	{
+//         ft_strlcpy(new_commande, arg, lenghtcommande + 1); 
+//         new_commande[lenghtcommande] = ' '; 
+//         ft_strlcpy(new_commande + lenghtcommande + 1, token->value, lenv + 1);
+//     } 
+// 	else 
+//         ft_strlcpy(new_commande, token->value, lenv + 1); 
+//     return (new_commande);
+// }
 
 // infile function u should check sysntaxe error
 
@@ -627,7 +661,7 @@ bool heredoc_check_append(t_token *token, char **del)
 t_command* parser_commande(t_token** tokendd)
 {
     t_command *cmd;
-    char *args = NULL;
+    char **args = NULL;
     char *infile_file = NULL;
     char *outfile_file = NULL;
     char *del = NULL;
@@ -655,8 +689,9 @@ t_command* parser_commande(t_token** tokendd)
 		if((*tokendd)->type == WORD )
 		{
 			if(!in_red)
-				args = to_arg((*tokendd), args);
+				args = to_arg((*tokendd), args);// ls ffdg"  " g  
 			in_red = false;
+
 		}
 		else{
 			in_red = true;
@@ -679,8 +714,7 @@ t_command* parser_commande(t_token** tokendd)
 		(*tokendd) = (*tokendd)->next;
 	}
 	// printf("%s\n", args);
-
-	cmd->args = ft_split(args, ' ');
+	cmd->args = args;
 	cmd->infile = infile_file;
 	cmd->outfile = outfile_file;
 	cmd->del = del;

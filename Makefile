@@ -28,7 +28,8 @@ SRCS    = \
 	$(SRC_DIR)/execution/utils/free.c \
 	$(SRC_DIR)/execution/utils/utils00.c \
 	$(SRC_DIR)/execution/utils/env_utils.c \
-	$(SRC_DIR)/parsing/expantion.c 
+	$(SRC_DIR)/parsing/expantion.c \
+	$(SRC_DIR)/parsing/newsplit.c 
 
 
 

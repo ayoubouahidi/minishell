@@ -47,9 +47,10 @@ typedef struct s_env
 
 typedef struct s_command
 {
-	char	**args;
+	char 	*str;
+	char	**args; // execve("/bin/ls")
 	char	*infile;
-	char	*outfile;
+	char	*outfile; // 
 	bool	is_append;
 	bool	is_heredoc;
 	char	*del;

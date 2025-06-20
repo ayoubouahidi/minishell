@@ -2,12 +2,17 @@
 
 char *get_env_value(t_env *env, const char *key)
 {
-    t_env *current = env;
+    t_env *current;
 
+	current = env;
     while (current)
     {
         if (ft_strcmp(current->key, key) == 0)
+		{
+			printf("GET_ENV : %s\n",key);
+			printf("GET_ENV : %s\n",current->value);
             return (current->value);
+		}
         current = current->next;
     }
     return (NULL);
@@ -34,7 +39,6 @@ t_env *new_env_node(char *key, char *value)
         free(new);
         return (NULL);
     }
-
     return (new);
 }
 
