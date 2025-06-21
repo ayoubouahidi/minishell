@@ -616,37 +616,50 @@ bool match_file(char *file)
 
 char *infile(t_token *token, char *arg, int *flag_err)
 {
-	int lenv;
-	int lenghtcommande;
-	char *new_commande;
-	// printf("test done");
-	if (!token || token->next->type == ENDF) {
-        printf("Syntax error \n : unexpected end of input\n");
-		*flag_err = 1;
+    char *new_commande;
+    
+    if (!token || token->next->type == ENDF) {
+        ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+        *flag_err = 1;
         return NULL;
     }
-	token = (token)->next;
-	if ((token)->type != WORD || !match_file((token->value)))
-	{
-		printf("Syntaxe error \n  ");
-		*flag_err = 1;
-		return(NULL);
-	}
-	lenv = ft_strlen((token)->value);
-	lenghtcommande = ft_strlen(arg);
-	new_commande = (char *)malloc(lenghtcommande + 1 + lenv + 1);
-	if (arg)
-	{
-        ft_strlcpy(new_commande, arg, lenghtcommande + 1); 
-        new_commande[lenghtcommande] = ' '; 
-        ft_strlcpy(new_commande + lenghtcommande + 1, (token)->value, lenv + 1);
+    token = token->next;
+    if (token->type != WORD) {
+        if (token->type == OUTPUT_RED)
+            ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
+        else if (token->type == INTPUT_RED)
+            ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
+        else if (token->type == APPEND)
+            ft_putstr_fd("minishell: syntax error near unexpected token `>>'\n", 2);
+        else if (token->type == HEREDOC)
+            ft_putstr_fd("minishell: syntax error near unexpected token `<<'\n", 2);
+        else if (token->type == PIPE)
+            ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+        else
+            ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
+            
+        *flag_err = 1;
+        return NULL;
     }
-	else 
-        ft_strlcpy(new_commande, (token)->value, lenv + 1); 
-	token = (token)->next;
-    return (new_commande);
+    if (!arg) {
+        new_commande = ft_strdup(token->value);
+    } else {
+        int lenv = ft_strlen(token->value);
+        int lenghtcommande = ft_strlen(arg);
+        
+        new_commande = (char *)malloc(lenghtcommande + 1 + lenv + 1);
+        if (!new_commande) {
+            *flag_err = 1;
+            return NULL;
+        }
+        
+        ft_strlcpy(new_commande, arg, lenghtcommande + 1);
+        new_commande[lenghtcommande] = ' ';
+        ft_strlcpy(new_commande + lenghtcommande + 1, token->value, lenv + 1);
+        free(arg); // Free the old arg
+    }
+    return new_commande;
 }
-// heredoc function and APPEND
 
 bool heredoc_check_append(t_token *token, char **del)
 {
@@ -676,9 +689,9 @@ t_command* parser_commande(t_token** tokendd)
     char *infile_file = NULL;
     char *outfile_file = NULL;
     char *del = NULL;
-	char *append = NULL;
+    char *append = NULL;
     bool in_red = false;
-	int flag_err = 0;
+    int flag_err = 0;
 
     if (!tokendd || !*tokendd)
         return NULL;
@@ -687,7 +700,7 @@ t_command* parser_commande(t_token** tokendd)
     if (!cmd)
         return NULL;
     
-    // Initialize all fields to prevent undefined behavior
+    // Initialize all fields
     cmd->args = NULL;
     cmd->infile = NULL;
     cmd->outfile = NULL;
@@ -698,40 +711,49 @@ t_command* parser_commande(t_token** tokendd)
     cmd->next = NULL;
     
     while (tokendd && (*tokendd)->type != ENDF && (*tokendd)->type != PIPE)
-	{
-		if((*tokendd)->type == WORD )
-		{
-			if(!in_red)
-				args = to_arg((*tokendd), args);//<< a   < d >> c > e  
-			in_red = false;
-			
-		}
-		else{
-			in_red = true;
-			if ((*tokendd)->type == OUTPUT_RED)
-				outfile_file = infile((*tokendd), outfile_file, &flag_err);
-			else if ((*tokendd)->type == INTPUT_RED)
-				infile_file = infile((*tokendd), infile_file, &flag_err);
-			else if ((*tokendd)->type == HEREDOC)
-				cmd->is_heredoc = heredoc_check_append((*tokendd), &del);
-			else if ((*tokendd)->type == APPEND)
-			{
-				append = infile((*tokendd), append, &flag_err);
-				cmd->is_append = true;
-			}
-			if (flag_err == 1)
-				break;
-		} 
-		(*tokendd) = (*tokendd)->next;
-	}
-	// printf("%s\n", args);
-	cmd->args = args;
-	cmd->infile = infile_file;
-	cmd->outfile = outfile_file;
-	cmd->del = del;
-	cmd->appendfile = append;
-	cmd->next = NULL;
-	return(cmd);
+    {
+        if((*tokendd)->type == WORD)
+        {
+            if(!in_red)
+                args = to_arg((*tokendd), args);
+            in_red = false;
+        }
+        else {
+            in_red = true;
+            if ((*tokendd)->type == OUTPUT_RED)
+                outfile_file = infile((*tokendd), outfile_file, &flag_err);
+            else if ((*tokendd)->type == INTPUT_RED)
+                infile_file = infile((*tokendd), infile_file, &flag_err);
+            else if ((*tokendd)->type == HEREDOC)
+                cmd->is_heredoc = heredoc_check_append((*tokendd), &del);
+            else if ((*tokendd)->type == APPEND)
+            {
+                append = infile((*tokendd), append, &flag_err);
+                cmd->is_append = true;
+            }
+            
+            // Handle error
+            if (flag_err == 1) {
+                // Clean up resources
+                if (args) free_array(args);
+                if (infile_file) free(infile_file);
+                if (outfile_file) free(outfile_file);
+                if (del) free(del);
+                if (append) free(append);
+                free(cmd);
+                return NULL;
+            }
+        }
+        (*tokendd) = (*tokendd)->next;
+    }
+    
+    cmd->args = args;
+    cmd->infile = infile_file;
+    cmd->outfile = outfile_file;
+    cmd->del = del;
+    cmd->appendfile = append;
+    
+    return cmd;
 }
 
 
@@ -744,7 +766,7 @@ t_command	*parcer(char *line, t_env *envp)
 	t_lexer *lexer;
 	t_command *commande;
 	t_command *head;
-	int 
+
 	head_token = NULL;
 	head = NULL;
 	token = NULL;
