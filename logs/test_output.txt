@@ -1,1 +1,11 @@
-minishell >minishell> 
+./| lsfile
+includes
+libft
+logs
+Makefile
+minishell
+objs
+out.txt
+srcs
+tester.js
+test.txt

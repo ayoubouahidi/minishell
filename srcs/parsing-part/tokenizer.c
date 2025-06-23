@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:09:16 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:16:03 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/22 17:17:19 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ char	*get_operator(char *input, int *i, t_quote_type *quote_type)
 	{
 		operator = ft_substr(input, *i, 1);
 		*i += 1;
-		if (input[*i] == '|' || input[0] == '|' || input[*i] == '>'
-			|| input[*i] == '<')
+		// Check for syntax errors: pipe at start or consecutive operators
+		if ((input[*i] == '|' && operator[0] == '|') || 
+			(operator[0] == '|' && *i == 1) ||  // Pipe at beginning
+			input[*i] == '>' || input[*i] == '<')
 			return (NULL);
 	}
 	if (input[*i] == '\'')

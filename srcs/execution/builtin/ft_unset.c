@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../../includes/minishell.h"
 
 static t_env *exist(t_data *data, char *key)
 {

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../../includes/minishell.h"
 
 static int	has_only_n(char *arg)
 {
@@ -16,7 +16,9 @@ static int	has_only_n(char *arg)
 
 int	ft_echo(char **args)
 {
-	int (n_flag), (i), (j);
+	int	n_flag;
+	int	i;
+	int	j;
 
 	n_flag = 0;
 	i = 1;

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 20:20:59 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:17:56 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:40:09 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,3 +108,15 @@ int	heredoc(t_command *cmds, t_env *env)
 	unlink_files(total_here_doc, files);
 	return (0);
 }
+char *get_tmp_file(void)
+{
+    static int counter = 0;
+    char *num_str;
+    char *filename;
+    
+    num_str = ft_itoa(counter++);
+    filename = ft_strjoin("/tmp/heredoc_", num_str);
+    free(num_str);
+    return filename;
+}
+

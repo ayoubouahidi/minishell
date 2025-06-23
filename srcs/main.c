@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 16:15:03 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:46:53 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/22 17:11:05 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,10 +139,18 @@ static void	read_line_process(char **env)
 
 	while (1)
 	{
-		input = readline("minishell> ");
+		if (isatty(STDIN_FILENO))
+			input = readline("minishell> ");
+		else
+		{
+			input = readline("");
+			if (!input)
+				break;
+		}
 		if (!input)
 		{
-			printf("exit\n");
+			if (isatty(STDIN_FILENO))
+				printf("exit\n");
 			break ;
 		}
 		if (ft_strlen(input) > 0)
@@ -153,6 +161,7 @@ static void	read_line_process(char **env)
 			continue ;
 		}
 		parsing_cmd(input, env);
+		free(input);
 	}
 }
 
