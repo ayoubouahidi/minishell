@@ -1,5 +1,8 @@
 #include "../../includes/minishell.h"
 
+// Forward declaration bash nتجنبو l implicit declaration error
+static int	external_command(t_data *data);
+
 /*
  * HNA KANDIRO L BUILTINS F CHILD PROCESS O KANRJ3O L STATUS
  * 
