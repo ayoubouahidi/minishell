@@ -9,6 +9,8 @@ static void init_data(t_data *data, char **envp)
     data->is_child = false;
 }
 
+
+
 int main(int ac, char **av, char **envp)
 {
     t_data  data;
@@ -32,12 +34,13 @@ int main(int ac, char **av, char **envp)
         {
             add_history(line);
             data.cmd = parcer(line, data.env);
+			if (run_heredoc(data.cmd) == -1)
+				return 0;
             if (data.cmd)
             {
                 // printf("test done\n");
                 executer(&data, envp);
             }
-		
             free_cmd(data.cmd);
             data.cmd = NULL;
         }

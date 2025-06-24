@@ -39,16 +39,7 @@ typedef enum
 } e_syntaxe;
 
 // tokenation
-typedef enum
-{
-	INTPUT_RED,
-	OUTPUT_RED,
-	HEREDOC,
-	APPEND,
-	PIPE,
-	WORD,
-	ENDF
-} TYPE_TOKEN;
+
 
 
 typedef struct s_token
@@ -79,4 +70,5 @@ bool    syntaxe_error(char *str);
 char	*expanation_token_env_var(char *str,  t_env *envp);
 void	expantion_remove_quotes(t_token *token, t_env *envp);
 char **newsplit(const char *input);
+int run_heredoc(t_command *cmd);
 #endif

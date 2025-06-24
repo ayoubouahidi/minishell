@@ -672,14 +672,47 @@ bool heredoc_check_append(t_token *token, char **del)
         printf("Syntaxe error: append or heredoc problem\n");
         return false;
     }
-	if(prev->type == HEREDOC)
-    	*del = token->value;
+	// v
 	// if(prev->type == APPEND)
-	// 	*del = token->value;
+	*del = token->value;
     return true;
 }
 
 // parser part
+
+/* redrection function
+
+
+t_red *creat_red(char *file, TYPE_TOKEN type)
+{
+	t_red *red;
+
+	red = (t_red *)malloc(sizeof(t_red));
+	if (!red)
+		return (NULL);
+	red->file = file;
+	red->type =  type;
+	red->next = NULL;
+	return(NULL);
+}
+	
+*/
+// void	ft_lstadd_back_red(t_red **lst, t_red *new)
+// {
+// 	t_red	*tmp;
+
+// 	if (!lst || !new)
+// 		return ;
+// 	tmp = *lst;
+// 	if (*lst)
+// 	{
+// 		while (tmp->next)
+// 			tmp = tmp->next;
+// 		tmp->next = new;
+// 	}
+// 	else
+// 		*lst = new;
+// }
 
 
 t_command* parser_commande(t_token** tokendd)

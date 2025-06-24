@@ -2,7 +2,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// #include "parser.h"
+// #include "parser.h"v
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
@@ -32,22 +32,34 @@ typedef struct s_env
     struct s_env    *next;
 }   t_env;
 
+typedef enum
+{
+	INTPUT_RED,
+	OUTPUT_RED,
+	HEREDOC,
+	APPEND,
+	PIPE,
+	WORD,
+	ENDF
+} TYPE_TOKEN;
+
+
+// typedef struct s_red
+// {
+// 	char *file;
+// 	TYPE_TOKEN type;
+// 	struct s_red *next;
+// }	t_red;
 
 // typedef struct s_command
 // {
-//     char **args;
-// 	char **infile;
-// 	char **outfile;
-//     bool            is_append;
-//     bool            is_heredoc;
-//     char *del;
-//     char **appendfile;
-//     struct s_command *next;
-// } t_command;
+// 	char **args;
+// 	t_red redstruct;
+// 	struct s_command	*next;
+// }				t_command;
 
 typedef struct s_command
 {
-	char 	*str;
 	char	**args; // execve("/bin/ls")
 	char	*infile;
 	char	*outfile; // 
@@ -134,6 +146,7 @@ void    free_array(char **array);
 void    free_data(t_data *data);
 void    clean_exit(t_data *data, int exit_code);
 void    free_array(char **array);
+
 
 
 #endif
