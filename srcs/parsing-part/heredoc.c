@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 20:20:59 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:17:56 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:33:14 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	handle_child_heredoc(t_command *cmd, t_env *env, char **files,
 			if (fd < 0)
 			{
 				perror("heredoc open");
-				exit(1);
+				exit(FAILURE);
 			}
 			write_in_here_doc_file(redir, env, fd);
 			close(fd);

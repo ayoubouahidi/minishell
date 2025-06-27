@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:23:39 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:21:25 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:33:14 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,11 @@ void	ign_ctrl_c_with_exit_status(int pid, int *status, int *signal_detected)
 {
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, status, 0);
-	g_exit_status = 130;
+	g_exit_status = CMD_NOT_FOUND;
 	if ((WIFSIGNALED(*status) && WTERMSIG(*status) == SIGINT)
-		|| (WIFEXITED(*status) && WEXITSTATUS(*status) == 130))
+		|| (WIFEXITED(*status) && WEXITSTATUS(*status) == CMD_NOT_FOUND))
 	{
-		g_exit_status = 130;
+		g_exit_status = CMD_NOT_FOUND;
 		*signal_detected = 1;
 		printf("\n");
 		return ;

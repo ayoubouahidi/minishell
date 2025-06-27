@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 16:15:03 by mdahani           #+#    #+#             */
-/*   Updated: 2025/06/27 11:27:40 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:33:14 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ static int	run_here_doc(t_command *cmd_list, t_env *env_list)
 	if (heredoc(cmd_list, env_list) == -1)
 	{
 		print_error("Error: heredoc failed\n");
-		return (0);
+		return (FAILURE);
 	}
 	if (cmd_list->signal_detected)
-		return (0);
-	return (1);
+		return (FAILURE);
+	return (SUCCESS);
 }
 
 static void	parsing_cmd(char *input, char **env)
@@ -116,7 +116,7 @@ static void	parsing_cmd(char *input, char **env)
 
 	
 	
-	if (!run_here_doc(cmd_list, data.env))
+	if (run_here_doc(cmd_list, data.env) == FAILURE)
 	{
 		free_env(data.env);
 		free_cmd(cmd_list);

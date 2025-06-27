@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:15:42 by stoof             #+#    #+#             */
-/*   Updated: 2025/06/24 14:29:00 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:44:04 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	handle_builtin(t_data *data)
 	{
 		close(stdin_copy);
 		close(stdout_copy);
-		return (1);
+		return (FAILURE);
 	}
 	
 	// kanshghlo l builtin
@@ -160,19 +160,19 @@ static int	launch_external_command(t_data *data)
 			ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 		else
 			ft_putendl_fd(": command not found", STDERR_FILENO);
-		return (127);
+		return (CMD_NOT_FOUND);
 	}
 	pid_ch = fork();
 	if (pid_ch == -1)
 	{
 		perror("minishell: fork");
 		free(path);
-		return (1);
+		return (FAILURE);
 	}
 	if (pid_ch == 0)
 	{
 		if (setup_redirections(data->cmd) < 0)
-			exit(1);
+			exit(FAILURE);
 		envp = env_to_array(data->env);
 		execve(path, data->cmd->args, envp);
 		perror("minishell: execve");
@@ -201,8 +201,8 @@ static int	external_command(t_data *data)
 	if (!data->cmd->args[0])
 	{
 		if (setup_redirections(data->cmd) < 0)
-			return (1);
-		return (0);
+			return (FAILURE);
+		return (SUCCESS);
 	}
 	return (launch_external_command(data));
 }
@@ -235,7 +235,7 @@ void	executer(t_data *data, char **envp)
 	if (!data->cmd->args[0])
 	{
 		if (setup_redirections(data->cmd) < 0)
-			data->exit_status = 1;
+			data->exit_status = FAILURE;
 		return ;
 	}
 	

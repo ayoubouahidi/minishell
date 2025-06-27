@@ -118,11 +118,10 @@ static void setup_child(int pre_fd, int *fd, t_command *cmd)
 static void execute_child(t_data *data, t_command *cmd)
 {
 	char *path;
-
 	char **envp;
 
 	if (setup_redirections(cmd) < 0)
-		exit(1);
+		exit(FAILURE);
 		
 	if (cmd->args && is_builtin(cmd->args[0]))
 	{
@@ -131,9 +130,7 @@ static void execute_child(t_data *data, t_command *cmd)
 	}
 	
 	if (!cmd->args || !cmd->args[0])
-		exit(0);
-		
-
+		exit(SUCCESS);
 
 	setup_redirections(cmd);
 
@@ -143,14 +140,12 @@ static void execute_child(t_data *data, t_command *cmd)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 		ft_putendl_fd(": command not found", STDERR_FILENO);
-		exit(127);
+		exit(CMD_NOT_FOUND);
 	}
 	envp = env_to_array(data->env);
 	execve(path, cmd->args, envp);
 	perror("minishell: execve");
 	free_array(envp);
-	execve(path, cmd->args, env_to_array(data->env));
-	perror("minishell: execve");
 	free(path);
 	exit(126);
 }
@@ -231,4 +226,9 @@ void execute_pipe(t_data *data)
 			data->exit_status = WEXITSTATUS(status);
 		j++;
 	}
-}
+
+		if (WIFEXITED(status) && j == p.i - 1)
+			data->exit_status = WEXITSTATUS(status);
+		j++;
+	}
+

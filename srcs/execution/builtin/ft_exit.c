@@ -28,7 +28,7 @@ int ft_exit(t_data *data, char **args)
         ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
         ft_putstr_fd(args[1], STDERR_FILENO);
         ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-        exit_code = 255;
+        exit_code = EXIT_NON_NUMERIC;
     }
     else if (args[2])
     {

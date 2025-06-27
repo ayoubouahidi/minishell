@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 20:12:00 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:16:03 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:33:14 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	is_only_spaces(char *input)
 	while (input[i])
 	{
 		if (input[i] > 32)
-			return (0);
+			return (FAILURE);
 		i++;
 	}
-	return (1);
+	return (SUCCESS);
 }

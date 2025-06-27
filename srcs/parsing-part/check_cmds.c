@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:46:47 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:16:03 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:33:14 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ int	check_cmds(t_token *tokens)
 	while (tmp_tokens)
 	{
 		if (tmp_tokens->type == TOKEN_PIPE && tmp_tokens->next == NULL)
-			return (0);
+			return (FAILURE);
 		if (tmp_tokens->type == TOKEN_PIPE)
 		{
 			tmp_tokens = tmp_tokens->next;
 			if (tmp_tokens->type == TOKEN_PIPE)
-				return (0);
+				return (FAILURE);
 		}
 		tmp_tokens = tmp_tokens->next;
 	}
-	return (1);
+	return (SUCCESS);
 }

@@ -39,5 +39,5 @@ int	ft_echo(char **args)
 	}
 	if (!n_flag)
 		ft_putchar_fd('\n', 1);
-	return (0);
+	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:22:18 by stoof             #+#    #+#             */
-/*   Updated: 2025/06/24 14:20:20 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:44:04 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static int handle_input_redirection(t_redirections *redir)
 	if (is_empty_or_whitespace(redir->file))
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
-		return (-1);
+		return (SYNTAX_ERROR);
 	}
 	
 	// kan7awlo nft7o l file
@@ -98,7 +98,7 @@ static int handle_input_redirection(t_redirections *redir)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		perror(redir->file);
-		return (-1);
+		return (FAILURE);
 	}
 	
 	// kanrbt9o l file b stdin
@@ -106,10 +106,10 @@ static int handle_input_redirection(t_redirections *redir)
 	{
 		close(fd);
 		perror("minishell: dup2");
-		return (-1);
+		return (FAILURE);
 	}
 	close(fd);
-	return (0);
+	return (SUCCESS);
 }
 
 /*
@@ -143,7 +143,7 @@ static int handle_output_redirection(t_redirections *redir)
 	if (is_empty_or_whitespace(redir->file))
 	{
 		ft_putstr_fd("minishell: ambiguous redirect\n", STDERR_FILENO);
-		return (-1);
+		return (FAILURE);
 	}
 	if (redir->type == TOKEN_APPEND)
 		flags = O_WRONLY | O_CREAT | O_APPEND;
@@ -154,16 +154,16 @@ static int handle_output_redirection(t_redirections *redir)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		perror(redir->file);
-		return (-1);
+		return (FAILURE);
 	}
 	if (dup2(fd, STDOUT_FILENO) < 0)
 	{
 		close(fd);
 		perror("minishell: dup2");
-		return (-1);
+		return (FAILURE);
 	}
 	close(fd);
-	return (0);
+	return (SUCCESS);
 }
 
 /*
@@ -198,7 +198,7 @@ int setup_redirections(t_command *cmd)
 
 	// ila makansh command wla redirections
 	if (!cmd || !cmd->redirections)
-		return (0);
+		return (SUCCESS);
 	
 	// kandouro 3la koll redirection
 	redir = cmd->redirections;
@@ -208,18 +208,18 @@ int setup_redirections(t_command *cmd)
 		if (redir->type == TOKEN_REDIRECT_IN)
 		{
 			if (handle_input_redirection(redir) < 0)
-				return (-1);
+				return (FAILURE);
 		}
 		// output redirection aw append
 		else if (redir->type == TOKEN_REDIRECT_OUT || redir->type == TOKEN_APPEND)
 		{
 			if (handle_output_redirection(redir) < 0)
-				return (-1);
+				return (FAILURE);
 		}
 		
 		redir = redir->next;
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 

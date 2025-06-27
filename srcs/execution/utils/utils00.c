@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 08:45:12 by stoof             #+#    #+#             */
-/*   Updated: 2025/06/24 14:16:38 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:44:04 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,5 +198,5 @@ int	execute_builtin(t_data *data)
 		return (ft_export(data, data->cmd->args));
 	if (!ft_strcmp(cmd, "unset"))
 		return (ft_unset(data, data->cmd->args));
-	return (0);
+	return (SUCCESS);
 }
