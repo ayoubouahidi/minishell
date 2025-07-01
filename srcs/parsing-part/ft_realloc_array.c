@@ -1,18 +1,18 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_realloc_array.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/17 12:50:05 by mdahani           #+#    #+#             */
-/*   Updated: 2025/05/24 16:16:03 by elkharti         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
+
+
+
+
+
+
+
+
+
+
 
 #include "../../includes/minishell.h"
 
-// func to add element to array and return the array
+
 char	**ft_realloc_array(char **arr, char *new_str)
 {
 	int		len;

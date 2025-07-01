@@ -93,7 +93,7 @@ typedef struct s_data
     bool        is_child;
 }   t_data;
 
-/* Parsing */
+
 int							is_only_spaces(char *input);
 t_token						*tokenize_input(char *input);
 char						*get_operator(char *input, int *i, t_quote_type *quote_type);
@@ -123,7 +123,7 @@ void						unlink_files(int total_here_doc, char **files);
 void						print_error(char *msg);
 char						*get_tmp_file(void);
 
-/* Builtins */
+
 int is_builtin(char *cmd);
 int     ft_cd(t_data *data, char **args);
 int     ft_echo(char **args);
@@ -133,7 +133,7 @@ int     ft_env(t_data *data, char **args);
 int     ft_export(t_data *data, char **args);
 int    ft_unset(t_data *data, char **args);
 
-/* Execution */
+
 void    executer(t_data *data, char **envp);
 char    *get_path(t_data *data, char *cmd);
 int execute_builtin(t_data *data);
@@ -141,7 +141,7 @@ void    execute_pipe(t_data *data);
 int	execute_single_command(t_data *data);
 int	setup_redirections(t_command *cmd);
 
-/* Environment */
+
 void init_env(t_data *data, char **envp);
 void update_env(t_env *env, const char *key, const char *new_value);
 void add_env_node(t_env **env, t_env *new_node);
@@ -153,7 +153,7 @@ void sort_and_print_env(t_env *env);
 bool	is_valid_key(const char *key);
 char **env_to_array(t_env *env);
 
-/* Memory */
+
 void cleanup_child_resources(char *path, char **envp);
 void    free_env(t_env *env);
 void free_cmd(t_command *cmd);
