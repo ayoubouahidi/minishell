@@ -14,8 +14,8 @@ SRCS    = \
 	$(SRC_DIR)/main.c \
 	$(SRC_DIR)/execution/executor.c \
 	$(SRC_DIR)/execution/init_env.c \
+	$(SRC_DIR)/parcing/parcer.c \
 	$(SRC_DIR)/execution/pipes.c \
-	$(SRC_DIR)/execution/redirections.c \
 	$(SRC_DIR)/execution/builtin/ft_cd.c \
 	$(SRC_DIR)/execution/builtin/ft_echo.c \
 	$(SRC_DIR)/execution/builtin/ft_env.c \
@@ -27,20 +27,10 @@ SRCS    = \
 	$(SRC_DIR)/execution/utils/utils00.c \
 	$(SRC_DIR)/execution/utils/utils01.c \
 	$(SRC_DIR)/execution/utils/env_utils.c \
-	$(SRC_DIR)/parsing-part/tokenizer.c \
-	$(SRC_DIR)/parsing-part/process_input.c \
-	$(SRC_DIR)/parsing-part/print_error.c \
-	$(SRC_DIR)/parsing-part/parse_tokens.c \
-	$(SRC_DIR)/parsing-part/is_only_spaces.c \
-	$(SRC_DIR)/parsing-part/heredoc.c \
-	$(SRC_DIR)/parsing-part/heredoc_utils.c \
-	$(SRC_DIR)/parsing-part/get_token_type.c \
-	$(SRC_DIR)/parsing-part/ft_strjoin_char.c \
-	$(SRC_DIR)/parsing-part/ft_realloc_array.c \
-	$(SRC_DIR)/parsing-part/expand_variables_and_remove_quotes.c \
-	$(SRC_DIR)/parsing-part/check_cmds.c \
-	$(SRC_DIR)/parsing-part/cases_of_expanding.c \
-	$(SRC_DIR)/parsing-part/cases_of_expanding_plus.c
+	$(SRC_DIR)/parcing/expantion.c \
+	$(SRC_DIR)/parcing/newsplit.c  \
+	$(SRC_DIR)/parcing/heredoc.c
+	# $(SRC_DIR)/execution/redirections.c \
 
 OBJS    = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

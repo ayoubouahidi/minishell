@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/01 10:57:38 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/02 13:00:46 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static int	handle_builtin(t_data *data)
 {
 	int	status;
 	
-	if (setup_redirections(data->cmd) < 0)
-		return (1);
+	// if (setup_redirections(data->cmd) < 0)
+	// 	return (1);
 	status = execute_builtin(data);
 	return (status);
 }
@@ -70,8 +70,8 @@ static int	launch_external_command(t_data *data)
 	}
 	if (pid_ch == 0)
 	{
-		if (setup_redirections(data->cmd) < 0)
-			exit(1);
+		// if (setup_redirections(data->cmd) < 0)
+		// 	exit(1);
 		envp = env_to_array(data->env);
 		execve(path, data->cmd->args, envp);
 		perror("minishell: execve");
@@ -94,8 +94,8 @@ void	executer(t_data *data, char **envp)
 	if (!data->cmd->args || !data->cmd->args[0])
 	{
 		save_std_fd(&saved_in, &saved_out);
-		if (setup_redirections(data->cmd) < 0)
-			data->exit_status = FAILURE;
+		// if (setup_redirections(data->cmd) < 0)
+		// 	data->exit_status = FAILURE;
 		reset_std_fd(saved_in, saved_out);
 		return ;
 	}

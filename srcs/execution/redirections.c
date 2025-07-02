@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/01 10:57:59 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/02 12:42:52 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,11 @@ static int handle_input_redirection(t_redirections *redir)
 {
 	int fd;
 	
-	
 	if (is_empty_or_whitespace(redir->file))
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
 		return (-1);
 	}
-	
-	
 	fd = open(redir->file, O_RDONLY);
 	if (fd < 0)
 	{
@@ -47,8 +44,6 @@ static int handle_input_redirection(t_redirections *redir)
 		perror(redir->file);
 		return (-1);
 	}
-	
-	
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
 		close(fd);
@@ -58,7 +53,6 @@ static int handle_input_redirection(t_redirections *redir)
 	close(fd);
 	return (0);
 }
-
 
 static int handle_output_redirection(t_redirections *redir)
 {
@@ -70,7 +64,7 @@ static int handle_output_redirection(t_redirections *redir)
 		ft_putstr_fd("minishell: ambiguous redirect\n", STDERR_FILENO);
 		return (-1);
 	}
-	if (redir->type == TOKEN_APPEND)
+	if (redir->type == APPEND)
 		flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
@@ -105,12 +99,12 @@ int setup_redirections(t_command *cmd)
 	while (redir)
 	{
 		
-		if (redir->type == TOKEN_REDIRECT_IN)
+		if (redir->type == INTPUT_RED)
 		{
 			if (handle_input_redirection(redir) < 0)
 				return (-1);
 		}
-		else if (redir->type == TOKEN_REDIRECT_OUT || redir->type == TOKEN_APPEND)
+		else if (redir->type == OUTPUT_RED || redir->type == APPEND)
 		{
 			if (handle_output_redirection(redir) < 0)
 				return (-1);
