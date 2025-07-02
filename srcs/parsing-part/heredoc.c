@@ -1,16 +1,5 @@
-
-
-
-
-
-
-
-
-
-
-
-
 #include "../../includes/minishell.h"
+#include <signal.h>
 
 static void	write_in_here_doc_file(t_redirections *redir, t_env *env, int fd)
 {
@@ -64,7 +53,12 @@ static void	handle_child_heredoc(t_command *cmd, t_env *env, char **files,
 
 static void	here_doc_process(t_command *cmds, t_env *env, char **files)
 {
-	int (pid), (nredir), (idx), (start_idx);
+	int	pid;
+	int	nredir;
+	int	idx;
+	int	start_idx;
+	int	status;
+
 	idx = 0;
 	while (cmds)
 	{
@@ -81,7 +75,8 @@ static void	here_doc_process(t_command *cmds, t_env *env, char **files)
 			}
 			else
 			{
-				waitpid(pid, NULL, 0);
+				ign_ctrl_c_with_exit_status(pid, &status, &cmds->signal_detected);
+				signal(SIGINT, SIG_DFL);
 			}
 			cmds->here_doc_file = ft_strdup(files[start_idx + nredir - 1]);
 			idx = start_idx + nredir;

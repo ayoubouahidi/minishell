@@ -1,20 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
+/*   Updated: 2025/07/02 10:19:36 by elkharti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <limits.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <string.h>
 # include <fcntl.h>
-# include <limits.h>
-# include <stdbool.h>
-# include <errno.h>
+# include <string.h>
 # include <signal.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 # include "../libft/libft.h"
+# include <stdbool.h>
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -22,14 +33,14 @@
 # define CMD_NOT_FOUND 127
 # define EXIT_NON_NUMERIC 255
 
-extern int g_exit_status;
+extern int	g_exit_status;
 
 typedef struct s_env
 {
-    char            *key;
-    char            *value;
-    struct s_env    *next;
-}   t_env;
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
 typedef enum s_token_type
 {
@@ -75,7 +86,7 @@ typedef struct s_command
 
 typedef struct s_pipe
 {
-    int			fd[2];
+	int			fd[2];
 	int			pre_fd;
 	pid_t		pids[1024];
 	int			i;
@@ -85,12 +96,12 @@ typedef struct s_pipe
 
 typedef struct s_data
 {
-    t_env       *env;
-    t_command   *cmd;
-    int         exit_status;
-    t_pipe      *pipe;
-    pid_t       pid;
-    bool        is_child;
+	t_env       *env;
+	t_command   *cmd;
+	int         exit_status;
+	t_pipe      *pipe;
+	pid_t       pid;
+	bool        is_child;
 }   t_data;
 
 
@@ -122,6 +133,7 @@ void						ign_ctrl_c_with_exit_status(int pid, int *status, int *signal_detected
 void						unlink_files(int total_here_doc, char **files);
 void						print_error(char *msg);
 char						*get_tmp_file(void);
+void 						safe_close(int fd);
 
 
 int is_builtin(char *cmd);
@@ -144,6 +156,7 @@ int	setup_redirections(t_command *cmd);
 
 void init_env(t_data *data, char **envp);
 void update_env(t_env *env, const char *key, const char *new_value);
+void update_or_add_env(t_env **env, const char *key, const char *new_value);
 void add_env_node(t_env **env, t_env *new_node);
 char *extract_key(char *str);
 char *extract_value(char *str);
@@ -159,5 +172,9 @@ void    free_env(t_env *env);
 void free_cmd(t_command *cmd);
 void    free_array(char **array);
 void    clean_exit(t_data *data, int exit_code);
+
+/* redirection fd helpers */
+int  save_std_fd(int *saved_in, int *saved_out);
+void reset_std_fd(int saved_in, int saved_out);
 
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
+/*   Updated: 2025/07/01 10:57:38 by elkharti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 void	free_env(t_env *env)
@@ -26,14 +38,6 @@ void	free_array(char **array)
 	free(array);
 }
 
-void	clean_exit(t_data *data, int exit_code)
-{
-	if (data->cmd)
-		free_cmd(data->cmd);
-	if (data->env)
-		free_env(data->env);
-	exit(exit_code);
-}
 
 static void	free_args(char **args)
 {
@@ -57,12 +61,6 @@ void	free_all(t_data *data)
 		free_args(data->cmd->args);
 		free(data->cmd);
 	}
-}
-
-void	cleanup_child_resources(char *path, char **envp)
-{
-	free(path);
-	free_array(envp);
 }
 
 void	free_cmd(t_command *cmd)

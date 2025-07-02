@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
+/*   Updated: 2025/07/01 10:57:38 by elkharti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "../../includes/minishell.h"
 
@@ -71,17 +83,20 @@ static int	launch_external_command(t_data *data)
 	return (WEXITSTATUS(data->exit_status));
 }
 
-
 void	executer(t_data *data, char **envp)
 {
 	(void)envp;
-	
-	if (!data->cmd || !data->cmd->args)
+	int	saved_in;
+	int	saved_out;
+
+	if (!data->cmd)
 		return ;
-	if (!data->cmd->args[0])
+	if (!data->cmd->args || !data->cmd->args[0])
 	{
+		save_std_fd(&saved_in, &saved_out);
 		if (setup_redirections(data->cmd) < 0)
-			data->exit_status = 1;
+			data->exit_status = FAILURE;
+		reset_std_fd(saved_in, saved_out);
 		return ;
 	}
 	if (!data->cmd->next)

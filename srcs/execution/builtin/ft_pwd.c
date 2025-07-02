@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
+/*   Updated: 2025/07/02 09:42:52 by elkharti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 int	ft_pwd(t_data *data)
@@ -14,4 +26,16 @@ int	ft_pwd(t_data *data)
 	perror("minishell: pwd");
 	data->exit_status = FAILURE;
 	return (FAILURE);
+}
+
+void	cleanup_child_resources(char *path, char **envp)
+{
+	free(path);
+	free_array(envp);
+}
+
+void safe_close(int fd)
+{
+    if (fd >= 0)
+        close(fd);
 }

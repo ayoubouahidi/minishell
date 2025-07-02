@@ -25,6 +25,7 @@ SRCS    = \
 	$(SRC_DIR)/execution/builtin/ft_unset.c \
 	$(SRC_DIR)/execution/utils/free.c \
 	$(SRC_DIR)/execution/utils/utils00.c \
+	$(SRC_DIR)/execution/utils/utils01.c \
 	$(SRC_DIR)/execution/utils/env_utils.c \
 	$(SRC_DIR)/parsing-part/tokenizer.c \
 	$(SRC_DIR)/parsing-part/process_input.c \

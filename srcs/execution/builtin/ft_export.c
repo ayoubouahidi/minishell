@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
+/*   Updated: 2025/07/02 10:19:36 by elkharti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 bool	is_valid_key(const char *key)
@@ -25,28 +37,11 @@ static void	print_invalid(char *arg)
 	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 }
 
-static void	update_or_add_env(t_data *data, char *key, char *val)
-{
-	t_env	*env;
-
-	env = data->env;
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-		{
-			free(env->value);
-			env->value = ft_strdup(val);
-			return ;
-		}
-		env = env->next;
-	}
-	add_env_node(&data->env, new_env_node(key, val));
-}
-
 static int	process_export_arg(t_data *data, char *arg)
 {
 	char	*key;
-	char	*val;
+	char	*val_part;
+	char	*value;
 
 	key = extract_key(arg);
 	if (!is_valid_key(key))
@@ -55,15 +50,19 @@ static int	process_export_arg(t_data *data, char *arg)
 		free(key);
 		return (FAILURE);
 	}
-	else if (ft_strchr(arg, '='))
-	{
-		val = extract_value(arg);
-		update_or_add_env(data, key, val);
-		free(val);
-		free(key);
-	}
+	val_part = ft_strchr(arg, '=');
+	if (val_part)
+		value = ft_strdup(val_part + 1);
 	else
+		value = ft_strdup("");
+	if (!value)
+	{
 		free(key);
+		return (FAILURE);
+	}
+	update_or_add_env(&data->env, key, value);
+	free(value);
+	free(key);
 	return (SUCCESS);
 }
 

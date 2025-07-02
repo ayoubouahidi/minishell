@@ -1,16 +1,5 @@
-
-
-
-
-
-
-
-
-
-
-
-
 #include "../../includes/minishell.h"
+#include <signal.h>
 
 char	*expand_the_heredoc(char *input_heredoc, t_env *env)
 {
@@ -81,16 +70,17 @@ int	count_redirections(t_command *cmds)
 
 void	ign_ctrl_c_with_exit_status(int pid, int *status, int *signal_detected)
 {
+	/* ignore SIGINT during the heredoc child run */
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, status, 0);
+	/* restore default handler */
+	signal(SIGINT, SIG_DFL);
 	g_exit_status = 130;
 	if ((WIFSIGNALED(*status) && WTERMSIG(*status) == SIGINT)
-		|| (WIFEXITED(*status) && WEXITSTATUS(*status) == 130))
+	 || (WIFEXITED(*status) && WEXITSTATUS(*status) == 130))
 	{
-		g_exit_status = 130;
 		*signal_detected = 1;
 		printf("\n");
-		return ;
 	}
 }
 

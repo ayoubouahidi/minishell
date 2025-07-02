@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 #include "../../includes/minishell.h"
 
 char	*case_of_squote(char *word, int *i, char *result)
@@ -30,14 +18,17 @@ char	*case_of_dquote(char *word, int *i, char *result, t_env *env)
 	(*i)++;
 	while (word[*i] && word[*i] != '"')
 	{
-		if (word[*i] == '$' && word[*i + 1] && (ft_isalnum(word[*i + 1])
+		if (word[*i] == '$' && word[*i + 1] && word[*i + 1] == '?')
+		{
+			char *status_s = ft_itoa(g_exit_status);
+
+			(*i) += 2;
+			result = ft_strjoin(result, status_s);
+			free(status_s);
+		}
+		else if (word[*i] == '$' && word[*i + 1] && (ft_isalnum(word[*i + 1])
 				|| word[*i + 1] == '_'))
 			result = case_of_normal_var_with_dquotes(word, i, result, env);
-		else if (word[*i] == '$' && word[*i + 1] && word[*i + 1] == '?')
-		{
-			(*i) += 2;
-			result = ft_strjoin(result, ft_itoa(g_exit_status));
-		}
 		else
 		{
 			result = ft_strjoin_char(result, word[*i]);

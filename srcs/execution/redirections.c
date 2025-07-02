@@ -1,7 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
+/*   Updated: 2025/07/01 10:57:59 by elkharti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
-
-
-
 
 static int is_empty_or_whitespace(char *str)
 {
@@ -18,7 +27,6 @@ static int is_empty_or_whitespace(char *str)
 	}
 	return (1);
 }
-
 
 static int handle_input_redirection(t_redirections *redir)
 {
@@ -102,16 +110,12 @@ int setup_redirections(t_command *cmd)
 			if (handle_input_redirection(redir) < 0)
 				return (-1);
 		}
-		
 		else if (redir->type == TOKEN_REDIRECT_OUT || redir->type == TOKEN_APPEND)
 		{
 			if (handle_output_redirection(redir) < 0)
 				return (-1);
 		}
-		
 		redir = redir->next;
 	}
 	return (0);
 }
-
-

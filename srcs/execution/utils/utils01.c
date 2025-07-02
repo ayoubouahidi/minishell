@@ -1,72 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils01.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
+/*   Updated: 2025/07/02 09:47:12 by elkharti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
-static char	*extract_filename(char *files, int start, int end)
+int save_std_fd(int *saved_in, int *saved_out)
 {
-	char	*file;
-	int		i;
-
-	i = 0;
-	if ((files[start] == '\'' && files[end - 1] == '\'') ||
-		(files[start] == '\"' && files[end - 1] == '\"'))
-	{
-		start++;
-		end--;
-	}
-	file = malloc(end - start + 1);
-	if (!file)
-		return (NULL);
-	while (start < end)
-		file[i++] = files[start++];
-	file[i] = '\0';
-	return (file);
+    *saved_in = dup(STDIN_FILENO);
+    *saved_out = dup(STDOUT_FILENO);
+    if (*saved_in < 0 || *saved_out < 0)
+        return (-1);
+    return (0);
 }
 
-char	*get_file_name(char *files)
+/* restore original stdin/stdout fds */
+void reset_std_fd(int saved_in, int saved_out)
 {
-	int	start;
-	int	end;
+    dup2(saved_in, STDIN_FILENO);
+    dup2(saved_out, STDOUT_FILENO);
+    close(saved_in);
+    close(saved_out);
+}
 
-	if (!files)
-		return (NULL);
-	start = 0;
-	while (files[start] && files[start] == ' ')
-		start++;
-	end = start;
-	while (files[end] && files[end] != ' ')
-		end++;
-	return (extract_filename(files, start, end));
-}
-	int	start;
-	int	end;
-
-	if (!files)
-		return (NULL);
-	start = 0;
-	while (files[start] && files[start] == ' ')
-		start++;
-	end = start;
-	while (files[end] && files[end] != ' ')
-		end++;
-	return (extract_filename(files, start, end));
-}
-		return (NULL);
-	start = 0;
-	while (files[start] && files[start] == ' ')
-		start++;
-	end = start;
-	while (files[end] && files[end] != ' ')
-		end++;
-	return (extract_filename(files, start, end));
-}
-int	env_size(t_env *env)
+int	is_builtin(char *cmd)
 {
-	int	i;
+	
+	if (!cmd)
+		return (0);
+	
+	return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "echo") ||
+		!ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "pwd") ||
+		!ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "export") ||
+		!ft_strcmp(cmd, "unset"));
+}
 
-	i = 0;
-	while (env)
-	{
-		i++;
-		env = env->next;
-	}
-	return (i);
+
+int	execute_builtin(t_data *data)
+{
+	char	*cmd;
+	
+	cmd = data->cmd->args[0];
+	if (!ft_strcmp(cmd, "cd"))
+		return ft_cd(data, data->cmd->args);
+	if (!ft_strcmp(cmd, "echo"))
+		return ft_echo(data->cmd->args);
+	if (!ft_strcmp(cmd, "exit"))
+		return (ft_exit(data, data->cmd->args));
+	if (!ft_strcmp(cmd, "pwd"))
+		return (ft_pwd(data));
+	if (!ft_strcmp(cmd, "env"))
+		return (ft_env(data, data->cmd->args));
+	if (!ft_strcmp(cmd, "export"))
+		return (ft_export(data, data->cmd->args));
+	if (!ft_strcmp(cmd, "unset"))
+		return (ft_unset(data, data->cmd->args));
+	return (0);
+}
+
+void	clean_exit(t_data *data, int exit_code)
+{
+	if (data->cmd)
+		free_cmd(data->cmd);
+	if (data->env)
+		free_env(data->env);
+	g_exit_status = exit_code;
+	exit(exit_code);
 }
