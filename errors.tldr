@@ -36,9 +36,9 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 355.1119689941406,
-			"y": 3150.2387726098596,
-			"lastActivityTimestamp": 1751477753694,
+			"x": 332.2789306640625,
+			"y": 65.12674196460273,
+			"lastActivityTimestamp": 1751477832382,
 			"meta": {}
 		},
 		{
@@ -80,19 +80,64 @@
 		},
 		{
 			"x": 0,
-			"y": -2535.8388092309533,
+			"y": 200.16134397289727,
 			"z": 1,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
 		},
 		{
-			"editingShapeId": null,
+			"x": 123.72111511230469,
+			"y": -21.542985360836724,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:wCuqMOsfNUQ7zjFuFD-53",
+			"type": "text",
+			"props": {
+				"color": "black",
+				"size": "m",
+				"w": 546.6587524414062,
+				"font": "draw",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 1,
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "to run tester :    node tester.js \"minishell$ \""
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							}
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a41mM",
+			"typeName": "shape"
+		},
+		{
+			"editingShapeId": "shape:wCuqMOsfNUQ7zjFuFD-53",
 			"croppingShapeId": null,
 			"selectedShapeIds": [
-				"shape:n1PfcLBfFh4AOn0mgpKGT"
+				"shape:wCuqMOsfNUQ7zjFuFD-53"
 			],
-			"hoveredShapeId": "shape:n1PfcLBfFh4AOn0mgpKGT",
+			"hoveredShapeId": null,
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
 			"focusedGroupId": null,
@@ -1210,7 +1255,7 @@
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "ns-resize",
+				"type": "default",
 				"rotation": 0
 			},
 			"isFocusMode": false,
