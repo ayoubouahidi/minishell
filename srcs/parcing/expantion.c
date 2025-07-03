@@ -216,6 +216,11 @@ char *expand_process(int *i, char *result, t_env *envp, char *final)
 		final = next_char_dquotes(result, i, final);
 	// else if (result[*i] == '$' && result[*i + 1] && ft_isdigit(result[*i + 1]))
 	// 	final = next_char_digits(result, i, final);
+	else if (result[*i] == '$' && result[*i + 1] && result[*i + 1] == '?')
+	{
+		final = ft_itoa(g_exit_status); // a refaire
+		(*i) += 2;
+	}
 	else
 		final = case_word(result, i, final);
 	// printf("final : %s\n", final);

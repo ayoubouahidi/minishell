@@ -36,10 +36,47 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 1300.7500534057622,
-			"y": 687.8892023302519,
-			"lastActivityTimestamp": 1751493226377,
+			"x": -166.88834337882508,
+			"y": 1411.9351513124732,
+			"lastActivityTimestamp": 1751540187869,
 			"meta": {}
+		},
+		{
+			"x": -3677.5803955882297,
+			"y": 261.797313586314,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:DbD9chQ-hRI3DVRx5iI3y",
+			"type": "geo",
+			"props": {
+				"w": 3453.486494896671,
+				"h": 1110.835136192274,
+				"geo": "rectangle",
+				"dash": "draw",
+				"growY": 0,
+				"url": "",
+				"scale": 1,
+				"color": "black",
+				"labelColor": "black",
+				"fill": "none",
+				"size": "m",
+				"font": "draw",
+				"align": "middle",
+				"verticalAlign": "middle",
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph"
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a59h0",
+			"typeName": "shape"
 		},
 		{
 			"x": 462.6275634765625,
@@ -79,9 +116,9 @@
 			"typeName": "shape"
 		},
 		{
-			"x": 93.24994659423783,
-			"y": 278.1107976697481,
-			"z": 0.5,
+			"x": 10046.888343378825,
+			"y": 1178.0648486875268,
+			"z": 0.1,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
@@ -135,9 +172,9 @@
 			"editingShapeId": null,
 			"croppingShapeId": null,
 			"selectedShapeIds": [
-				"shape:fP22ZbOUW7bKCYLknLtr_"
+				"shape:DbD9chQ-hRI3DVRx5iI3y"
 			],
-			"hoveredShapeId": null,
+			"hoveredShapeId": "shape:DbD9chQ-hRI3DVRx5iI3y",
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
 			"focusedGroupId": null,
@@ -183,6 +220,261 @@
 			},
 			"parentId": "page:page",
 			"index": "a21oh",
+			"typeName": "shape"
+		},
+		{
+			"x": -3486.888343378825,
+			"y": 495.7398388124732,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:QAkbtyb3jDI4v4hiMsCTc",
+			"type": "text",
+			"props": {
+				"color": "black",
+				"size": "m",
+				"w": 2785.890625,
+				"font": "draw",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 1.1299921293827913,
+				"richText": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "1. echo Hello\" \"World\"\" \"'$USER'\"$11337 'test \"'\"=>\"'\"'\"''\"'if passed this $USER\"$USER\"$USER'your Mr.$USER \" $NOTHING\"' 'but \"' the next one\" will '\"be\"'\"more 'harder $?'\"\"\"\" \" but 'you have\" \"' \"to \"'handle \"exit 'status'\"'' '$?"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "2. echo $2025"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "3. ls | | ls"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "4. ls |"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "5. ls | | wc"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "6. echo \"exit_code ->$? user ->$USER home -> $HOME\""
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "7. echo |"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "8. minishell"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "9. echo $var $foo"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "10. echo test$1test"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "11. echo $1"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "12. echo $NULL test"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "13. echo $USER.test"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "14. ls |"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "15. ls << |"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "16. ls | <"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "17. ls | <<"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "18. ls | >"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "19. ls | >>"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "a69dk",
 			"typeName": "shape"
 		},
 		{
@@ -1249,11 +1541,13 @@
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {},
+			"stylesForNextShape": {
+				"tldraw:geo": "rectangle"
+			},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "move",
+				"type": "nwse-resize",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -1263,8 +1557,8 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 1750,
-				"h": 934
+				"w": 1702,
+				"h": 565
 			},
 			"insets": [
 				false,

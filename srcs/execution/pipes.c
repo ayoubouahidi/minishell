@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/02 12:58:39 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:45:53 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ static void execute_child(t_data *data, t_command *cmd)
 	char *path;
 	char **envp;
 
-	// if (setup_redirections(cmd) < 0)
-	// 	exit(1);
+	if (setup_redirections(cmd) < 0)
+		exit(1);
 	if (cmd->args && is_builtin(cmd->args[0]))
 	{
 		execute_builtin(data);

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/02 13:00:28 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:44:54 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ char    *get_path(t_data *data, char *cmd);
 int execute_builtin(t_data *data);
 void    execute_pipe(t_data *data);
 int	execute_single_command(t_data *data);
-// int	setup_redirections(t_command *cmd);
+int	setup_redirections(t_command *cmd);
 
 /* ======================== ENVIRONMENT FUNCTIONS ======================== */
 

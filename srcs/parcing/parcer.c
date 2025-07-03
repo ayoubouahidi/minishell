@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/05/12 20:04:48 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:44:37 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void printlist(t_command *head)
 
     while (tmp)
     {
-        printf("┌────────────────────────────────────────┐\n");
-        printf("│              Command Block             │\n");
-        printf("├────────────────────────────────────────┤\n");
+        // printf("┌────────────────────────────────────────┐\n");
+        // printf("│              Command Block             │\n");
+        // printf("├────────────────────────────────────────┤\n");
 
         printf("│ here_doc_file : %-25s│\n", tmp->here_doc_file);
         printf("│ redirections  :  │\n");
@@ -249,12 +249,12 @@ t_lexer *creat_lexer(char *content)  // ls -la"fgrt"
 
 void	increment_using_index(t_lexer *lexer)
 {
-	if (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content))
-	{
-		lexer->i += 1;
-		lexer->c = lexer->content[lexer->i];
-		// printf("this is i : %d\n", lexer->i); 	
-	}
+    if (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content))
+    {
+        lexer->i += 1;
+        lexer->c = lexer->content[lexer->i];
+        // printf("this is i : %d\n", lexer->i);
+    }
 }
 
 t_token *string_process(t_lexer *lexer)
@@ -288,7 +288,7 @@ t_token *string_process(t_lexer *lexer)
 		increment_using_index(lexer); //f"c |<>"d
 	}
 	value = ft_substr(lexer->content, start, lexer->i - start);
-	printf("walid : %s\n", value);
+	// printf("walid : %s\n", value);
 	return (creat_token(WORD, value));
 }
 
@@ -735,7 +735,7 @@ t_command* parser_commande(t_token** tokendd)
 			infile((*tokendd), &flag_err);
 			if ((*tokendd)->type == OUTPUT_RED)
 			{
-				printf("in red\n");
+				// printf("in red\n");
 				red = creat_red((*tokendd)->next->value, OUTPUT_RED);
 				ft_lstadd_back_red(&red_head, red);
 
@@ -755,7 +755,7 @@ t_command* parser_commande(t_token** tokendd)
 			else if ((*tokendd)->type == PIPE)
 			{
 				infile((*tokendd), &flag_err);
-				printf("test done");				
+				// printf("test done");
 			}
             if (flag_err == 1) {
 				// if (args) free_array(args);
@@ -793,7 +793,7 @@ t_command	*parcer(char *line, t_env *envp)
 			while(1)
 			{
 				token = tokenize(lexer);
-				printf("token(%d, %s)\n", token->type, token->value);
+				// printf("token(%d, %s)\n", token->type, token->value);
 				// printf("test 0");
 				expantion_remove_quotes(token, envp);
 				// if(token->type == WORD)
