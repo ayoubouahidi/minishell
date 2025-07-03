@@ -37,14 +37,40 @@ int	countwords(char const *s, char c)
 	return (words);
 }
 
+int	is_inside_child(int flag)
+{
+	static int set;
+
+	if(flag == 1)
+		set = 1;
+	if(flag == 0)
+		set = 0;
+	return set;
+}
+
+void	here_doc_signal(int signum)
+{
+	(void)signum;
+	
+	printf("is inside = %d", is_inside_child(2));
+	if(is_inside_child(2))
+	{
+		exit(130);
+
+	}
+}
+
+
 void	handle_child_process(char *filename, char *del)
 {
 	char *line_heredoc;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
 	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0766);
 	while (1)
 	{
-		line_heredoc = readline(">");
+		line_heredoc = readline("> ");
 		if (ft_strcmp(line_heredoc, del) == 0) 
 		{
 			free(line_heredoc);
@@ -84,17 +110,28 @@ char *randome_generate()
 void	heredocprocess(t_command *cmd)
 {
 	int pid;
+	int status;
 
 	char *filename = randome_generate();
 	char *tmp = filename;
 	filename = ft_strjoin("/tmp/", filename);
 	free(tmp);
-	printf("============================%s\n\n", filename);
+	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
-		signal_child_handler(), handle_child_process(filename, cmd->del);
-	waitpid(pid, NULL, 0);
+	{
+		handle_child_process(filename, cmd->del);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status)) {
+        int signal_num = WTERMSIG(status);
+        g_exit_status = 128 + signal_num;
+		if(g_exit_status == 130)
+			write(1,"\n", 1); 
+    }
+	signal_parent_handler();
 	cmd->here_doc_file = filename;
+	write(1,"ff\n", 3);
 }
 
 int run_heredoc(t_command *cmd)
@@ -102,7 +139,7 @@ int run_heredoc(t_command *cmd)
 	if (cmd->is_heredoc)
 	{
 		heredocprocess(cmd);
-		return -1;
+		
 	}
 	return 0;
 }

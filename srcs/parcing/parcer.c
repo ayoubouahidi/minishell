@@ -36,43 +36,43 @@
 // linked list functions 
 
 
-void printlist(t_command *head)
-{
-    t_command *tmp = head;
-    int i;
+// void printlist(t_command *head)
+// {
+//     t_command *tmp = head;
+//     int i;
 
-    while (tmp)
-    {
-        // printf("┌────────────────────────────────────────┐\n");
-        // printf("│              Command Block             │\n");
-        // printf("├────────────────────────────────────────┤\n");
+//     while (tmp)
+//     {
+//         // printf("┌────────────────────────────────────────┐\n");
+//         // printf("│              Command Block             │\n");
+//         // printf("├────────────────────────────────────────┤\n");
 
-        printf("│ here_doc_file : %-25s│\n", tmp->here_doc_file);
-        printf("│ redirections  :  │\n");
-		while (tmp->redirections)
-		{
-			printf("red ===== %s|\n", tmp->redirections->file);
-			tmp->redirections = tmp->redirections->next;
-		}
-        printf("│ is_heredoc    : %-25s│\n", tmp->is_heredoc ? "true" : "false");
-        printf("│ del           : %-25s│\n", tmp->del ? tmp->del : "(null)");
+//         printf("│ here_doc_file : %-25s│\n", tmp->here_doc_file);
+//         printf("│ redirections  :  │\n");
+// 		while (tmp->redirections)
+// 		{
+// 			printf("red ===== %s|\n", tmp->redirections->file);
+// 			tmp->redirections = tmp->redirections->next;
+// 		}
+//         printf("│ is_heredoc    : %-25s│\n", tmp->is_heredoc ? "true" : "false");
+//         printf("│ del           : %-25s│\n", tmp->del ? tmp->del : "(null)");
 
-        printf("├─────────────── Arguments ──────────────┤\n");
-        if (tmp->args)
-        {
-            for (i = 0; tmp->args[i]; i++)
-                printf("│ arg[%d]        : %-24s│\n", i, tmp->args[i]);
-        }
-        else
-        {
-            printf("│ No arguments provided.                 │\n");
-        }
+//         printf("├─────────────── Arguments ──────────────┤\n");
+//         if (tmp->args)
+//         {
+//             for (i = 0; tmp->args[i]; i++)
+//                 printf("│ arg[%d]        : %-24s│\n", i, tmp->args[i]);
+//         }
+//         else
+//         {
+//             printf("│ No arguments provided.                 │\n");
+//         }
 
-        printf("└────────────────────────────────────────┘\n\n");
+//         printf("└────────────────────────────────────────┘\n\n");
 
-        tmp = tmp->next;
-    }
-}
+//         tmp = tmp->next;
+//     }
+// }
 
 
 
