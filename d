@@ -8,6 +8,5 @@ Makefile
 minishell
 objs
 out
-s
 srcs
 tester.js

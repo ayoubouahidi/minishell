@@ -138,6 +138,8 @@ int main(int ac, char **av, char **envp)
         {
             add_history(line);
             data.cmd = parcer(line, data.env);
+			if (!data.cmd)
+				continue;
 			if (run_heredoc(data.cmd) == -1)
 				return 0;
             if (data.cmd)

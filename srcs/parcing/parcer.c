@@ -616,17 +616,17 @@ bool match_file(char *file)
 }
 
 
-void	infile(t_token *token, int *flag_err)
+void	print_syntax_error(t_token *token)
 {
     // char *new_commande;
     
     if (!token || token->next->type == ENDF) {
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-        *flag_err = 1;
+
         // return NULL;
     }
-    token = token->next;
-    if (token->type != WORD) {
+    // token = token->next;
+    else if (token->type != WORD) {
         if (token->type == OUTPUT_RED)
 			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `>'\n", 2);
         else if (token->type == INTPUT_RED)
@@ -639,7 +639,6 @@ void	infile(t_token *token, int *flag_err)
 			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `|'\n", 2);
         else
 			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token\n", 2);
-        *flag_err = 1;
         // return NULL;
     }
     // return new_commande;
@@ -732,7 +731,7 @@ t_command* parser_commande(t_token** tokendd)
 		}
 		else {
 			in_red = true;
-			infile((*tokendd), &flag_err);
+			// infile((*tokendd), &flag_err);
 			if ((*tokendd)->type == OUTPUT_RED)
 			{
 				// printf("in red\n");
@@ -752,11 +751,6 @@ t_command* parser_commande(t_token** tokendd)
 				red = creat_red((*tokendd)->next->value, APPEND);
 				ft_lstadd_back_red(&red_head, red);
 			}
-			else if ((*tokendd)->type == PIPE)
-			{
-				infile((*tokendd), &flag_err);
-				// printf("test done");
-			}
             if (flag_err == 1) {
 				// if (args) free_array(args);
 				if (del) free(del);
@@ -771,6 +765,30 @@ t_command* parser_commande(t_token** tokendd)
 	return cmd;
 }
 
+bool	validate_pipe_parse(t_token *token)
+{
+	t_token *current_token = token;
+	// int i;
+
+	if(token->type == PIPE)
+	{
+		print_syntax_error(current_token);
+	 	return false;
+	}
+		while (current_token && current_token->type != ENDF)
+	{
+		if (current_token->type != WORD)
+		{
+			if (current_token->next  && current_token->next->type != WORD )
+			{
+				print_syntax_error(current_token);
+				return false;
+			}
+		}	
+		current_token = current_token->next;
+	}
+	return true;
+}
 
 t_command	*parcer(char *line, t_env *envp)
 {
@@ -794,7 +812,7 @@ t_command	*parcer(char *line, t_env *envp)
 			{
 				token = tokenize(lexer);
 				// printf("token(%d, %s)\n", token->type, token->value);
-				// printf("test 0");
+				// printf("test 0")
 				expantion_remove_quotes(token, envp);
 				// if(token->type == WORD)
 				// {
@@ -806,14 +824,17 @@ t_command	*parcer(char *line, t_env *envp)
 				if (token->type  == ENDF)
 					break;
 			}
+			if (!validate_pipe_parse(head_token))
+			{
+				return NULL;
+			}
 			while (head_token && head_token->type != ENDF)
 			{
+				
 				commande = parser_commande(&head_token);
 				ft_lstadd_back_cmd(&head, commande);
-				// printf("value %s\n", head_token->value);
 				head_token = head_token->next;
 			}
-			// printlist(head);
 			head_token = NULL;
 		}
 		else 

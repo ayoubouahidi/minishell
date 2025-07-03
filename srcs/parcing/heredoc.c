@@ -104,5 +104,6 @@ int run_heredoc(t_command *cmd)
 		heredocprocess(cmd);
 		return -1;
 	}
+	
 	return 0;
 }
