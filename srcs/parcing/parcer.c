@@ -253,7 +253,7 @@ void	increment_using_index(t_lexer *lexer)
 	{
 		lexer->i += 1;
 		lexer->c = lexer->content[lexer->i];
-		printf("this is i : %d\n", lexer->i);
+		// printf("this is i : %d\n", lexer->i); 	
 	}
 }
 
@@ -269,7 +269,7 @@ t_token *string_process(t_lexer *lexer)
 	flag_double = 0;
 	while (lexer->c != '\0' )
 	{
-		if (lexer->c == '\'')
+		if (lexer->c == '\'' && !flag_double)
 		{
 			if (!flag_single)
 				flag_single++;
