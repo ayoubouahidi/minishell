@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/03 11:44:54 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:05:35 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ t_env *new_env_node(char *key, char *value);
 void sort_and_print_env(t_env *env);
 bool	is_valid_key(const char *key);
 char **env_to_array(t_env *env);
+int	env_size(t_env *env);
+
 
 /* ======================== UTILITY FUNCTIONS ======================== */
 
@@ -143,6 +145,10 @@ void free_cmd(t_command *cmd);
 void    free_array(char **array);
 void    clean_exit(t_data *data, int exit_code);
 void safe_close(int fd);
+
+/* ======================== SIGNAL HANDLERS ======================== */
+void signal_parent_handler(void);
+void signal_child_handler(void);
 
 /* redirection fd helpers */
 int  save_std_fd(int *saved_in, int *saved_out);

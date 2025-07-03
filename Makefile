@@ -17,6 +17,7 @@ SRCS    = \
 	$(SRC_DIR)/parcing/parcer.c \
 	$(SRC_DIR)/execution/pipes.c \
 	$(SRC_DIR)/execution/redirections.c \
+	$(SRC_DIR)/execution/signals.c \
 	$(SRC_DIR)/execution/builtin/ft_cd.c \
 	$(SRC_DIR)/execution/builtin/ft_echo.c \
 	$(SRC_DIR)/execution/builtin/ft_env.c \
@@ -36,9 +37,9 @@ SRCS    = \
 OBJS    = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 $(NAME): $(LIBFT_DIR)/libft.a $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft $(READLINE) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft $(READLINE) -o $(NAME)   
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 

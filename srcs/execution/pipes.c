@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/03 11:45:53 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:05:09 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static pid_t create_pipe_and_fork(int *fd, t_command *cmd)
     pid = fork();
     if (pid == -1)
     {
+		signal_child_handler();
         perror("minishell: fork");
         exit(EXIT_FAILURE);
     }

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/02 11:10:35 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:00:38 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,12 @@ static void	print_sorted_env(t_env **sorted, int count)
 void	sort_and_print_env(t_env *env)
 {
 	t_env	*current;
-	t_env	*sorted[1000];
+	t_env	*sorted[env_size(env)];
 	int		count;
 
 	count = 0;
 	current = env;
-	while (current && count < 1000)
+	while (current && count < env_size(env))
 	{
 		sorted[count++] = current;
 		current = current->next;

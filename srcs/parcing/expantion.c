@@ -60,7 +60,7 @@ char *normal_var(int *i, char *result, t_env *envp, char *final)
     if (!tmp1)
         tmp1 = ft_strdup("");
     new_final = ft_strjoin(final, tmp1);
-	printf("DEBUG%sll", new_final);
+	// printf("DEBUG%sll", new_final); 	
     free(final);
     free(tmp1);
     return new_final;

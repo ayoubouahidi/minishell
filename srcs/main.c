@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/02 12:41:35 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:04:31 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int main(int ac, char **av, char **envp)
     
     ft_memset(&data, 0, sizeof(t_data)); 
     init_data(&data, envp);
-
+    signal_parent_handler();
     while (1)
     {
         line = readline("minishell$ ");
@@ -138,8 +138,6 @@ int main(int ac, char **av, char **envp)
         {
             add_history(line);
             data.cmd = parcer(line, data.env);
-			if (!data.cmd)
-				continue;
 			if (run_heredoc(data.cmd) == -1)
 				return 0;
             if (data.cmd)
