@@ -36,9 +36,9 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 332.2789306640625,
-			"y": 65.12674196460273,
-			"lastActivityTimestamp": 1751477832382,
+			"x": 1300.7500534057622,
+			"y": 687.8892023302519,
+			"lastActivityTimestamp": 1751493226377,
 			"meta": {}
 		},
 		{
@@ -79,9 +79,9 @@
 			"typeName": "shape"
 		},
 		{
-			"x": 0,
-			"y": 200.16134397289727,
-			"z": 1,
+			"x": 93.24994659423783,
+			"y": 278.1107976697481,
+			"z": 0.5,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
@@ -132,10 +132,10 @@
 			"typeName": "shape"
 		},
 		{
-			"editingShapeId": "shape:wCuqMOsfNUQ7zjFuFD-53",
+			"editingShapeId": null,
 			"croppingShapeId": null,
 			"selectedShapeIds": [
-				"shape:wCuqMOsfNUQ7zjFuFD-53"
+				"shape:fP22ZbOUW7bKCYLknLtr_"
 			],
 			"hoveredShapeId": null,
 			"erasingShapeIds": [],
@@ -186,8 +186,8 @@
 			"typeName": "shape"
 		},
 		{
-			"x": 836.7633666992188,
-			"y": 348.74208070800216,
+			"x": 528.7633666992188,
+			"y": 336.74208070800216,
 			"rotation": 0,
 			"isLocked": false,
 			"opacity": 1,
@@ -197,7 +197,7 @@
 			"props": {
 				"color": "black",
 				"size": "m",
-				"w": 2791.726806640625,
+				"w": 2793.015625,
 				"font": "draw",
 				"textAlign": "start",
 				"autoSize": true,
@@ -213,7 +213,7 @@
 							"content": [
 								{
 									"type": "text",
-									"text": ". echo Hello\" \"World\"\" \"'from the'\"harder 'test \"'\"=>\"'\"'\"''\"'if passed this 'your good' 'but \"' the next one\" will '\"be\"'\"more 'harder'\"\"\""
+									"text": "echo Hello\" \"World\"\" \"'from the'\"harder 'test \"'\"=>\"'\"'\"''\"'if passed this 'your good' 'but \"' the next one\" will '\"be\"'\"more 'harder'\"\"\""
 								}
 							]
 						},
@@ -249,7 +249,7 @@
 							"content": [
 								{
 									"type": "text",
-									"text": "4. echo \"$USER$NOT_EXISTING\""
+									"text": "\t4. echo \"$USER$NOT_EXISTING\""
 								}
 							]
 						},
@@ -405,7 +405,7 @@
 							"content": [
 								{
 									"type": "text",
-									"text": "17. echo hello >>> "
+									"text": "\t\t17. echo hello >>>  "
 								}
 							]
 						},
@@ -717,7 +717,7 @@
 							"content": [
 								{
 									"type": "text",
-									"text": "43. echo \"$USER\" | grep . | wc -c > out.txt"
+									"text": "\t43. echo \"$USER\" | grep . | wc -c > out.txt"
 								}
 							]
 						},
@@ -777,7 +777,7 @@
 							"content": [
 								{
 									"type": "text",
-									"text": "48. echo <<<"
+									"text": "\t48. echo <<<"
 								}
 							]
 						},
@@ -1101,7 +1101,7 @@
 							"content": [
 								{
 									"type": "text",
-									"text": "75. ls > >> |"
+									"text": "\t75. ls > >> |"
 								}
 							]
 						},
@@ -1113,7 +1113,7 @@
 							"content": [
 								{
 									"type": "text",
-									"text": "76. ls >>"
+									"text": "\t76. ls >>"
 								}
 							]
 						},
@@ -1249,13 +1249,11 @@
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {
-				"tldraw:geo": "rectangle"
-			},
+			"stylesForNextShape": {},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "default",
+				"type": "move",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -1265,8 +1263,8 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 2487.8974609375,
-				"h": 994.1725463867188
+				"w": 1750,
+				"h": 934
 			},
 			"insets": [
 				false,
@@ -1281,7 +1279,7 @@
 			"isChatting": false,
 			"highlightedUserIds": [],
 			"isFocused": true,
-			"devicePixelRatio": 1.4192707538604736,
+			"devicePixelRatio": 1,
 			"isCoarsePointer": false,
 			"isHoveringCanvas": true,
 			"openMenus": [],

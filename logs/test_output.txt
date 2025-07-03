@@ -1,1 +1,82 @@
-hello
+this is i : 1
+this is i : 2
+walid : rm
+token(5, rm)
+this is i : 3
+this is i : 4
+this is i : 5
+this is i : 6
+walid : -rf
+token(5, -rf)
+this is i : 7
+this is i : 8
+walid : a
+token(5, a)
+this is i : 9
+this is i : 10
+walid : b
+token(5, b)
+this is i : 11
+this is i : 12
+walid : d
+token(5, d)
+this is i : 13
+this is i : 14
+walid : e
+token(5, e)
+this is i : 15
+this is i : 16
+walid : f
+token(5, f)
+this is i : 17
+this is i : 18
+walid : p
+token(5, p)
+this is i : 19
+this is i : 20
+walid : q
+token(5, q)
+this is i : 21
+this is i : 22
+this is i : 23
+walid : t1
+token(5, t1)
+this is i : 24
+this is i : 25
+this is i : 26
+this is i : 27
+this is i : 28
+walid : test
+token(5, test)
+this is i : 29
+this is i : 30
+walid : x
+token(5, x)
+this is i : 31
+this is i : 32
+walid : z
+token(5, z)
+token(6, END)
+┌────────────────────────────────────────┐
+│              Command Block             │
+├────────────────────────────────────────┤
+│ here_doc_file : (null)                   │
+│ redirections  :  │
+│ is_heredoc    : false                    │
+│ del           : (null)                   │
+├─────────────── Arguments ──────────────┤
+│ arg[0]        : rm                      │
+│ arg[1]        : -rf                     │
+│ arg[2]        : a                       │
+│ arg[3]        : b                       │
+│ arg[4]        : d                       │
+│ arg[5]        : e                       │
+│ arg[6]        : f                       │
+│ arg[7]        : p                       │
+│ arg[8]        : q                       │
+│ arg[9]        : t1                      │
+│ arg[10]        : test                    │
+│ arg[11]        : x                       │
+│ arg[12]        : z                       │
+└────────────────────────────────────────┘
+

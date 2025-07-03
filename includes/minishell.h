@@ -66,7 +66,7 @@ typedef struct s_token
 typedef struct s_redirections
 {
 	char					*file;        /* BOTH - parsed, used in execution */
-	t_token					type;         /* BOTH - parsed, used in execution */
+	TYPE_TOKEN					type;         /* BOTH - parsed, used in execution */
 	struct s_redirections	*next;        /* BOTH - linked list structure */
 }							t_redirections;
 

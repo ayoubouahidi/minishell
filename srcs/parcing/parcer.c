@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/02 17:55:30 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/05/12 20:04:48 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,41 +36,43 @@
 // linked list functions 
 
 
-// void printlist(t_command *head)
-// {
-//     t_command *tmp = head;
-//     int i;
+void printlist(t_command *head)
+{
+    t_command *tmp = head;
+    int i;
 
-//     while (tmp)
-//     {
-//         printf("┌────────────────────────────────────────┐\n");
-//         printf("│              Command Block             │\n");
-//         printf("├────────────────────────────────────────┤\n");
+    while (tmp)
+    {
+        printf("┌────────────────────────────────────────┐\n");
+        printf("│              Command Block             │\n");
+        printf("├────────────────────────────────────────┤\n");
 
-//         // printf("│ Infile      : %-25s│\n", tmp->infile ? tmp->infile : "(null)");
-//         // printf("│ Outfile     : %-25s│\n", tmp->outfile ? tmp->outfile : "(null)");
-//         // printf("│ AppendFile  : %-25s│\n", tmp->appendfile ? tmp->appendfile : "(null)");
-//         printf("│ Delimiter   : %-25s│\n", tmp->del ? tmp->del : "(null)");
+        printf("│ here_doc_file : %-25s│\n", tmp->here_doc_file);
+        printf("│ redirections  :  │\n");
+		while (tmp->redirections)
+		{
+			printf("red ===== %s|\n", tmp->redirections->file);
+			tmp->redirections = tmp->redirections->next;
+		}
+        printf("│ is_heredoc    : %-25s│\n", tmp->is_heredoc ? "true" : "false");
+        printf("│ del           : %-25s│\n", tmp->del ? tmp->del : "(null)");
 
-//         // printf("│ is_append   : %-25s│\n", tmp->is_append ? "true" : "false");
-//         printf("│ is_heredoc  : %-25s│\n", tmp->is_heredoc ? "true" : "false");
+        printf("├─────────────── Arguments ──────────────┤\n");
+        if (tmp->args)
+        {
+            for (i = 0; tmp->args[i]; i++)
+                printf("│ arg[%d]        : %-24s│\n", i, tmp->args[i]);
+        }
+        else
+        {
+            printf("│ No arguments provided.                 │\n");
+        }
 
-//         printf("├─────────────── Arguments ──────────────┤\n");
-//         if (tmp->args)
-//         {
-//             for (i = 0; tmp->args[i]; i++)
-//                 printf("│ arg[%d]      : %-25s│\n", i, tmp->args[i]);
-//         }
-//         else
-//         {
-//             printf("│ No arguments provided.                 │\n");
-//         }
+        printf("└────────────────────────────────────────┘\n\n");
 
-//         printf("└────────────────────────────────────────┘\n\n");
-
-//         tmp = tmp->next;
-//     }
-// }
+        tmp = tmp->next;
+    }
+}
 
 
 
@@ -251,7 +253,7 @@ void	increment_using_index(t_lexer *lexer)
 	{
 		lexer->i += 1;
 		lexer->c = lexer->content[lexer->i];
-		// printf("this is i : %d\n", lexer->i);
+		printf("this is i : %d\n", lexer->i);
 	}
 }
 
@@ -274,7 +276,7 @@ t_token *string_process(t_lexer *lexer)
 			else
 				flag_single--;
 		}
-		if (lexer->c == '\"')
+		if (lexer->c == '\"' && !flag_single)
 		{
 			if (!flag_double)
 				flag_double++;
@@ -286,7 +288,7 @@ t_token *string_process(t_lexer *lexer)
 		increment_using_index(lexer); //f"c |<>"d
 	}
 	value = ft_substr(lexer->content, start, lexer->i - start);
-	// printf("walid : %s\n", value);
+	printf("walid : %s\n", value);
 	return (creat_token(WORD, value));
 }
 
@@ -614,52 +616,33 @@ bool match_file(char *file)
 }
 
 
-char *infile(t_token *token, char *arg, int *flag_err)
+void	infile(t_token *token, int *flag_err)
 {
-    char *new_commande;
+    // char *new_commande;
     
     if (!token || token->next->type == ENDF) {
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
         *flag_err = 1;
-        return NULL;
+        // return NULL;
     }
     token = token->next;
     if (token->type != WORD) {
         if (token->type == OUTPUT_RED)
-            ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `>'\n", 2);
         else if (token->type == INTPUT_RED)
-            ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `<'\n", 2);
         else if (token->type == APPEND)
-            ft_putstr_fd("minishell: syntax error near unexpected token `>>'\n", 2);
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `>>'\n", 2);
         else if (token->type == HEREDOC)
-            ft_putstr_fd("minishell: syntax error near unexpected token `<<'\n", 2);
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `<<'\n", 2);
         else if (token->type == PIPE)
-            ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `|'\n", 2);
         else
-            ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
-            
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token\n", 2);
         *flag_err = 1;
-        return NULL;
+        // return NULL;
     }
-    if (!arg) {
-        new_commande = ft_strdup(token->value);
-    } else {
-        int lenv = ft_strlen(token->value);
-        int lenghtcommande = ft_strlen(arg);
-        
-        new_commande = (char *)malloc(lenghtcommande + 1 + lenv + 1);
-        if (!new_commande) 
-		{	
-            *flag_err = 1;
-            return NULL;
-        }
-        
-        ft_strlcpy(new_commande, arg, lenghtcommande + 1);
-        new_commande[lenghtcommande] = ' ';
-        ft_strlcpy(new_commande + lenghtcommande + 1, token->value, lenv + 1);
-        free(arg); // Free the old arg
-    }
-    return new_commande;
+    // return new_commande;
 }
 
 bool heredoc_check_append(t_token *token, char **del)
@@ -681,55 +664,54 @@ bool heredoc_check_append(t_token *token, char **del)
 
 // parser part
 
-/* redrection function
+//  redrection function
 
 
-t_red *creat_red(char *file, TYPE_TOKEN type)
+t_redirections *creat_red(char *file, TYPE_TOKEN type)
 {
-	t_red *red;
+	t_redirections *red;
 
-	red = (t_red *)malloc(sizeof(t_red));
+	red = (t_redirections *)malloc(sizeof(t_redirections));
 	if (!red)
 		return (NULL);
 	red->file = file;
 	red->type =  type;
 	red->next = NULL;
-	return(NULL);
+	return(red);
 }
 	
-*/
-// void	ft_lstadd_back_red(t_red **lst, t_red *new)
-// {
-// 	t_red	*tmp;
 
-// 	if (!lst || !new)
-// 		return ;
-// 	tmp = *lst;
-// 	if (*lst)
-// 	{
-// 		while (tmp->next)
-// 			tmp = tmp->next;
-// 		tmp->next = new;
-// 	}
-// 	else
-// 		*lst = new;
-// }
+void	ft_lstadd_back_red(t_redirections **lst, t_redirections *new)
+{
+	t_redirections	*tmp;
+
+	if (!lst || !new)
+		return ;
+	tmp = *lst;
+	if (*lst)
+	{
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
+	else
+		*lst = new;
+}
 
 
 t_command* parser_commande(t_token** tokendd)
 {
     t_command *cmd;
     char **args = NULL;
-    // char *infile_file = NULL;
-    // char *outfile_file = NULL;
     char *del = NULL;
-    // char *append = NULL;
+
     bool in_red = false;
-    // int flag_err = 0;
+    int flag_err = 0;
+	t_redirections *red_head;
+	t_redirections *red;
 
     if (!tokendd || !*tokendd)
         return NULL;
-
     cmd = (t_command *)malloc(sizeof(t_command));
     if (!cmd)
         return NULL;
@@ -737,44 +719,56 @@ t_command* parser_commande(t_token** tokendd)
     cmd->is_heredoc = false;
     cmd->del = NULL;
     cmd->next = NULL;
-    while (tokendd && (*tokendd)->type != ENDF && (*tokendd)->type != PIPE)
-    {
-        if((*tokendd)->type == WORD)
-        {
-            if(!in_red)
-                args = to_arg((*tokendd), args);
-            in_red = false;
-        }
-        else {
-            in_red = true;
-            // if ((*tokendd)->type == OUTPUT_RED)
-            //     outfile_file = infile((*tokendd), outfile_file, &flag_err);
-            // else if ((*tokendd)->type == INTPUT_RED)
-            //     infile_file = infile((*tokendd), infile_file, &flag_err);
-            // else if ((*tokendd)->type == HEREDOC)
-            //     cmd->is_heredoc = heredoc_check_append((*tokendd), &del);
-            // else if ((*tokendd)->type == APPEND)
-            // {
-            //     append = infile((*tokendd), append, &flag_err);
-            //     cmd->is_append = true;
-            // }
-            // if (flag_err == 1) {
-
-            //     if (args) free_array(args);
-            //     if (infile_file) free(infile_file);
-            //     if (outfile_file) free(outfile_file);
-            //     if (del) free(del);
-            //     if (append) free(append);
-            //     free(cmd);
-            //     return NULL;
-            // }
-        }
-        (*tokendd) = (*tokendd)->next;
-    }
+	red_head = NULL;
+	red = NULL;
     
-    cmd->args = args;
-    cmd->del = del;
-    return cmd;
+	while (tokendd && (*tokendd)->type != ENDF && (*tokendd)->type != PIPE)
+	{
+		if((*tokendd)->type == WORD)
+		{
+			if(!in_red)
+				args = to_arg((*tokendd), args);
+			in_red = false;
+		}
+		else {
+			in_red = true;
+			infile((*tokendd), &flag_err);
+			if ((*tokendd)->type == OUTPUT_RED)
+			{
+				printf("in red\n");
+				red = creat_red((*tokendd)->next->value, OUTPUT_RED);
+				ft_lstadd_back_red(&red_head, red);
+
+			}
+			else if ((*tokendd)->type == INTPUT_RED)
+			{
+				red = creat_red((*tokendd)->next->value, INTPUT_RED);
+				ft_lstadd_back_red(&red_head, red);
+			}
+			else if ((*tokendd)->type == HEREDOC)
+				cmd->is_heredoc = heredoc_check_append((*tokendd), &del);
+			else if ((*tokendd)->type == APPEND)
+			{
+				red = creat_red((*tokendd)->next->value, APPEND);
+				ft_lstadd_back_red(&red_head, red);
+			}
+			else if ((*tokendd)->type == PIPE)
+			{
+				infile((*tokendd), &flag_err);
+				printf("test done");				
+			}
+            if (flag_err == 1) {
+				// if (args) free_array(args);
+				if (del) free(del);
+				return NULL;
+			}
+		}
+		(*tokendd) = (*tokendd)->next;
+	}
+	cmd->args = args;
+	cmd->del = del;
+	cmd->redirections = red_head;
+	return cmd;
 }
 
 
@@ -799,7 +793,7 @@ t_command	*parcer(char *line, t_env *envp)
 			while(1)
 			{
 				token = tokenize(lexer);
-				// printf("token(%d, %s)\n", token->type, token->value);
+				printf("token(%d, %s)\n", token->type, token->value);
 				// printf("test 0");
 				expantion_remove_quotes(token, envp);
 				// if(token->type == WORD)
