@@ -46,7 +46,7 @@ static void	free_args(char **args)
 	if (!args)
 		return ;
 	i = 0;
-	while (args[i])
+	while (args && args[i])
 	{
 		free(args[i]);
 		i++;
