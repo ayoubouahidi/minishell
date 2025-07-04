@@ -288,7 +288,6 @@ t_token *string_process(t_lexer *lexer)
 		increment_using_index(lexer); //f"c |<>"d
 	}
 	value = ft_substr(lexer->content, start, lexer->i - start);
-	// printf("walid : %s\n", value);
 	return (creat_token(WORD, value));
 }
 
@@ -793,7 +792,6 @@ bool	validate_pipe_parse(t_token *token)
 t_command	*parcer(char *line, t_env *envp)
 {
 	char	*trim;
-	// char *expantion;
 	t_token *token;
 	t_token *head_token;
 	t_lexer *lexer;
@@ -811,36 +809,23 @@ t_command	*parcer(char *line, t_env *envp)
 			while(1)
 			{
 				token = tokenize(lexer);
-				// printf("token(%d, %s)\n", token->type, token->value);
-				// printf("test 0")
 				expantion_remove_quotes(token, envp);
-				// if(token->type == WORD)
-				// {
-				// 	expantion = expanation_token_env_var(token->value , envp);
-				// 	free(token->value);
-				// 	token->value = expantion;
-				// }
 				ft_lstadd_back_token(&head_token, token);
 				if (token->type  == ENDF)
 					break;
 			}
 			if (!validate_pipe_parse(head_token))
-			{
 				return NULL;
-			}
 			while (head_token && head_token->type != ENDF)
-			{
-				
+			{				
 				commande = parser_commande(&head_token);
 				ft_lstadd_back_cmd(&head, commande);
 				head_token = head_token->next;
 			}
 			head_token = NULL;
 		}
-		else 
-		{
+		else
 			write(1, "Quotes Error !\n", 15);
-		}
 		return(head);
 }
 

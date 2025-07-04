@@ -176,14 +176,11 @@ int main(int ac, char **av, char **envp)
         {
             add_history(line);
             data.cmd = parcer(line, data.env);
-			if (run_heredoc(data.cmd) == -1)
+			printlist(data.cmd);
+			if (data.cmd && run_heredoc(data.cmd) == -1)
 				return 0;
 			if (data.cmd)
-			{
-				// printlist(data.cmd);
-                // printf("test done\n");
                 executer(&data, envp);
-            }
             free_cmd(data.cmd);
             data.cmd = NULL;
         }

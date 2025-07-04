@@ -5,12 +5,6 @@
 #include <stdbool.h>
 #include "../../includes/parser.h"
 
-
-// $ll$$all
-// syntax error
-//  >> v >> v
-//  >> v > v
-
 char *join_char(char *str, char c)
 {
 	char *newstr;
@@ -35,8 +29,6 @@ char	*case_word(char	*result, int *i,char *final)
 	(*i)++;
 	return (final);
 }
-
-
 
 char *normal_var(int *i, char *result, t_env *envp, char *final)
 {
@@ -65,69 +57,6 @@ char *normal_var(int *i, char *result, t_env *envp, char *final)
     free(tmp1);
     return new_final;
 }
-
-/*
-char *assemble_expanded_string(char *original, int quote_start,  int quote_end, char *expansion)
-{
-    char *before;
-    char *after;
-    char *result;
-    
-    before = ft_substr(original, 0, quote_start);
-    after = ft_strdup(original + quote_end);
-    
-    if (!before || !after) {
-        free(before);
-        free(after);
-        return NULL;
-    }
-    
-    result = ft_strjoin(before, expansion);
-    free(before);
-    if (!result) {
-        free(after);
-        return NULL;
-    }
-    
-    before = result;
-    result = ft_strjoin(result, after);
-    free(before);
-    free(after);
-    
-    return result;
-}
-
-char *squotes_expand(int *i, char *result)
-{
-    int start;
-    char *extracted;
-    char *new_result;
-    
-    (*i)++; // Skip opening quote
-    start = *i;
-    
-    // Find closing quote
-    while (result[*i] && result[*i] != '\'')
-        (*i)++;
-    
-    if (!result[*i]) {
-        fprintf(stderr, "minishell: unmatched single quote\n");
-        return NULL; // Or handle error differently
-    }
-    
-    // Extract content between quotes
-    extracted = ft_substr(result, start, *i - start);
-    if (!extracted)
-        return NULL;
-    
-    // Create new string combining parts before/after quotes
-    new_result = assemble_expanded_string(result, start-1, *i+1, extracted);
-    free(extracted);
-    
-    (*i)--; // Adjust position since expand_process will increment
-    return new_result;
-}*/
-
 
 char *squotes_expand(int *i, char* result, char *final)
 {
@@ -235,19 +164,14 @@ char *expanation_token_env_var(char *str, t_env *envp)
 	char	*final;
 	int i;
 	int count;
-	// int	pos;
-	// int j;
-
 
 	count = 0;
 	i = 0;
 	result = ft_strdup(str);
 	tmp1 = envp;
 	final = ft_strdup("");
-
 	while (result[i] != '\0')
 		final = expand_process(&i, result, tmp1, final);
-	// printf("final in expand: %s\n", final);
 	return (final);
 }
 
@@ -255,16 +179,10 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 {
 	char *result;
 
-	// printf("test : done");
-	// if ()
 	if(token->type == WORD)
 	{
 		result = expanation_token_env_var(token->value , envp);
-	
-		// printf("--------------------\n%s--------------------------\n", result);
 		free(token->value);
 		token->value = result;
-		// printf("result :%s\n", token->value);
 	}
-	// return (result);
 }
