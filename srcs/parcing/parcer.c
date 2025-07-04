@@ -614,17 +614,11 @@ bool match_file(char *file)
 	return (true);
 }
 
-
 void	print_syntax_error(t_token *token)
 {
-    // char *new_commande;
-    
     if (!token || token->next->type == ENDF) {
         ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-
-        // return NULL;
     }
-    // token = token->next;
     else if (token->type != WORD) {
         if (token->type == OUTPUT_RED)
 			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `>'\n", 2);
@@ -638,9 +632,7 @@ void	print_syntax_error(t_token *token)
 			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `|'\n", 2);
         else
 			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token\n", 2);
-        // return NULL;
     }
-    // return new_commande;
 }
 
 bool heredoc_check_append(t_token *token, char **del)
@@ -654,16 +646,9 @@ bool heredoc_check_append(t_token *token, char **del)
         printf("Syntaxe error: append or heredoc problem\n");
         return false;
     }
-	// v
-	// if(prev->type == APPEND)
 	*del = token->value;
     return true;
 }
-
-// parser part
-
-//  redrection function
-
 
 t_redirections *creat_red(char *file, TYPE_TOKEN type)
 {

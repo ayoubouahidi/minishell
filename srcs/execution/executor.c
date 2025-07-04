@@ -51,6 +51,7 @@ static int	launch_external_command(t_data *data)
 	pid_t	pid_ch;
 
 	path = get_command_path(data);
+	
 	if (!path)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);

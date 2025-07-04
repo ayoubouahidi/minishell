@@ -176,7 +176,7 @@ int main(int ac, char **av, char **envp)
         {
             add_history(line);
             data.cmd = parcer(line, data.env);
-			printlist(data.cmd);
+			// printlist(data.cmd);
 			if (data.cmd && run_heredoc(data.cmd) == -1)
 				return 0;
 			if (data.cmd)

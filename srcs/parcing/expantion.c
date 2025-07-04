@@ -23,6 +23,20 @@ char *join_char(char *str, char c)
 	return (newstr);
 }
 
+char *handle_exit_code(int *i, char *final)
+{
+	char *exit_str;
+	char *temp_final;
+	
+	exit_str = ft_itoa(g_exit_status);
+	temp_final = ft_strjoin(final, exit_str);
+	free(final);
+	free(exit_str);
+	final = temp_final;
+	(*i) += 2;
+	return (final);
+}
+
 char	*case_word(char	*result, int *i,char *final)
 {
 	final = join_char(final, result[*i]);
@@ -80,10 +94,10 @@ char *double_quotes_expand(int *i, char *result, t_env *envp, char *final)
 	{
 		if (result[*i] == '$' && ft_isalnum(result[*i + 1]))
 			final = normal_var(i, result, envp, final);
-		else if (result[*i] == '$' && result[*i] == '?')
+		else if (result[*i] == '$' && result[*i + 1] == '?')
 		{
-			final = ft_itoa(g_exit_status); // a refaire
-			(*i) += 2;
+			// printf("DEBUB : \n");
+			final = handle_exit_code(i, final);
 		}
 		else 
 		{
@@ -133,6 +147,8 @@ char *next_char_digits(char  *result, int *i, char *final)
 	return(final);
 }
 
+
+
 char *expand_process(int *i, char *result, t_env *envp, char *final)
 {
 	if (result[*i] == '\'')
@@ -148,10 +164,7 @@ char *expand_process(int *i, char *result, t_env *envp, char *final)
 	else if (result[*i] == '$' && result[*i + 1] && ft_isdigit(result[*i + 1]))
 		final = next_char_digits(result, i, final);
 	else if (result[*i] == '$' && result[*i + 1] && result[*i + 1] == '?')
-	{
-		final = ft_itoa(g_exit_status); // a refaire
-		(*i) += 2;
-	}
+		final = handle_exit_code( i, final);
 	else
 		final = case_word(result, i, final);
     return final;
