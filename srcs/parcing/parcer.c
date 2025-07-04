@@ -403,85 +403,7 @@ t_token *string_process(t_lexer *lexer)
 // 	return (creat_token(WORD, value));
 // }
 
-char *is_word(t_lexer *lexer)
-{
-    t_lexer tmp;
-    int count;
-    char *value;
 
-    tmp = *lexer;
-    count = 0;
-    
-    // First pass: count all characters in the word
-    while (ft_isalnum(tmp.c) || tmp.c == '=' || tmp.c == '"')
-    {
-        if (tmp.c == '"')
-        {
-            // Count the opening quote
-            count++;
-            increment_using_index(&tmp);
-            
-            // Count everything until closing quote
-            while (tmp.c != '"' && tmp.c != '\0')
-            {
-                count++;
-                increment_using_index(&tmp);
-            }
-            
-            // Count the closing quote if present
-            if (tmp.c == '"')
-            {
-                count++;
-                increment_using_index(&tmp);
-            }
-        }
-        else
-        {
-            count++;
-            increment_using_index(&tmp);
-        }
-    }
-    
-    // Allocate memory
-    value = (char *)malloc(count + 1);
-    if (!value)
-        return NULL;
-    
-    // Second pass: copy characters
-    count = 0;
-    
-    while (ft_isalnum(lexer->c) || lexer->c == '=' || lexer->c == '"' || lexer->c == '\'')
-    {
-        if (lexer->c == '"' || lexer->c == '\'')
-        {
-            // Copy the opening quote
-            value[count++] = lexer->c;
-            increment_using_index(lexer);
-            
-            // Copy everything until closing quote
-            while ((lexer->c != '"' || lexer->c == '\'') && lexer->c != '\0')
-            {
-                value[count++] = lexer->c;
-                increment_using_index(lexer);
-            }
-            
-            // Copy the closing quote if present
-            if (lexer->c == '"' || lexer->c == '\'')
-            {
-                value[count++] = lexer->c;
-                increment_using_index(lexer);
-            }
-        }
-        else
-        {
-            value[count++] = lexer->c;
-            increment_using_index(lexer);
-        }
-    }
-    
-    value[count] = '\0';
-    return (value);
-}
 
 
 char *tostr(char c)
@@ -559,9 +481,8 @@ t_token	*tokenize(t_lexer *lexer)
 		if (lexer->c == '>')
 			return (check_append(lexer));
 		}
-		// increment_using_index(lexer);
 		return (creat_token(ENDF, "END",NOT_QUOTED));
-	}
+}
 
 
 
@@ -606,28 +527,6 @@ char	**to_arg(t_token* token, char **arg)
 	result[i + 1] = NULL;
 	return (result);
 }
-
-// char *to_arg(t_token* token, char *arg)
-// {
-// 	int lenv;
-// 	int lenghtcommande;
-// 	char *new_commande;
-
-// 	lenv = ft_strlen(token->value);
-// 	lenghtcommande = ft_strlen(arg);
-// 	new_commande = (char *)malloc(lenghtcommande + 1 + lenv + 1);
-// 	if (arg)
-// 	{
-//         ft_strlcpy(new_commande, arg, lenghtcommande + 1); 
-//         new_commande[lenghtcommande] = ' '; 
-//         ft_strlcpy(new_commande + lenghtcommande + 1, token->value, lenv + 1);
-//     } 
-// 	else 
-//         ft_strlcpy(new_commande, token->value, lenv + 1); 
-//     return (new_commande);
-// }
-
-// infile function u should check sysntaxe error
 
 
 bool match_file(char *file)
@@ -710,7 +609,6 @@ t_command* parser_commande(t_token** tokendd)
     t_command *cmd;
     char **args = NULL;
     char *del = NULL;
-
     bool in_red = false;
     int flag_err = 0;
 	t_redirections *red_head;
@@ -727,7 +625,7 @@ t_command* parser_commande(t_token** tokendd)
     cmd->next = NULL;
 	red_head = NULL;
 	red = NULL;
-    
+
 	while (tokendd && (*tokendd)->type != ENDF && (*tokendd)->type != PIPE)
 	{
 		if((*tokendd)->type == WORD)
@@ -738,10 +636,8 @@ t_command* parser_commande(t_token** tokendd)
 		}
 		else {
 			in_red = true;
-			// infile((*tokendd), &flag_err);
 			if ((*tokendd)->type == OUTPUT_RED)
 			{
-				// printf("in red\n");
 				red = creat_red((*tokendd)->next->value, OUTPUT_RED);
 				ft_lstadd_back_red(&red_head, red);
 
@@ -759,7 +655,6 @@ t_command* parser_commande(t_token** tokendd)
 				ft_lstadd_back_red(&red_head, red);
 			}
             if (flag_err == 1) {
-				// if (args) free_array(args);
 				if (del) free(del);
 				return NULL;
 			}
@@ -818,7 +713,6 @@ t_command	*parcer(char *line, t_env *envp)
 			{
 				token = tokenize(lexer);
 				expantion_remove_quotes(token, envp);
-				// printf("hgjhdh0\n");
 				if (token && token->value)
 				{
 					ft_lstadd_back_token(&head_token, token);

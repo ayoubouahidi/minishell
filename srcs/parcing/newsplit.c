@@ -44,3 +44,84 @@ char    **extracting_cmd(t_token *token, int i)
     args[j] = NULL;
     return (args);
 }
+
+
+// char *is_word(t_lexer *lexer)
+// {
+//     t_lexer tmp;
+//     int count;
+//     char *value;
+
+//     tmp = *lexer;
+//     count = 0;
+    
+//     // First pass: count all characters in the word
+//     while (ft_isalnum(tmp.c) || tmp.c == '=' || tmp.c == '"')
+//     {
+//         if (tmp.c == '"')
+//         {
+//             // Count the opening quote
+//             count++;
+//             increment_using_index(&tmp);
+            
+//             // Count everything until closing quote
+//             while (tmp.c != '"' && tmp.c != '\0')
+//             {
+//                 count++;
+//                 increment_using_index(&tmp);
+//             }
+            
+//             // Count the closing quote if present
+//             if (tmp.c == '"')
+//             {
+//                 count++;
+//                 increment_using_index(&tmp);
+//             }
+//         }
+//         else
+//         {
+//             count++;
+//             increment_using_index(&tmp);
+//         }
+//     }
+    
+//     // Allocate memory
+//     value = (char *)malloc(count + 1);
+//     if (!value)
+//         return NULL;
+    
+//     // Second pass: copy characters
+//     count = 0;
+    
+//     while (ft_isalnum(lexer->c) || lexer->c == '=' || lexer->c == '"' || lexer->c == '\'')
+//     {
+//         if (lexer->c == '"' || lexer->c == '\'')
+//         {
+//             // Copy the opening quote
+//             value[count++] = lexer->c;
+//             increment_using_index(lexer);
+            
+//             // Copy everything until closing quote
+//             while ((lexer->c != '"' || lexer->c == '\'') && lexer->c != '\0')
+//             {
+//                 value[count++] = lexer->c;
+//                 increment_using_index(lexer);
+//             }
+            
+//             // Copy the closing quote if present
+//             if (lexer->c == '"' || lexer->c == '\'')
+//             {
+//                 value[count++] = lexer->c;
+//                 increment_using_index(lexer);
+//             }
+//         }
+//         else
+//         {
+//             value[count++] = lexer->c;
+//             increment_using_index(lexer);
+//         }
+//     }
+    
+//     value[count] = '\0';
+//     return (value);
+// }

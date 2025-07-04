@@ -51,12 +51,9 @@ char	*case_word(char	*result, int *i, char *final)
 
 char *normal_var(int *i, char *result, t_env *envp, char *final)
 {
-    char *var;
-    char *tmp1;
-    int count = 0;
-    int pos;
-    char *new_final;
-
+    char (*var), (*tmp1), (*new_final);
+    int (count), (pos);
+	count = 0;
     (*i)++;
     pos = *i;
     while (result[*i] && ft_isalnum(result[*i]) && result[*i] !='.'&& result[*i] != '"')
@@ -75,12 +72,6 @@ char *normal_var(int *i, char *result, t_env *envp, char *final)
 	}
 	else
 	{
-		// if (!final || *final == '\0')
-		// {
-		// 	if (final)
-		// 		free(final);
-		// 	return (NULL);
-		// }
 		free(tmp1);
 		return (final);
 	}
@@ -186,8 +177,6 @@ char *expand_process(int *i, char *result, t_env *envp, char *final)
 			final = handle_exit_code( i, final);
 		else
 			final = case_word(result, i, final);
-		// if (final == NULL)
-		// 	break;
 	}
     return final;
 }
@@ -208,8 +197,6 @@ char *expanation_token_env_var(char *str, t_env *envp)
 	while (result[i] != '\0')
 	{
 		final = expand_process(&i, result, tmp1, final);
-		// if (final == NULL)
-		// 	break;
 	}
 	return (final);
 }
@@ -221,8 +208,6 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 	if(token->type == WORD)
 	{
 		result = expanation_token_env_var(token->value , envp);
-		// if (result == '\0')
-
 		free(token->value);
 		token->value = result;
 	}
