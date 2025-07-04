@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 20:22:01 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/04 21:01:08 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 21:24:35 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,15 +132,21 @@ void	heredocprocess(t_command *cmd)
     }
 	signal_parent_handler();
 	cmd->here_doc_file = filename;
-	write(1,"ff\n", 3);
 }
 
 int run_heredoc(t_command *cmd)
 {
-	if (cmd->is_heredoc)
+	t_command *current = cmd;
+	
+	while (current)
 	{
-		heredocprocess(cmd);
-		
+		if (current->is_heredoc)
+		{
+			heredocprocess(current);
+			if (g_exit_status == 130)
+				return -1;
+		}
+		current = current->next;
 	}
 	return 0;
 }

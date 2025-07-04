@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 20:00:25 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 21:24:35 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,13 +176,23 @@ int main(int ac, char **av, char **envp)
         {
             add_history(line);
             data.cmd = parcer(line, data.env);
-			// printlist(data.cmd);
-			if (data.cmd && run_heredoc(data.cmd) == -1)
-				return 0;
-			if (data.cmd)
-                executer(&data, envp);
-            free_cmd(data.cmd);
-            data.cmd = NULL;
+            if (data.cmd)
+            {
+                if (run_heredoc(data.cmd) == -1)
+                {
+                    free_cmd(data.cmd);
+                    data.cmd = NULL;
+                    free(line);
+                    continue;
+                }
+                
+                // Skip execution if it's only a heredoc with no command
+                if (!(data.cmd->is_heredoc && (!data.cmd->args || !data.cmd->args[0])))
+                    executer(&data, envp);
+                
+                free_cmd(data.cmd);
+                data.cmd = NULL;
+            }
         }
         free(line);
     }

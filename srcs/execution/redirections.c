@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 20:04:29 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 21:24:35 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ static int handle_heredoc_file(t_command *cmd)
 		return (-1);
 	}
 	close(fd);
+	unlink(cmd->here_doc_file); // Clean up the temporary file
 	return (0);
 }
 
