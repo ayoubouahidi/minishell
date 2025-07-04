@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/02 12:42:52 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 20:04:29 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,20 +85,56 @@ static int handle_output_redirection(t_redirections *redir)
 	return (0);
 }
 
+static int handle_heredoc_file(t_command *cmd)
+{
+	int fd;
+	
+	if (!cmd->here_doc_file)
+		return (0);
+	
+	fd = open(cmd->here_doc_file, O_RDONLY);
+	if (fd < 0)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror(cmd->here_doc_file);
+		return (-1);
+	}
+	if (dup2(fd, STDIN_FILENO) < 0)
+	{
+		close(fd);
+		perror("minishell: dup2");
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
 
 int setup_redirections(t_command *cmd)
 {
 	t_redirections *redir;
+	int has_input_redirection;
 
-	
-	if (!cmd || !cmd->redirections)
+	if (!cmd)
 		return (0);
 	
-	
+	has_input_redirection = 0;
 	redir = cmd->redirections;
 	while (redir)
 	{
-		
+		if (redir->type == INTPUT_RED)
+			has_input_redirection = 1;
+		redir = redir->next;
+	}
+	if (cmd->is_heredoc && cmd->here_doc_file && !has_input_redirection)
+	{
+		if (handle_heredoc_file(cmd) < 0)
+			return (-1);
+	}
+	if (!cmd->redirections)
+		return (0);
+	redir = cmd->redirections;
+	while (redir)
+	{
 		if (redir->type == INTPUT_RED)
 		{
 			if (handle_input_redirection(redir) < 0)

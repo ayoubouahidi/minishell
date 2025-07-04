@@ -1,1 +1,1 @@
-minishell$ exit
+minishell$ minishell$ exit

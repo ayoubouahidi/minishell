@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/03 18:59:09 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:52:13 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,18 @@
 static int	handle_builtin(t_data *data)
 {
 	int	status;
+	int saved_in;
+	int saved_out;
 	
-	if (setup_redirections(data->cmd) < 0)
+	if (save_std_fd(&saved_in, &saved_out) < 0)
 		return (1);
+	if (setup_redirections(data->cmd) < 0)
+	{
+		reset_std_fd(saved_in, saved_out);
+		return (1);
+	}
 	status = execute_builtin(data);
+	reset_std_fd(saved_in, saved_out);
 	return (status);
 }
 
@@ -36,10 +44,9 @@ static char	*get_command_path(t_data *data)
 			return (NULL);
 		return (ft_strdup(data->cmd->args[0]));
 	}
-	if (access(data->cmd->args[0], X_OK) == 0)
-		path = ft_strdup(data->cmd->args[0]);
-	else
-		path = get_path(data, data->cmd->args[0]);
+	
+	// Only look in PATH for commands without slashes - don't try current directory
+	path = get_path(data, data->cmd->args[0]);
 	return (path);
 }
 
@@ -87,17 +94,16 @@ static int	launch_external_command(t_data *data)
 void	executer(t_data *data, char **envp)
 {
 	(void)envp;
-	int	saved_in;
-	int	saved_out;
 
 	if (!data->cmd)
 		return ;
 	if (!data->cmd->args || !data->cmd->args[0])
 	{
-		save_std_fd(&saved_in, &saved_out);
 		if (setup_redirections(data->cmd) < 0)
+		{
 			data->exit_status = FAILURE;
-		reset_std_fd(saved_in, saved_out);
+			g_exit_status = FAILURE;
+		}
 		return ;
 	}
 	if (!data->cmd->next)
@@ -105,9 +111,11 @@ void	executer(t_data *data, char **envp)
 		if (is_builtin(data->cmd->args[0]))
 		{
 			data->exit_status = handle_builtin(data);
+			g_exit_status = data->exit_status;
 			return ;
 		}
 		data->exit_status = launch_external_command(data);
+		g_exit_status = data->exit_status;
 		return ;
 	}
 	execute_pipe(data);

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/03 19:05:09 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:52:13 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,15 @@ void execute_pipe(t_data *data)
 	{
 		waitpid(p.pids[j], &status, 0);
 		if (WIFEXITED(status) && j == p.i - 1)
+		{
 			data->exit_status = WEXITSTATUS(status);
+			g_exit_status = WEXITSTATUS(status);
+		}
+		else if (WIFSIGNALED(status) && j == p.i - 1)
+		{
+			data->exit_status = 128 + WTERMSIG(status);
+			g_exit_status = 128 + WTERMSIG(status);
+		}
 		j++;
 	}
 }

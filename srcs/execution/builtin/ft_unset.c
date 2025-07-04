@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/01 10:57:38 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:52:13 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,6 @@ int	ft_unset(t_data *data, char **args)
 		i++;
 	}
 	data->exit_status = exit_status;
+	g_exit_status = exit_status;
 	return (exit_status);
 }
