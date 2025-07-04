@@ -1,1 +1,1 @@
- test
+minishell$ exit

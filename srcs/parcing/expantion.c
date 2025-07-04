@@ -20,6 +20,7 @@ char *join_char(char *str, char c)
 	newstr[i] = c;
 	i++;
 	newstr[i] = '\0';
+	free(str);
 	return (newstr);
 }
 
@@ -37,8 +38,12 @@ char *handle_exit_code(int *i, char *final)
 	return (final);
 }
 
-char	*case_word(char	*result, int *i,char *final)
+char	*case_word(char	*result, int *i, char *final)
 {
+	if (!result || !i || !final)
+		return final;
+	if (result[*i] == '\0')
+		return final;
 	final = join_char(final, result[*i]);
 	(*i)++;
 	return (final);
@@ -54,21 +59,31 @@ char *normal_var(int *i, char *result, t_env *envp, char *final)
 
     (*i)++;
     pos = *i;
-    while (result[*i] && ft_isalnum(result[*i]) && result[*i] !='.')
+    while (result[*i] && ft_isalnum(result[*i]) && result[*i] !='.'&& result[*i] != '"')
     {
         (*i)++;
         count++;
     }
     var = ft_substr(result, pos, count);
     tmp1 = ft_strdup(get_env_value(envp, var));
-	
-    free(var); 
-    if (!tmp1)
-        tmp1 = ft_strdup("");
-    new_final = ft_strjoin(final, tmp1);
-	// printf("DEBUG%sll", new_final); 	
-    free(final);
-    free(tmp1);
+    free(var);
+    if (tmp1)
+	{
+    	new_final = ft_strjoin(final, tmp1);
+    	free(tmp1);
+		free(final);
+	}
+	else
+	{
+		// if (!final || *final == '\0')
+		// {
+		// 	if (final)
+		// 		free(final);
+		// 	return (NULL);
+		// }
+		free(tmp1);
+		return (final);
+	}
     return new_final;
 }
 
@@ -90,20 +105,22 @@ char *squotes_expand(int *i, char* result, char *final)
 char *double_quotes_expand(int *i, char *result, t_env *envp, char *final)
 {
 	(*i)++;
+	if (result[*i] == '"')
+    {
+        (*i)++;
+        return final;
+    }
 	while (result[*i] && result[*i] != '"')
 	{
 		if (result[*i] == '$' && ft_isalnum(result[*i + 1]))
 			final = normal_var(i, result, envp, final);
 		else if (result[*i] == '$' && result[*i + 1] == '?')
-		{
-			// printf("DEBUB : \n");
 			final = handle_exit_code(i, final);
-		}
-		else 
+		else
 		{
 			final = join_char(final, result[*i]);
 			(*i)++;
-		}	
+		}
 	}
 	if (result[*i])
 		(*i)++;
@@ -151,22 +168,27 @@ char *next_char_digits(char  *result, int *i, char *final)
 
 char *expand_process(int *i, char *result, t_env *envp, char *final)
 {
-	if (result[*i] == '\'')
-		final = squotes_expand(i, result, final);
-    else if (result[*i] == '$' && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'))
-		final = normal_var(i, result, envp, final);
-	else if (result[*i] == '"')
-		final = double_quotes_expand(i, result, envp, final);
-	else if (result[*i] == '$' && result[*i + 1] == '\'')
-		final = next_char_squotes(result, i, final);
-	else if (result[*i] == '$' && result[*i + 1] == '"')
-		final = next_char_dquotes(result, i, final);
-	else if (result[*i] == '$' && result[*i + 1] && ft_isdigit(result[*i + 1]))
-		final = next_char_digits(result, i, final);
-	else if (result[*i] == '$' && result[*i + 1] && result[*i + 1] == '?')
-		final = handle_exit_code( i, final);
-	else
-		final = case_word(result, i, final);
+	while (result[*i] != '\0')
+	{
+		if (result[*i] == '\'')
+			final = squotes_expand(i, result, final);
+		else if (result[*i] == '$' && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'))
+			final = normal_var(i, result, envp, final);
+		else if (result[*i] == '"')
+			final = double_quotes_expand(i, result, envp, final);
+		else if (result[*i] == '$' && result[*i + 1] == '\'')
+			final = next_char_squotes(result, i, final);
+		else if (result[*i] == '$' && result[*i + 1] == '"')
+			final = next_char_dquotes(result, i, final);
+		else if (result[*i] == '$' && result[*i + 1] && ft_isdigit(result[*i + 1]))
+			final = next_char_digits(result, i, final);
+		else if (result[*i] == '$' && result[*i + 1] && result[*i + 1] == '?')
+			final = handle_exit_code( i, final);
+		else
+			final = case_word(result, i, final);
+		// if (final == NULL)
+		// 	break;
+	}
     return final;
 }
 
@@ -184,7 +206,11 @@ char *expanation_token_env_var(char *str, t_env *envp)
 	tmp1 = envp;
 	final = ft_strdup("");
 	while (result[i] != '\0')
+	{
 		final = expand_process(&i, result, tmp1, final);
+		// if (final == NULL)
+		// 	break;
+	}
 	return (final);
 }
 
@@ -195,6 +221,8 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 	if(token->type == WORD)
 	{
 		result = expanation_token_env_var(token->value , envp);
+		// if (result == '\0')
+
 		free(token->value);
 		token->value = result;
 	}

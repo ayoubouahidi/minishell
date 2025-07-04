@@ -187,6 +187,24 @@ int	ft_lstsize_parce(t_command *lst)
 // 		i++;
 // 	}
 // }
+IS_QUOTED is_token_quoted(const char *str, int len)
+{
+    if (!str || len < 2)
+        return NOT_QUOTED;
+    
+    // Check for empty quotes: "" or ''
+    if ((str[0] == '"' && str[1] == '"' && len == 2) ||
+        (str[0] == '\'' && str[1] == '\'' && len == 2))
+        return QUOTED;
+    
+    // For longer strings, check if they start and end with quotes
+    if (len >= 2 && 
+        ((str[0] == '"' && str[len-1] == '"') ||
+         (str[0] == '\'' && str[len-1] == '\'')))
+        return QUOTED;
+        
+    return NOT_QUOTED;
+}
 
 bool syntaxe_error(char *str)
 {
@@ -219,7 +237,7 @@ bool syntaxe_error(char *str)
 // 	return (c == '>' || c == '<' || c == '>>' || c == '<<' || c == '|');
 // }
 // initialisation of tokan and lexer
-t_token *creat_token(TYPE_TOKEN type, char *value)
+t_token *creat_token(TYPE_TOKEN type, char *value, IS_QUOTED is_quoted)
 {
 	t_token *token;
 
@@ -228,6 +246,7 @@ t_token *creat_token(TYPE_TOKEN type, char *value)
 		return (NULL);
 	token->type = type;
 	token->value = value;
+	token->is_quoted =  is_quoted;
 	token->next = NULL;
 	return (token);
 }
@@ -264,6 +283,7 @@ t_token *string_process(t_lexer *lexer)
 	int flag_double;
 	size_t start;
 
+
 	start = lexer->i;
 	flag_single = 0;
 	flag_double = 0;
@@ -288,7 +308,7 @@ t_token *string_process(t_lexer *lexer)
 		increment_using_index(lexer); //f"c |<>"d
 	}
 	value = ft_substr(lexer->content, start, lexer->i - start);
-	return (creat_token(WORD, value));
+	return (creat_token(WORD, value , is_token_quoted(value, ft_strlen(value))));
 }
 
 // t_token* is_word(t_lexer *lexer)
@@ -308,7 +328,7 @@ t_token *string_process(t_lexer *lexer)
 // 	}
 // 	// to handle export name="ayoub" 
 // 	// lenght counter
-// 	if (tmp.c == '=')
+// 	if (tmp.c == '=') 	
 // 	{
 // 		count++;
 // 		increment_using_index(&tmp);
@@ -484,9 +504,9 @@ t_token* chech_herdoc(t_lexer* lexer)
 	if (tmp.c == '<')
 	{
 		increment_using_index(lexer);
-		return(creat_token(HEREDOC, "<<"));
+		return(creat_token(HEREDOC, "<<", NOT_QUOTED));
 	}
-	return (creat_token(INTPUT_RED, tostr('<')));
+	return (creat_token(INTPUT_RED, tostr('<'), NOT_QUOTED));
 }
 
 t_token* check_append(t_lexer* lexer)
@@ -499,9 +519,9 @@ t_token* check_append(t_lexer* lexer)
 	if (tmp.c == '>')
 	{
 		increment_using_index(lexer);
-		return(creat_token(APPEND, ">>"));
+		return(creat_token(APPEND, ">>", NOT_QUOTED));
 	}
-	return (creat_token(OUTPUT_RED, tostr('>')));
+	return (creat_token(OUTPUT_RED, tostr('>'), NOT_QUOTED));
 }
 
 // t_token* retreive_key(lexer)
@@ -532,7 +552,7 @@ t_token	*tokenize(t_lexer *lexer)
 		if (lexer->c == '|')
 		{
 			increment_using_index(lexer);
-			return (creat_token(PIPE, tostr('|')));
+			return (creat_token(PIPE, tostr('|'), NOT_QUOTED));
 		}
 		if (lexer->c == '<')
 			return (chech_herdoc(lexer));
@@ -540,9 +560,9 @@ t_token	*tokenize(t_lexer *lexer)
 			return (check_append(lexer));
 		}
 		// increment_using_index(lexer);
-		return (creat_token(ENDF, "END"));
+		return (creat_token(ENDF, "END",NOT_QUOTED));
 	}
-	
+
 
 
 
@@ -564,6 +584,9 @@ char	**to_arg(t_token* token, char **arg)
 {
 	char **result;
 	int i;
+
+	if (token->is_quoted == NOT_QUOTED && (!token->value || token->value[0] == '\0' ))
+		return arg; // skip empty
 
 	i = 0;
 	if(!arg)
@@ -795,14 +818,20 @@ t_command	*parcer(char *line, t_env *envp)
 			{
 				token = tokenize(lexer);
 				expantion_remove_quotes(token, envp);
-				ft_lstadd_back_token(&head_token, token);
+				// printf("hgjhdh0\n");
+				if (token && token->value)
+				{
+					ft_lstadd_back_token(&head_token, token);
+				}
+				else
+					free(token);
 				if (token->type  == ENDF)
 					break;
 			}
 			if (!validate_pipe_parse(head_token))
 				return NULL;
 			while (head_token && head_token->type != ENDF)
-			{				
+			{
 				commande = parser_commande(&head_token);
 				ft_lstadd_back_cmd(&head, commande);
 				head_token = head_token->next;

@@ -56,10 +56,17 @@ typedef enum
 	ENDF
 } TYPE_TOKEN;
 
+typedef enum
+{
+	QUOTED,
+	NOT_QUOTED
+} IS_QUOTED;
+
 typedef struct s_token
 {
 	TYPE_TOKEN type;
 	char *value;
+	IS_QUOTED is_quoted;
 	struct s_token *next;
 }	t_token;
 
