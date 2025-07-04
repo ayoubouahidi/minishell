@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 18:52:13 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 21:00:27 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static int	launch_external_command(t_data *data)
 	pid_ch = fork();
 	if (pid_ch == -1)
 	{
+		signal_child_handler();
 		perror("minishell: fork");
 		free(path);
 		return (1);

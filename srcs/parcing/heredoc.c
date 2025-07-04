@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 20:22:01 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/04 20:00:30 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/04 21:01:08 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ void	heredocprocess(t_command *cmd)
 	pid = fork();
 	if (pid == 0)
 	{
+		signal_child_handler();
 		handle_child_process(filename, cmd->del);
 	}
 	waitpid(pid, &status, 0);
