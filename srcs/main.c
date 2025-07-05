@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 11:35:17 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 20:24:25 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,43 +104,43 @@ int			g_exit_status = 0;
 // }
 #include "parser.h"
 
-void printlist(t_command *head)
-{
-    t_command *tmp = head;
-    int i;
+// void printlist(t_command *head)
+// {
+//     t_command *tmp = head;
+//     int i;
 
-    while (tmp)
-    {
-        // printf("┌────────────────────────────────────────┐\n");
-        // printf("│              Command Block             │\n");
-        // printf("├────────────────────────────────────────┤\n");
+//     while (tmp)
+//     {
+//         // printf("┌────────────────────────────────────────┐\n");
+//         // printf("│              Command Block             │\n");
+//         // printf("├────────────────────────────────────────┤\n");
 
-        printf("│ here_doc_file : %-25s│\n", tmp->here_doc_file);
-        printf("│ redirections  :  │\n");
-		while (tmp->redirections)
-		{
-			printf("red ===== %s|\n", tmp->redirections->file);
-			tmp->redirections = tmp->redirections->next;
-		}
-        printf("│ is_heredoc    : %-25s│\n", tmp->is_heredoc ? "true" : "false");
-        printf("│ del           : %-25s│\n", tmp->del ? tmp->del : "(null)");
+//         printf("│ here_doc_file : %-25s│\n", tmp->here_doc_file);
+//         printf("│ redirections  :  │\n");
+// 		while (tmp->redirections)
+// 		{
+// 			printf("red ===== %s|\n", tmp->redirections->file);
+// 			tmp->redirections = tmp->redirections->next;
+// 		}
+//         printf("│ is_heredoc    : %-25s│\n", tmp->is_heredoc ? "true" : "false");
+//         printf("│ del           : %-25s│\n", tmp->del ? tmp->del : "(null)");
 
-        printf("├─────────────── Arguments ──────────────┤\n");
-        if (tmp->args)
-        {
-            for (i = 0; tmp->args[i]; i++)
-                printf("│ arg[%d]        : %-24s│\n", i, tmp->args[i]);
-        }
-        else
-        {
-            printf("│ No arguments provided.                 │\n");
-        }
+//         printf("├─────────────── Arguments ──────────────┤\n");
+//         if (tmp->args)
+//         {
+//             for (i = 0; tmp->args[i]; i++)
+//                 printf("│ arg[%d]        : %-24s│\n", i, tmp->args[i]);
+//         }
+//         else
+//         {
+//             printf("│ No arguments provided.                 │\n");
+//         }
 
-        printf("└────────────────────────────────────────┘\n\n");
+//         printf("└────────────────────────────────────────┘\n\n");
 
-        tmp = tmp->next;
-    }
-}
+//         tmp = tmp->next;
+//     }
+// }
 
 static void init_data(t_data *data, char **envp)
 {
@@ -187,8 +187,7 @@ int main(int ac, char **av, char **envp)
                 }
                 if (!(data.cmd->is_heredoc && (!data.cmd->args || !data.cmd->args[0])))
                     g_exit_status = executer(&data);
-                
-                free_cmd(data.cmd);
+                // free_cmd(data.cmd);
                 data.cmd = NULL;
             }
         }

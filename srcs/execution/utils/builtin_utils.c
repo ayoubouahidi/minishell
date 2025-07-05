@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 07:04:55 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:42:38 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 21:21:35 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,20 @@ int	execute_builtin(t_data *data)
 		return (ft_export(data, data->cmd->args));
 	if (!ft_strcmp(cmd, "unset"))
 		return (ft_unset(data, data->cmd->args));
+	return (0);
+}
+
+int	check_input_redirections(t_command *cmd, int *has_input)
+{
+	t_redirections	*redir;
+
+	*has_input = 0;
+	redir = cmd->redirections;
+	while (redir)
+	{
+		if (redir->type == INTPUT_RED)
+			*has_input = 1;
+		redir = redir->next;
+	}
 	return (0);
 }

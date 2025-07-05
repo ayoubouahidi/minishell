@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   newsplit.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:56:43 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/06/19 13:56:45 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/05 20:24:00 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../includes/minishell.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../libft/libft.h"

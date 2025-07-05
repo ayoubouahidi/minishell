@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 11:24:14 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 20:20:12 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ static void	exec_ch_process(t_data *data, t_command *cmd)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
-		ft_putendl_fd(": command not found", STDERR_FILENO);
+		ft_putstr_fd(": command not found", STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
 		exit(127);
 	}
 	envp = env_to_array(data->env);

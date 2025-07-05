@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 11:15:50 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 21:18:55 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	save_std_fd(int *saved_in, int *saved_out)
 	return (0);
 }
 
-/* restore original stdin/stdout fds */
 void	reset_std_fd(int saved_in, int saved_out)
 {
 	dup2(saved_in, STDIN_FILENO);

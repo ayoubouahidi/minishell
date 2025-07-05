@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:40:24 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 21:21:59 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,17 +88,20 @@ char	*get_file_name(char *files)
 	return (extract_filename_content(files, start, end));
 }
 
-int	check_input_redirections(t_command *cmd, int *has_input)
+char	*get_command_path(t_data *data)
 {
-	t_redirections	*redir;
+	char	*path;
 
-	*has_input = 0;
-	redir = cmd->redirections;
-	while (redir)
+	if (!data->cmd->args || !data->cmd->args[0])
+		return (NULL);
+	if (ft_strchr(data->cmd->args[0], '/'))
 	{
-		if (redir->type == INTPUT_RED)
-			*has_input = 1;
-		redir = redir->next;
+		if (access(data->cmd->args[0], F_OK) != 0)
+			return (NULL);
+		if (access(data->cmd->args[0], X_OK) != 0)
+			return (NULL);
+		return (ft_strdup(data->cmd->args[0]));
 	}
-	return (0);
+	path = get_path(data, data->cmd->args[0]);
+	return (path);
 }
