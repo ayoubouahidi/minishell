@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/03 18:59:32 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 08:39:00 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	update_or_add_env(t_env **env, const char *key, const char *new_value)
 	add_env_node(env, new_env_node((char *)key, (char *)new_value));
 }
 
-
 void	add_env_node(t_env **env, t_env *new_node)
 {
 	t_env	*tmp;
@@ -63,26 +62,33 @@ void	add_env_node(t_env **env, t_env *new_node)
 	tmp->next = new_node;
 }
 
-
-int	env_size(t_env *env)
+static char	*create_env_string(t_env *env, int *success)
 {
-	int	i;
+	char	*temp;
+	char	*result;
 
-	i = 0;
-	while (env)
+	*success = 1;
+	if (!env->key || !env->value)
+		return (NULL);
+	temp = ft_strjoin(env->key, "=");
+	if (!temp)
 	{
-		i++;
-		env = env->next;
+		*success = 0;
+		return (NULL);
 	}
-	return (i);
+	result = ft_strjoin(temp, env->value);
+	free(temp);
+	if (!result)
+		*success = 0;
+	return (result);
 }
-
 
 char	**env_to_array(t_env *env)
 {
 	int		i;
 	char	**arr;
-	char	*temp;
+	int		success;
+	char	*env_str;
 
 	if (!env)
 		return (NULL);
@@ -92,18 +98,11 @@ char	**env_to_array(t_env *env)
 	i = 0;
 	while (env)
 	{
-		if (env->key && env->value)
-		{
-			temp = ft_strjoin(env->key, "=");
-			if (temp)
-			{
-				arr[i] = ft_strjoin(temp, env->value);
-				free(temp);
-				if (!arr[i])
-					return (free_array(arr), NULL);
-				i++;
-			}
-		}
+		env_str = create_env_string(env, &success);
+		if (env_str && success)
+			arr[i++] = env_str;
+		else if (!success)
+			return (free_array(arr), NULL);
 		env = env->next;
 	}
 	arr[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/03 19:05:35 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 08:38:03 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ typedef struct s_data
 
 /* ======================== EXECUTION FUNCTIONS ======================== */
 
-int is_builtin(char *cmd);
+int     is_builtin(char *cmd);
 int     ft_cd(t_data *data, char **args);
 int     ft_echo(char **args);
 int     ft_exit(t_data *data, char **args);
@@ -119,6 +119,7 @@ int     ft_pwd(t_data *data);
 int     ft_env(t_data *data, char **args);
 int     ft_export(t_data *data, char **args);
 int    ft_unset(t_data *data, char **args);
+int	handle_builtin(t_data *data);
 
 
 void    executer(t_data *data, char **envp);
@@ -126,7 +127,11 @@ char    *get_path(t_data *data, char *cmd);
 int execute_builtin(t_data *data);
 void    execute_pipe(t_data *data);
 int	execute_single_command(t_data *data);
-int	setup_redirections(t_command *cmd);
+
+/* ======================== REDIRECTIONS FUNCTIONS ======================== */
+int setup_redirections(t_command *cmd);
+int is_empty_or_whitespace(char *str);
+int check_input_redirections(t_command *cmd, int *has_input);
 
 /* ======================== ENVIRONMENT FUNCTIONS ======================== */
 
@@ -147,6 +152,7 @@ int	env_size(t_env *env);
 /* ======================== UTILITY FUNCTIONS ======================== */
 
 void cleanup_child_resources(char *path, char **envp);
+void parent_cleanup(int *pre_fd, int *fd, t_command **cmd);
 void    free_env(t_env *env);
 void free_cmd(t_command *cmd);
 void    free_array(char **array);

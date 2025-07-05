@@ -26,6 +26,7 @@ SRCS    = \
 	$(SRC_DIR)/execution/builtin/ft_export.c \
 	$(SRC_DIR)/execution/builtin/ft_unset.c \
 	$(SRC_DIR)/execution/utils/free.c \
+	$(SRC_DIR)/execution/utils/builtin_utils.c \
 	$(SRC_DIR)/execution/utils/utils00.c \
 	$(SRC_DIR)/execution/utils/utils01.c \
 	$(SRC_DIR)/execution/utils/env_utils.c \
@@ -47,7 +48,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(LIBFT_DIR)/libft.a:
-	make -C $(LIBFT_DIR)
+	make bonus -C $(LIBFT_DIR)
 
 all: $(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/02 09:42:52 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 08:38:41 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,21 @@ void	cleanup_child_resources(char *path, char **envp)
 	free_array(envp);
 }
 
-void safe_close(int fd)
+void	safe_close(int fd)
 {
-    if (fd >= 0)
-        close(fd);
+	if (fd >= 0)
+		close(fd);
+}
+
+int	env_size(t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while (env)
+	{
+		i++;
+		env = env->next;
+	}
+	return (i);
 }

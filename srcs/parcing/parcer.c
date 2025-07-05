@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/04 19:22:49 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 07:22:13 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -565,7 +565,7 @@ bool heredoc_check_append(t_token *token, char **del)
     token = token->next;
     if ((token)->type != WORD)
     {
-        printf("Syntaxe error: append or heredoc problem\n");
+        ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
         return false;
     }
 	*del = token->value;

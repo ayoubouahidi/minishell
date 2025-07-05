@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/01 10:57:38 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 08:16:41 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,32 @@ static int	has_only_n(char *arg)
 	return (1);
 }
 
+static int	process_n_flag(char **args, int *i)
+{
+	int	n_flag;
+
+	n_flag = 0;
+	while (args[*i] && ft_strncmp(args[*i], "-n", 2) == 0)
+	{
+		if (has_only_n(args[*i]))
+			n_flag = 1;
+		else
+			break ;
+		(*i)++;
+	}
+	return (n_flag);
+}
+
 int	ft_echo(char **args)
 {
 	int	n_flag;
-	int	i, j;
+	int	i;
+	int	j;
 
 	n_flag = 0;
 	i = 1;
 	j = 0;
-	while (args[i] && ft_strncmp(args[i], "-n", 2) == 0)
-	{
-		if (has_only_n(args[i]))
-			n_flag = 1;
-		else
-			break ;
-		i++;
-	}
+	n_flag = process_n_flag(args, &i);
 	while (args[i])
 	{
 		if (j != 0)

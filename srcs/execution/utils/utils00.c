@@ -6,12 +6,11 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 15:35:40 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 08:40:24 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
-
 
 static char	*search_path(char **paths, char *cmd)
 {
@@ -33,18 +32,14 @@ static char	*search_path(char **paths, char *cmd)
 	return (NULL);
 }
 
-
 char	*get_path(t_data *data, char *cmd)
 {
 	char	**paths;
 	char	*env_path;
 	char	*final_path;
 
-	
 	if (!cmd || !data || !data->env)
 		return (NULL);
-		
-	
 	env_path = get_env_value(data->env, "PATH");
 	if (!env_path)
 		return (NULL);
@@ -55,7 +50,6 @@ char	*get_path(t_data *data, char *cmd)
 	free_array(paths);
 	return (final_path);
 }
-
 
 static char	*extract_filename_content(char *files, int start, int end)
 {
@@ -85,11 +79,26 @@ char	*get_file_name(char *files)
 	end = start;
 	while (files[end] && files[end] != ' ')
 		end++;
-	if ((files[start] == '\'' && files[end - 1] == '\'') ||
-		(files[start] == '\"' && files[end - 1] == '\"'))
+	if ((files[start] == '\'' && files[end - 1] == '\'')
+		|| (files[start] == '\"' && files[end - 1] == '\"'))
 	{
 		start++;
 		end--;
 	}
 	return (extract_filename_content(files, start, end));
+}
+
+int	check_input_redirections(t_command *cmd, int *has_input)
+{
+	t_redirections	*redir;
+
+	*has_input = 0;
+	redir = cmd->redirections;
+	while (redir)
+	{
+		if (redir->type == INTPUT_RED)
+			*has_input = 1;
+		redir = redir->next;
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 18:52:11 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 08:28:24 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	ft_env(t_data *data, char **args)
 	data->exit_status = SUCCESS;
 	return (SUCCESS);
 }
+
 static void	bubble_sort_env(t_env **sorted, int count)
 {
 	int		i;
@@ -84,17 +85,22 @@ static void	print_sorted_env(t_env **sorted, int count)
 void	sort_and_print_env(t_env *env)
 {
 	t_env	*current;
-	t_env	*sorted[env_size(env)];
+	t_env	**sorted;
 	int		count;
+	int		env_count;
 
+	env_count = env_size(env);
+	sorted = malloc(sizeof(t_env *) * env_count);
+	if (!sorted)
+		return ;
 	count = 0;
 	current = env;
-	while (current && count < env_size(env))
+	while (current && count < env_count)
 	{
 		sorted[count++] = current;
 		current = current->next;
 	}
-	
 	bubble_sort_env(sorted, count);
 	print_sorted_env(sorted, count);
+	free(sorted);
 }
