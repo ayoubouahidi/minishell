@@ -178,7 +178,7 @@ int main(int ac, char **av, char **envp)
             data.cmd = parcer(line, data.env);
             if (data.cmd)
             {
-                if (run_heredoc(data.cmd) == -1)
+                if (run_heredoc(data.cmd, data.env) == -1)
                 {
                     free_cmd(data.cmd);
                     data.cmd = NULL;

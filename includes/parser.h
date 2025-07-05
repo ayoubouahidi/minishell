@@ -55,7 +55,7 @@ typedef struct s_lexer
 
 // a revoire : lexer == '\t' || lexer == '\n' || lexer == '\r' || lexer == '\f' || lexer == '\v'
 
-
+int is_del(int flag);
 t_command *parse_line(char *line);
 void free_commands(t_command *cmd);
 t_command	*parcer(char *line, t_env *envp);
@@ -65,5 +65,10 @@ bool    syntaxe_error(char *str);
 char	*expanation_token_env_var(char *str,  t_env *envp);
 void	expantion_remove_quotes(t_token *token, t_env *envp);
 char **newsplit(const char *input);
-int run_heredoc(t_command *cmd);
+int run_heredoc(t_command *cmd, t_env *env);
+char	*case_word(char	*result, int *i, char *final);
+char *normal_var(int *i, char *result, t_env *envp, char *final);
+char *next_char_digits(char  *result, int *i, char *final);
+char *handle_exit_code(int *i, char *final);
+
 #endif

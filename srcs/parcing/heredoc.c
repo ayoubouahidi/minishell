@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 20:22:01 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/05 20:24:00 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:15:55 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,78 @@ void	here_doc_signal(int signum)
 	}
 }
 
+bool check_quotes(char *del)
+{
+	int i;
 
-void	handle_child_process(char *filename, char *del)
+	if (!del)
+		return false;
+	i = 0;
+	while (del[i])
+	{
+		if (del[i] == '\'' || del[i] == '"')
+			return true;
+		i++;
+	}
+	return false;
+}
+
+
+
+char	*expand_here_doc(char *line_heredoc, t_env *env)
+{
+	char *result;
+	int	i;
+
+	if (!line_heredoc)
+		return NULL;
+	i = 0;
+	result = ft_strdup("");
+	while (line_heredoc[i])
+	{
+		if (line_heredoc[i] == '$' && line_heredoc[i + 1]
+			&& (ft_isalpha(line_heredoc[i + 1]) || line_heredoc[i
+					+ 1] == '_'))
+			result = normal_var(&i, line_heredoc, env, result);
+		else if (line_heredoc[i] == '$' && line_heredoc[i + 1]
+			&& ft_isdigit(line_heredoc[i + 1]))
+			result = next_char_digits(line_heredoc,
+					&i, result);
+		else if (line_heredoc[i] == '$' && line_heredoc[i + 1]
+			&& line_heredoc[i + 1] == '?')
+			result = handle_exit_code(&i, result);
+		else
+			result = case_word(line_heredoc, &i, result);
+	}
+	return result;
+}
+
+
+void	handle_child_process(char *filename, char *del, t_env *env)
 {
 	char *line_heredoc;
-
+	char *result;
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0766);
 	while (1)
 	{
 		line_heredoc = readline("> ");
-		if (ft_strcmp(line_heredoc, del) == 0) 
+		if (!check_quotes(del))
 		{
+			result = expand_here_doc(line_heredoc, env);
 			free(line_heredoc);
+		}
+		else
+			result = line_heredoc;
+		if (ft_strcmp(result, del) == 0) 
+		{
+			free(result);
 			close(fd);
 			exit(0);
 		}
-		ft_putendl_fd(line_heredoc, fd);
-		free(line_heredoc);
+		ft_putendl_fd(result, fd);
+		free(result);
 	}
 }
 
@@ -107,7 +160,7 @@ char *randome_generate()
 	name[i] = '\0';
 	return (name);
 }
-void	heredocprocess(t_command *cmd)
+void	heredocprocess(t_command *cmd, t_env *env)
 {
 	int pid;
 	int status;
@@ -121,7 +174,7 @@ void	heredocprocess(t_command *cmd)
 	if (pid == 0)
 	{
 		signal_child_handler();
-		handle_child_process(filename, cmd->del);
+		handle_child_process(filename, cmd->del, env);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status)) {
@@ -134,7 +187,7 @@ void	heredocprocess(t_command *cmd)
 	cmd->here_doc_file = filename;
 }
 
-int run_heredoc(t_command *cmd)
+int run_heredoc(t_command *cmd,t_env *env)
 {
 	t_command *current = cmd;
 	
@@ -142,7 +195,7 @@ int run_heredoc(t_command *cmd)
 	{
 		if (current->is_heredoc)
 		{
-			heredocprocess(current);
+			heredocprocess(current, env);
 			if (g_exit_status == 130)
 				return -1;
 		}

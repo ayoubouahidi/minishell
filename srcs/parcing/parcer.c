@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/05 20:24:00 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 07:22:13 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -470,7 +470,7 @@ t_token	*tokenize(t_lexer *lexer)
 			while (lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n' || lexer->c == '\r' || lexer->c == '\f' || lexer->c == '\v')
 				increment_using_index(lexer);
 		if(!ft_strchr("|<>", lexer->c))
-			return string_process(lexer);//f"ls"cat
+			return string_process(lexer);
 		if (lexer->c == '|')
 		{
 			increment_using_index(lexer);
@@ -507,8 +507,7 @@ char	**to_arg(t_token* token, char **arg)
 	int i;
 
 	if (token->is_quoted == NOT_QUOTED && (!token->value || token->value[0] == '\0' ))
-		return arg; // skip empty
-
+		return arg; 
 	i = 0;
 	if(!arg)
 	{
@@ -669,15 +668,15 @@ t_command* parser_commande(t_token** tokendd)
 
 bool	validate_pipe_parse(t_token *token)
 {
-	t_token *current_token = token;
-	// int i;
+	t_token *current_token;
 
+	current_token = token;
 	if(token->type == PIPE)
 	{
 		print_syntax_error(current_token);
 	 	return false;
 	}
-		while (current_token && current_token->type != ENDF)
+	while (current_token && current_token->type != ENDF)
 	{
 		if (current_token->type != WORD)
 		{
@@ -691,49 +690,61 @@ bool	validate_pipe_parse(t_token *token)
 	}
 	return true;
 }
-
-t_command	*parcer(char *line, t_env *envp)
+t_token *tokenize_input(char *line, t_env *envp)
 {
-	char	*trim;
-	t_token *token;
-	t_token *head_token;
+	t_token *token = NULL;
+	t_token *head_token = NULL;
 	t_lexer *lexer;
-	t_command *commande;
-	t_command *head;
+	char *trim;
+	
+	trim = ft_strtrim(line, " ");
+	if (!syntaxe_error(trim))
+	{
+		write(1, "Quotes Error !\n", 15);
+		free(trim);
+		return NULL;
+	}
+	lexer = creat_lexer(trim);
+	while (1)
+	{
+		token = tokenize(lexer);
+		expantion_remove_quotes(token, envp);
+		ft_lstadd_back_token(&head_token, token);
+		if (token->type == ENDF)
+			break;
+	}
+	if (!validate_pipe_parse(head_token))
+		return NULL;
+	return head_token;
+}
 
-	head_token = NULL;
-	head = NULL;
-	token = NULL;
-	commande = NULL;
-		trim = ft_strtrim(line, " ");
-		if (syntaxe_error(trim))
-		{
-			lexer = creat_lexer(trim);
-			while(1)
-			{
-				token = tokenize(lexer);
-				expantion_remove_quotes(token, envp);
-				if (token && token->value)
-				{
-					ft_lstadd_back_token(&head_token, token);
-				}
-				else
-					free(token);
-				if (token->type  == ENDF)
-					break;
-			}
-			if (!validate_pipe_parse(head_token))
-				return NULL;
-			while (head_token && head_token->type != ENDF)
-			{
-				commande = parser_commande(&head_token);
-				ft_lstadd_back_cmd(&head, commande);
-				head_token = head_token->next;
-			}
-			head_token = NULL;
-		}
-		else
-			write(1, "Quotes Error !\n", 15);
-		return(head);
+int is_del(int flag)
+{
+	static int i;
+
+	if(flag == 0)
+		i = 0;
+	else if(flag == 1)
+		i = 1;
+	return i;
+}
+t_command *parcer(char *line, t_env *envp)
+{
+	t_token *head_token;
+	t_command *commande = NULL;
+	t_command *head = NULL;
+
+	head_token = tokenize_input(line, envp);
+	if (!head_token)
+		return NULL;
+	
+	while (head_token && head_token->type != ENDF)
+	{
+		commande = parser_commande(&head_token);
+		ft_lstadd_back_cmd(&head, commande);
+		head_token = head_token->next;
+	}
+	
+	return head;
 }
 
