@@ -30,6 +30,8 @@ char *handle_exit_code(int *i, char *final)
 	char *temp_final;
 	
 	exit_str = ft_itoa(g_exit_status);
+	if (!exit_str)
+		exit_str = ft_strdup("0");
 	temp_final = ft_strjoin(final, exit_str);
 	free(final);
 	free(exit_str);

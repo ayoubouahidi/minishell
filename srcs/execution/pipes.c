@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 20:20:12 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 21:44:09 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,12 @@ static void	wait_for_children(t_pipe *p, t_data *data)
 	while (j < p->i)
 	{
 		waitpid(p->pids[j], &status, 0);
-		if ((WIFEXITED(status) || WIFSIGNALED(status)) && j == p->i - 1)
+		if (j == p->i - 1)
 		{
-			if (WIFEXITED(status))
-				g_exit_status = WEXITSTATUS(status);
-			else
+			if (WIFSIGNALED(status))
 				g_exit_status = 128 + WTERMSIG(status);
+			else if (WIFEXITED(status))
+				g_exit_status = WEXITSTATUS(status);
 		}
 		j++;
 	}
