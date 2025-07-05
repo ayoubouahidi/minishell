@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 18:52:13 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:24:39 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static int	count_args(char **args)
 
 static int	handle_cd_error(char *oldpwd, char *error_msg, t_data *data)
 {
+	(void)data;
 	free(oldpwd);
 	ft_putstr_fd(error_msg, 2);
 	g_exit_status = FAILURE;
-	data->exit_status = FAILURE;
 	return (FAILURE);
 }
 
@@ -65,7 +65,7 @@ static int	change_directory(char *path, char *oldpwd, t_data *data)
 		free(oldpwd);
 		ft_putstr_fd("minishell: cd: ", 2);
 		perror(path);
-		data->exit_status = FAILURE;
+		g_exit_status = FAILURE;
 		return (FAILURE);
 	}
 	update_env(data->env, "OLDPWD", oldpwd);
@@ -84,7 +84,6 @@ int	ft_cd(t_data *data, char **args)
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		g_exit_status = FAILURE;
-		data->exit_status = FAILURE;
 		return (FAILURE);
 	}
 	oldpwd = getcwd(NULL, 0);
@@ -97,6 +96,5 @@ int	ft_cd(t_data *data, char **args)
 		return (FAILURE);
 	free(oldpwd);
 	g_exit_status = SUCCESS;
-	data->exit_status = SUCCESS;
 	return (SUCCESS);
 }

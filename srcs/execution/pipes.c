@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:13:36 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:24:14 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	exec_ch_process(t_data *data, t_command *cmd)
 	if (cmd->args && is_builtin(cmd->args[0]))
 	{
 		execute_builtin(data);
-		exit(data->exit_status);
+		exit(g_exit_status);
 	}
 	if (!cmd->args || !cmd->args[0])
 		exit(0);
@@ -79,6 +79,7 @@ static void	wait_for_children(t_pipe *p, t_data *data)
 	int	j;
 	int	status;
 
+	(void)data;
 	j = 0;
 	while (j < p->i)
 	{
@@ -86,10 +87,9 @@ static void	wait_for_children(t_pipe *p, t_data *data)
 		if ((WIFEXITED(status) || WIFSIGNALED(status)) && j == p->i - 1)
 		{
 			if (WIFEXITED(status))
-				data->exit_status = WEXITSTATUS(status);
+				g_exit_status = WEXITSTATUS(status);
 			else
-				data->exit_status = 128 + WTERMSIG(status);
-			g_exit_status = data->exit_status;
+				g_exit_status = 128 + WTERMSIG(status);
 		}
 		j++;
 	}

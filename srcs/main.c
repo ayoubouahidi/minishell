@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 21:24:35 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:35:17 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ static void init_data(t_data *data, char **envp)
 {
     init_env(data, envp);
     data->cmd = NULL;
-    data->exit_status = 0;
+    g_exit_status = 0;
     data->pid = 0;
     data->is_child = false;
 }
@@ -170,7 +170,7 @@ int main(int ac, char **av, char **envp)
         if (!line)
         {
             ft_putstr_fd("exit\n", STDOUT_FILENO);
-            clean_exit(&data, data.exit_status);
+            clean_exit(&data, g_exit_status);
         }
         if (*line)
         {
@@ -185,10 +185,8 @@ int main(int ac, char **av, char **envp)
                     free(line);
                     continue;
                 }
-                
-                // Skip execution if it's only a heredoc with no command
                 if (!(data.cmd->is_heredoc && (!data.cmd->args || !data.cmd->args[0])))
-                    executer(&data, envp);
+                    g_exit_status = executer(&data);
                 
                 free_cmd(data.cmd);
                 data.cmd = NULL;

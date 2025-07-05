@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/01 10:57:38 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:16:15 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ft_exit(t_data *data, char **args)
 
 	ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (!args[1])
-		exit_code = data->exit_status;
+		exit_code = g_exit_status;
 	else if (!is_numeric(args[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);

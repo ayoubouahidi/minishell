@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:38:41 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:25:10 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,16 @@ int	ft_pwd(t_data *data)
 {
 	char	cwd[PATH_MAX];
 
+	(void)data;
 	if (getcwd(cwd, PATH_MAX))
 	{
 		ft_putstr_fd(cwd, STDOUT_FILENO);
 		ft_putchar_fd('\n', STDOUT_FILENO);
-		data->exit_status = SUCCESS;
+		g_exit_status = SUCCESS;
 		return (SUCCESS);
 	}
 	perror("minishell: pwd");
-	data->exit_status = FAILURE;
+	g_exit_status = FAILURE;
 	return (FAILURE);
 }
 

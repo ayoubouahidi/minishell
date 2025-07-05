@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:03:30 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:39:33 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static int	launch_external_command(t_data *data)
 {
 	char	*path;
 	pid_t	pid;
+	int		status;
 
 	path = get_command_path(data);
 	if (!path)
@@ -74,33 +75,37 @@ static int	launch_external_command(t_data *data)
 	}
 	if (pid == 0)
 		execute_external_child(data, path);
-	waitpid(pid, &data->exit_status, 0);
+	waitpid(pid, &status, 0);
+	g_exit_status = WEXITSTATUS(status);
 	free(path);
-	return (WEXITSTATUS(data->exit_status));
+	return (g_exit_status);
 }
 
-void	executer(t_data *data, char **envp)
+int	executer(t_data *data)
 {
-	(void)envp;
+	int	redir_status;
+
 	if (!data->cmd)
-		return ;
+		return (FAILURE);
 	if (!data->cmd->args || !data->cmd->args[0])
 	{
 		if (setup_redirections(data->cmd) < 0)
-			data->exit_status = FAILURE;
-		return ;
+			return (FAILURE);
+		return (SUCCESS);
 	}
 	if (!data->cmd->next)
 	{
 		if (is_builtin(data->cmd->args[0]))
 		{
-			data->exit_status = handle_builtin(data);
-			g_exit_status = data->exit_status;
-			return ;
+			redir_status = setup_redirections(data->cmd);
+			if (redir_status < 0)
+				return (FAILURE);
+			handle_builtin(data);
+			return (g_exit_status);
 		}
-		data->exit_status = launch_external_command(data);
-		g_exit_status = data->exit_status;
-		return ;
+		g_exit_status = launch_external_command(data);
+		return (g_exit_status);
 	}
 	execute_pipe(data);
+	return (g_exit_status);
 }

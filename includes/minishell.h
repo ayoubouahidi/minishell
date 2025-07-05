@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:38:03 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:34:27 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ typedef struct s_data
 {
 	t_env       *env;         /* BOTH - initialized in main, used in parsing (expansion) and execution (builtins) */
 	t_command   *cmd;         /* BOTH - parsed commands, executed */
-	int         exit_status;  /* EXECUTION - command exit status */
 	t_pipe      *pipe;        /* EXECUTION - pipe management */
 	pid_t       pid;          /* EXECUTION - process management */
 	bool        is_child;     /* EXECUTION - child process flag */
@@ -122,7 +121,7 @@ int    ft_unset(t_data *data, char **args);
 int	handle_builtin(t_data *data);
 
 
-void    executer(t_data *data, char **envp);
+int    executer(t_data *data);
 char    *get_path(t_data *data, char *cmd);
 int execute_builtin(t_data *data);
 void    execute_pipe(t_data *data);

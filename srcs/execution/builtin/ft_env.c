@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:28:24 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:19:54 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_env(t_data *data, char **args)
 	if (args[1])
 	{
 		ft_putstr_fd("minishell: env: too many arguments\n", STDERR_FILENO);
-		data->exit_status = FAILURE;
+		g_exit_status = FAILURE;
 		return (FAILURE);
 	}
 	env = data->env;
@@ -34,7 +34,7 @@ int	ft_env(t_data *data, char **args)
 		}
 		env = env->next;
 	}
-	data->exit_status = SUCCESS;
+	g_exit_status = SUCCESS;
 	return (SUCCESS);
 }
 

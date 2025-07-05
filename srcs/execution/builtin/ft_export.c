@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/04 18:52:13 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/05 11:19:54 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int	ft_export(t_data *data, char **args)
 	{
 		sort_and_print_env(data->env);
 		g_exit_status = SUCCESS;
-		data->exit_status = SUCCESS;
 		return (SUCCESS);
 	}
 	i = 1;
@@ -86,7 +85,6 @@ int	ft_export(t_data *data, char **args)
 			exit_status = FAILURE;
 		i++;
 	}
-	data->exit_status = exit_status;
 	g_exit_status = exit_status;
 	return (exit_status);
 }
