@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 12:32:24 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 17:54:32 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,12 @@ static int	process_export_arg(t_data *data, char *arg)
 	}
 	val_part = ft_strchr(arg, '=');
 	if (val_part)
-		value = ft_strdup(val_part + 1);
-	else
-		value = ft_strdup("");
-	if (!value)
 	{
-		return (FAILURE);
+		value = ft_strdup(val_part + 1);
+		if (!value)
+			return (FAILURE);
+		update_or_add_env(&data->env, key, value);
 	}
-	update_or_add_env(&data->env, key, value);
 	return (SUCCESS);
 }
 

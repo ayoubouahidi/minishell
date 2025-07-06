@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 12:15:49 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 19:39:18 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ char						**env_to_array(t_env *env);
 int							env_size(t_env *env);
 
 /* ======================== UTILITY FUNCTIONS ======================== */
-void						cleanup_child_resources(char *path, char **envp);
 void						parent_cleanup(int *pre_fd, int *fd,
 								t_command **cmd);
 void						clean_exit(t_data *data, int exit_code);
