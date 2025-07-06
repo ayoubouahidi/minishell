@@ -15,6 +15,14 @@ SRCS    = \
 	$(SRC_DIR)/execution/executor.c \
 	$(SRC_DIR)/execution/init_env.c \
 	$(SRC_DIR)/parcing/parcer.c \
+	$(SRC_DIR)/parcing/parcer_utils_1.c \
+	$(SRC_DIR)/parcing/parcer_utils_2.c \
+	$(SRC_DIR)/parcing/parcer_utils_3.c \
+	$(SRC_DIR)/parcing/parcer_utils_4.c \
+	$(SRC_DIR)/parcing/parcer_utils_5.c \
+	$(SRC_DIR)/parcing/parcer_utils_6.c \
+	$(SRC_DIR)/parcing/heredoc.c \
+	$(SRC_DIR)/parcing/heredoc_utils.c \
 	$(SRC_DIR)/execution/pipes.c \
 	$(SRC_DIR)/execution/redirections.c \
 	$(SRC_DIR)/execution/signals.c \
@@ -31,8 +39,11 @@ SRCS    = \
 	$(SRC_DIR)/execution/utils/utils01.c \
 	$(SRC_DIR)/execution/utils/env_utils.c \
 	$(SRC_DIR)/parcing/expantion.c \
-	$(SRC_DIR)/parcing/newsplit.c  \
-	$(SRC_DIR)/parcing/heredoc.c
+	$(SRC_DIR)/parcing/expantion_utils_1.c \
+	$(SRC_DIR)/parcing/expantion_utils_2.c \
+	$(SRC_DIR)/parcing/newsplit.c  
+
+
 	# $(SRC_DIR)/execution/redirections.c \
 
 OBJS    = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
