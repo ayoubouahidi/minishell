@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/21 20:22:01 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 13:02:05 by elkharti         ###   ########.fr       */
+/*   Created: 2025/07/06 14:56:05 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:56:08 by ayouahid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
 
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"

@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/06 14:56:16 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:56:19 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"
 #include "../../libft/libft.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 
 int	is_inside_child(int flag)
 {
@@ -60,8 +71,8 @@ char	*expand_here_doc(char *line_heredoc, t_env *env)
 		else if (line_heredoc[i] == '$' && line_heredoc[i + 1]
 			&& ft_isdigit(line_heredoc[i + 1]))
 			result = next_char_digits(line_heredoc, &i, result);
-		else if (line_heredoc[i] == '$' && line_heredoc[i + 1] && line_heredoc[i
-			+ 1] == '?')
+		else if (line_heredoc[i] == '$' && line_heredoc[i + 1] && line_heredoc \
+			[i + 1] == '?')
 			result = handle_exit_code(&i, result);
 		else
 			result = case_word(line_heredoc, &i, result);

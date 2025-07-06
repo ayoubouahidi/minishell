@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expantion_utils_2.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/06 14:54:52 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:54:54 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"
 #include "../../libft/libft.h"
@@ -42,4 +54,3 @@ char	*next_char_squotes(char *result, int *i, char *final)
 		(*i)++;
 	return (final);
 }
-

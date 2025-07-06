@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parcer_utils_5.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/06 14:57:56 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:57:57 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include "../../libft/libft.h"
 #include "parser.h"
@@ -65,6 +77,7 @@ t_command	*init_command(void)
 	cmd->redirections = NULL;
 	return (cmd);
 }
+
 void	process_word_token(t_token *token, char ***args, bool *in_red)
 {
 	if (!*in_red)

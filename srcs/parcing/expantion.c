@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expantion.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/06 14:55:07 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:55:09 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"
 #include "../../libft/libft.h"
@@ -35,8 +47,8 @@ char	*expand_process(int *i, char *result, t_env *envp, char *final)
 	{
 		if (result[*i] == '\'')
 			final = squotes_expand(i, result, final);
-		else if (result[*i] == '$' && (ft_isalpha(result[*i + 1])
-			|| result[*i + 1] == '_'))
+		else if (result[*i] == '$' && (ft_isalpha(result[*i + 1]) || result[*i \
+				+ 1] == '_'))
 			final = normal_var(i, result, envp, final);
 		else if (result[*i] == '"')
 			final = double_quotes_expand(i, result, envp, final);
@@ -44,7 +56,7 @@ char	*expand_process(int *i, char *result, t_env *envp, char *final)
 			final = next_char_squotes(result, i, final);
 		else if (result[*i] == '$' && result[*i + 1] == '"')
 			final = next_char_dquotes(result, i, final);
-		else if (result[*i] == '$' && result[*i + 1] && ft_isdigit(result[*i
+		else if (result[*i] == '$' && result[*i + 1] && ft_isdigit(result[*i \
 				+ 1]))
 			final = next_char_digits(result, i, final);
 		else if (result[*i] == '$' && result[*i + 1] && result[*i + 1] == '?')
@@ -79,8 +91,6 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 {
 	char	*result;
 
-	// if (token->type == DEL)
-	// 	token->value ;
 	if (token->type == WORD)
 	{
 		result = expanation_token_env_var(token->value, envp);

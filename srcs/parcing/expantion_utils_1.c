@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expantion_utils_1.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/06 14:54:34 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:54:38 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"
 #include "../../libft/libft.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 
 char	*join_char(char *str, char c)
 {
@@ -49,8 +60,12 @@ char	*case_word(char *result, int *i, char *final)
 
 char	*normal_var(int *i, char *result, t_env *envp, char *final)
 {
-	char(*var), (*tmp1), (*new_final);
-	int(count), (pos);
+	int		count;
+	int		pos;
+	char	*var;
+	char	*tmp1;	
+	char	*new_final;
+
 	count = 0;
 	(*i)++;
 	pos = *i;
@@ -63,13 +78,9 @@ char	*normal_var(int *i, char *result, t_env *envp, char *final)
 	var = ft_substr(result, pos, count);
 	tmp1 = ft_strdup(get_env_value(envp, var));
 	if (tmp1)
-	{
 		new_final = ft_strjoin(final, tmp1);
-	}
 	else
-	{
 		return (final);
-	}
 	return (new_final);
 }
 

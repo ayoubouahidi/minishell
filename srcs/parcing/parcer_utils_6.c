@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parcer_utils_6.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/06 14:58:02 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:58:03 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include "../../libft/libft.h"
 #include "parser.h"
@@ -29,4 +41,16 @@ bool	process_redirection(t_token *token, t_command *cmd,
 		ft_lstadd_back_red(red_head, red);
 	}
 	return (token->type != HEREDOC || cmd->is_heredoc);
+}
+
+t_command	*init_and_validate_command(t_token **tokendd)
+{
+	t_command	*cmd;
+
+	if (!tokendd || !*tokendd)
+		return (NULL);
+	cmd = init_command();
+	if (!cmd)
+		return (NULL);
+	return (cmd);
 }

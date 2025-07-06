@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parcer_utils_4.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/06 14:57:46 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:57:48 by ayouahid         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 #include "../../libft/libft.h"
 #include "parser.h"
@@ -83,27 +95,34 @@ bool	match_file(char *file)
 void	print_syntax_error(t_token *token)
 {
 	if (!token || token->next->type == ENDF)
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
+		ft_putstr_fd("minishell: syntax error near unexpected token \
+			`newline'\n",
 			2);
 	else if (token->type != WORD)
 	{
 		if (token->type == OUTPUT_RED)
-			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `>'\n",
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token\
+				 `>'\n",
 				2);
 		else if (token->type == INTPUT_RED)
-			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `<'\n",
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected \
+				token `<'\n",
 				2);
 		else if (token->type == APPEND)
-			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `>>'\n",
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected \
+				token `>>'\n",
 				2);
 		else if (token->type == HEREDOC)
-			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `<<'\n",
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected \
+				token `<<'\n",
 				2);
 		else if (token->type == PIPE)
-			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token `|'\n",
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected \
+				token `|'\n",
 				2);
 		else
-			ft_putstr_fd("minishell- ayoub : syntax error near unexpected token\n",
+			ft_putstr_fd("minishell- ayoub : syntax error near unexpected \
+				token\n",
 				2);
 	}
 }

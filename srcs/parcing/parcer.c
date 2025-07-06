@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 12:33:56 by elkharti         ###   ########.fr       */
+/*   Created: 2025/07/06 14:56:59 by ayouahid          #+#    #+#             */
+/*   Updated: 2025/07/06 14:57:01 by ayouahid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-t_command	*init_and_validate_command(t_token **tokendd)
-{
-	t_command	*cmd;
-
-	if (!tokendd || !*tokendd)
-		return (NULL);
-	cmd = init_command();
-	if (!cmd)
-		return (NULL);
-	return (cmd);
-}
 
 bool	process_tokens(t_token **tokendd, t_command *cmd, char ***args,
 		t_redirections **red_head)
@@ -96,12 +84,14 @@ bool	validate_pipe_parse(t_token *token)
 	}
 	return (true);
 }
+
 t_token	*tokenize_input(char *line, t_env *envp)
 {
 	t_lexer	*lexer;
 	char	*trim;
+	t_token	*token;
+	t_token	*head_token;
 
-	t_token(*token), (*head_token);
 	token = NULL;
 	head_token = NULL;
 	trim = ft_strtrim(line, " ");
