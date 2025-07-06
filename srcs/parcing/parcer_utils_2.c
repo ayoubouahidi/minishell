@@ -47,7 +47,7 @@ t_token	*creat_token(TYPE_TOKEN type, char *value, IS_QUOTED is_quoted)
 {
 	t_token	*token;
 
-	token = (t_token *)malloc(sizeof(t_token));
+	token = (t_token *)ft_malloc(sizeof(t_token), 1);
 	if (!token)
 		return (NULL);
 	token->type = type;
@@ -61,7 +61,7 @@ t_lexer	*creat_lexer(char *content)
 {
 	t_lexer	*lexer;
 
-	lexer = (t_lexer *)malloc(sizeof(t_lexer));
+	lexer = (t_lexer *)ft_malloc(sizeof(t_lexer), 1);
 	if (!lexer)
 		return (NULL);
 	lexer->content = content;

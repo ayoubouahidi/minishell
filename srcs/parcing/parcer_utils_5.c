@@ -67,7 +67,7 @@ t_command	*init_command(void)
 {
 	t_command	*cmd;
 
-	cmd = (t_command *)malloc(sizeof(t_command));
+	cmd = (t_command *)ft_malloc(sizeof(t_command), 1);
 	if (!cmd)
 		return (NULL);
 	cmd->args = NULL;

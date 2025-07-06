@@ -38,13 +38,19 @@ void	handle_child_process(char *filename, char *del, t_env *env)
 			result = line_heredoc;
 		if (ft_strcmp(result, del) == 0)
 		{
-			free(result);
+
 			close(fd);
+			// ft_malloc(0, 0);
 			exit(0);
 		}
 		ft_putendl_fd(result, fd);
-		free(result);
+
 	}
+}
+
+int	ft_isalnum_2(int c)
+{
+	return (ft_isalpha(c) || ft_isdigit(c));
 }
 
 char	*randome_generate(void)
@@ -56,18 +62,17 @@ char	*randome_generate(void)
 
 	i = 0;
 	fd = open("/dev/random", O_RDONLY);
-	name = (char *)malloc(sizeof(char *) * 7);
+	name = (char *)ft_malloc(7,1);
 	while (fd != -1 && i < 6)
 	{
-		buffer = (char *)malloc(sizeof(char *) * 2);
-		read(fd, buffer, 6);
+		buffer = (char *)ft_malloc(2, 1);
+		read(fd, buffer, 1);
 		buffer[1] = '\0';
-		if (ft_isprint(buffer[0]))
+		if (ft_isalnum_2(buffer[0]))
 		{
 			name[i] = buffer[0];
 			i++;
 		}
-		free(buffer);
 	}
 	close(fd);
 	name[i] = '\0';
@@ -84,7 +89,6 @@ void	heredocprocess(t_command *cmd, t_env *env)
 	filename = randome_generate();
 	tmp = filename;
 	filename = ft_strjoin("/tmp/", filename);
-	free(tmp);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
@@ -104,6 +108,19 @@ void	heredocprocess(t_command *cmd, t_env *env)
 	cmd->here_doc_file = filename;
 }
 
+void	unlink_heredoc_files(t_command *cmd)
+{
+    t_command	*current;
+
+    current = cmd;
+    while (current)
+    {
+        if (current->is_heredoc && current->here_doc_file)
+            unlink(current->here_doc_file);
+        current = current->next;
+    }
+}
+
 int	run_heredoc(t_command *cmd, t_env *env)
 {
 	t_command	*current;
@@ -115,7 +132,10 @@ int	run_heredoc(t_command *cmd, t_env *env)
 		{
 			heredocprocess(current, env);
 			if (g_exit_status == 130)
+			{
+				unlink_heredoc_files(cmd);
 				return (-1);
+			}
 		}
 		current = current->next;
 	}

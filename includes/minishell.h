@@ -118,7 +118,7 @@ int     ft_pwd(t_data *data);
 int     ft_env(t_data *data, char **args);
 int     ft_export(t_data *data, char **args);
 int    ft_unset(t_data *data, char **args);
-int	handle_builtin(t_data *data);
+int		handle_builtin(t_data *data);
 
 
 int    executer(t_data *data);
@@ -164,5 +164,8 @@ void signal_child_handler(void);
 /* redirection fd helpers */
 int  save_std_fd(int *saved_in, int *saved_out);
 void reset_std_fd(int saved_in, int saved_out);
+
+
+int	run_heredoc(t_command *cmd, t_env *env);
 
 #endif

@@ -1,0 +1,17 @@
+total 232
+drwxr-xr-x  9 ayouahid candidates   4096 Jul  6 17:26 .
+drwxr-xr-x 13 ayouahid candidates    246 Jul  5 22:09 ..
+-rw-r--r--  1 ayouahid candidates      0 Jul  6 15:57 d
+-rw-r--r--  1 ayouahid candidates  86245 Jul  5 22:09 errors.tldr
+-rw-r--r--  1 ayouahid candidates      0 Jul  6 17:28 file
+drwxr-xr-x  8 ayouahid candidates   4096 Jul  6 15:55 .git
+drwxr-xr-x  2 ayouahid candidates     41 Jul  6 13:40 includes
+drwxr-xr-x  2 ayouahid candidates   4096 Jul  6 17:26 libft
+drwxr-xr-x  2 ayouahid candidates     52 Jul  5 22:09 logs
+-rw-r--r--  1 ayouahid candidates   1893 Jul  6 14:59 Makefile
+-rwxr-xr-x  1 ayouahid candidates 105640 Jul  6 17:26 minishell
+-rw-r--r--  1 ayouahid candidates   3806 Jul  6 14:59 newsplit.c
+drwxr-xr-x  4 ayouahid candidates     52 Jul  6 17:26 objs
+drwxr-xr-x  4 ayouahid candidates     52 Jul  6 13:40 srcs
+-rwxr-xr-x  1 ayouahid candidates  14124 Jul  5 22:09 tester.js
+drwxr-xr-x  2 ayouahid candidates     27 Jul  6 16:33 .vscode
