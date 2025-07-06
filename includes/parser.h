@@ -74,7 +74,8 @@ void			handle_quotes(char c, int *flag_single, int *flag_double);
 bool			is_token_delimiter(char c, int flag_single, int flag_double);
 void			increment_using_index(t_lexer *lexer);
 t_lexer			*creat_lexer(char *content);
-t_token			*creat_token(t_TYPE_TOKEN type, char *value, t_IS_QUOTED is_quoted);
+t_token			*creat_token(t_TYPE_TOKEN type, char *value, \
+	t_IS_QUOTED is_quoted);
 bool			syntaxe_error(char *str);
 t_IS_QUOTED		is_token_quoted(const char *str, int len);
 int				ft_lstsize_parce(t_command *lst);
