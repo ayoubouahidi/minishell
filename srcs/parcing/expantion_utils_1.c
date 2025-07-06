@@ -1,0 +1,94 @@
+#include "../../includes/minishell.h"
+#include "../../includes/parser.h"
+#include "../../libft/libft.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+char	*join_char(char *str, char c)
+{
+	char	*newstr;
+	int		i;
+
+	i = 0;
+	newstr = malloc(sizeof(char) * ft_strlen(str) + 2);
+	while (str[i] != '\0')
+	{
+		newstr[i] = str[i];
+		i++;
+	}
+	newstr[i] = c;
+	i++;
+	newstr[i] = '\0';
+	free(str);
+	return (newstr);
+}
+
+char	*handle_exit_code(int *i, char *final)
+{
+	char	*exit_str;
+	char	*temp_final;
+
+	exit_str = ft_itoa(g_exit_status);
+	temp_final = ft_strjoin(final, exit_str);
+	free(final);
+	free(exit_str);
+	final = temp_final;
+	(*i) += 2;
+	return (final);
+}
+
+char	*case_word(char *result, int *i, char *final)
+{
+	if (!result || !i || !final)
+		return (final);
+	if (result[*i] == '\0')
+		return (final);
+	final = join_char(final, result[*i]);
+	(*i)++;
+	return (final);
+}
+
+char	*normal_var(int *i, char *result, t_env *envp, char *final)
+{
+	char(*var), (*tmp1), (*new_final);
+	int(count), (pos);
+	count = 0;
+	(*i)++;
+	pos = *i;
+	while (result[*i] && ft_isalnum(result[*i]) && result[*i] != '.'
+		&& result[*i] != '"')
+	{
+		(*i)++;
+		count++;
+	}
+	var = ft_substr(result, pos, count);
+	tmp1 = ft_strdup(get_env_value(envp, var));
+	free(var);
+	if (tmp1)
+	{
+		new_final = ft_strjoin(final, tmp1);
+		free(tmp1);
+		free(final);
+	}
+	else
+	{
+		free(tmp1);
+		return (final);
+	}
+	return (new_final);
+}
+
+char	*squotes_expand(int *i, char *result, char *final)
+{
+	(*i)++;
+	while (result[*i] && result[*i] != '\'')
+	{
+		final = join_char(final, result[*i]);
+		(*i)++;
+	}
+	if (result[*i])
+		(*i)++;
+	return (final);
+}
