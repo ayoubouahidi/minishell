@@ -32,7 +32,7 @@ bool	heredoc_check_append(t_token *token, char **del)
 	return (true);
 }
 
-t_redirections	*creat_red(char *file, TYPE_TOKEN type)
+t_redirections	*creat_red(char *file, t_TYPE_TOKEN type)
 {
 	t_redirections	*red;
 

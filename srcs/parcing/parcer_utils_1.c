@@ -75,7 +75,7 @@ int	ft_lstsize_parce(t_command *lst)
 	return (cmpt);
 }
 
-IS_QUOTED	is_token_quoted(const char *str, int len)
+t_IS_QUOTED	is_token_quoted(const char *str, int len)
 {
 	if (!str || len < 2)
 		return (NOT_QUOTED);

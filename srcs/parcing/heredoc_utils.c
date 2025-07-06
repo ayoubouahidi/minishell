@@ -79,3 +79,8 @@ char	*expand_here_doc(char *line_heredoc, t_env *env)
 	}
 	return (result);
 }
+
+int	ft_isalnum_2(int c)
+{
+	return (ft_isalpha(c) || ft_isdigit(c));
+}

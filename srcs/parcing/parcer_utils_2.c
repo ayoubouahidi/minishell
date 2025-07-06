@@ -43,7 +43,7 @@ bool	syntaxe_error(char *str)
 	return (false);
 }
 
-t_token	*creat_token(TYPE_TOKEN type, char *value, IS_QUOTED is_quoted)
+t_token	*creat_token(t_TYPE_TOKEN type, char *value, t_IS_QUOTED is_quoted)
 {
 	t_token	*token;
 

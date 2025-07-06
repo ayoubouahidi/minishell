@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"
 #include "../../libft/libft.h"
@@ -21,8 +19,10 @@
 
 void	handle_child_process(char *filename, char *del, t_env *env)
 {
-	char	(*line_heredoc), (*result);
+	char	*line_heredoc;
+	char	*result;
 	int		fd;
+
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0766);
@@ -38,19 +38,11 @@ void	handle_child_process(char *filename, char *del, t_env *env)
 			result = line_heredoc;
 		if (ft_strcmp(result, del) == 0)
 		{
-
 			close(fd);
-			// ft_malloc(0, 0);
 			exit(0);
 		}
 		ft_putendl_fd(result, fd);
-
 	}
-}
-
-int	ft_isalnum_2(int c)
-{
-	return (ft_isalpha(c) || ft_isdigit(c));
 }
 
 char	*randome_generate(void)
@@ -62,7 +54,7 @@ char	*randome_generate(void)
 
 	i = 0;
 	fd = open("/dev/random", O_RDONLY);
-	name = (char *)ft_malloc(7,1);
+	name = (char *)ft_malloc(7, 1);
 	while (fd != -1 && i < 6)
 	{
 		buffer = (char *)ft_malloc(2, 1);
@@ -78,13 +70,13 @@ char	*randome_generate(void)
 	name[i] = '\0';
 	return (name);
 }
+
 void	heredocprocess(t_command *cmd, t_env *env)
 {
 	int		pid;
 	int		status;
 	char	*filename;
 	char	*tmp;
-	int		signal_num;
 
 	filename = randome_generate();
 	tmp = filename;
@@ -99,8 +91,7 @@ void	heredocprocess(t_command *cmd, t_env *env)
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
 	{
-		signal_num = WTERMSIG(status);
-		g_exit_status = 128 + signal_num;
+		g_exit_status = 128 + WTERMSIG(status);
 		if (g_exit_status == 130)
 			write(1, "\n", 1);
 	}
@@ -110,15 +101,15 @@ void	heredocprocess(t_command *cmd, t_env *env)
 
 void	unlink_heredoc_files(t_command *cmd)
 {
-    t_command	*current;
+	t_command	*current;
 
-    current = cmd;
-    while (current)
-    {
-        if (current->is_heredoc && current->here_doc_file)
-            unlink(current->here_doc_file);
-        current = current->next;
-    }
+	current = cmd;
+	while (current)
+	{
+		if (current->is_heredoc && current->here_doc_file)
+			unlink(current->here_doc_file);
+		current = current->next;
+	}
 }
 
 int	run_heredoc(t_command *cmd, t_env *env)
