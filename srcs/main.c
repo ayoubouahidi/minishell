@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 19:50:11 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 20:41:56 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,5 @@ int	main(int ac, char **av, char **envp)
 		free(line);
 	}
 	ft_malloc(0, 0);
-	return (0);
+	return (g_exit_status);
 }
