@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 11:25:10 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:16:40 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,6 @@ int	ft_pwd(t_data *data)
 	return (FAILURE);
 }
 
-void	cleanup_child_resources(char *path, char **envp)
-{
-	free(path);
-	free_array(envp);
-}
 
 void	safe_close(int fd)
 {

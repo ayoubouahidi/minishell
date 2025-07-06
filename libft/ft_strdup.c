@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 16:31:39 by ayouahid          #+#    #+#             */
-/*   Updated: 2024/10/21 16:33:21 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/06 09:22:27 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strdup(const char *s)
 	if (s == NULL)
 		return (NULL);
 	str = (char *)s;
-	newstr = malloc(sizeof(char) * ft_strlen(str) + 1);
+	newstr = ft_malloc(sizeof(char) * ft_strlen(str) + 1, 1);
 	if (newstr == NULL)
 		return (NULL);
 	i = 0;

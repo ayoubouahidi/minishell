@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 21:20:18 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:15:49 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,11 +153,9 @@ int	env_size(t_env *env);
 
 void cleanup_child_resources(char *path, char **envp);
 void parent_cleanup(int *pre_fd, int *fd, t_command **cmd);
-void    free_env(t_env *env);
-void free_cmd(t_command *cmd);
-void    free_array(char **array);
 void    clean_exit(t_data *data, int exit_code);
 void safe_close(int fd);
+void	*ft_malloc(size_t size, int mode);
 
 /* ======================== SIGNAL HANDLERS ======================== */
 void signal_parent_handler(void);

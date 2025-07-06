@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/02 10:04:17 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:31:33 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_env	*new_env_node(char *key, char *value)
 {
 	t_env	*new;
 
-	new = malloc(sizeof(t_env));
+	new = ft_malloc(sizeof(t_env), 1);
 	if (!new)
 		return (NULL);
 	new->key = ft_strdup(key);
@@ -39,13 +39,6 @@ t_env	*new_env_node(char *key, char *value)
 	else
 		new->value = NULL;
 	new->next = NULL;
-	if (!new->key || (value && !new->value))
-	{
-		free(new->key);
-		free(new->value);
-		free(new);
-		return (NULL);
-	}
 	return (new);
 }
 
@@ -62,7 +55,7 @@ char	*extract_value(char *str)
 	if (!str[i])
 		return (NULL);
 	i++;
-	value = malloc(ft_strlen(str + i) + 1);
+	value = ft_malloc(ft_strlen(str + i) + 1, 1);
 	if (!value)
 		return (NULL);
 	while (str[i])
@@ -79,7 +72,7 @@ char	*extract_key(char *str)
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
-	key = malloc(i + 1);
+	key = ft_malloc(i + 1, 1);
 	if (!key)
 		return (NULL);
 	i = 0;
@@ -108,8 +101,6 @@ void	init_env(t_data *data, char **envp)
 		if (key)
 		{
 			add_env_node(&env, new_env_node(key, value));
-			free(key);
-			free(value);
 		}
 		i++;
 	}

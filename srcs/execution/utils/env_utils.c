@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:39:00 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:37:15 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	update_env(t_env *env, const char *key, const char *new_value)
 	{
 		if (ft_strcmp(current->key, key) == 0)
 		{
-			free(current->value);
 			current->value = ft_strdup(new_value);
 			return ;
 		}
@@ -37,11 +36,7 @@ void	update_or_add_env(t_env **env, const char *key, const char *new_value)
 	while (current)
 	{
 		if (ft_strcmp(current->key, key) == 0)
-		{
-			free(current->value);
-			current->value = ft_strdup(new_value);
 			return ;
-		}
 		current = current->next;
 	}
 	add_env_node(env, new_env_node((char *)key, (char *)new_value));
@@ -77,7 +72,6 @@ static char	*create_env_string(t_env *env, int *success)
 		return (NULL);
 	}
 	result = ft_strjoin(temp, env->value);
-	free(temp);
 	if (!result)
 		*success = 0;
 	return (result);
@@ -92,7 +86,7 @@ char	**env_to_array(t_env *env)
 
 	if (!env)
 		return (NULL);
-	arr = malloc(sizeof(char *) * (env_size(env) + 1));
+	arr = ft_malloc(sizeof(char *) * (env_size(env) + 1), 1);
 	if (!arr)
 		return (NULL);
 	i = 0;
@@ -102,7 +96,7 @@ char	**env_to_array(t_env *env)
 		if (env_str && success)
 			arr[i++] = env_str;
 		else if (!success)
-			return (free_array(arr), NULL);
+			return (NULL);
 		env = env->next;
 	}
 	arr[i] = NULL;

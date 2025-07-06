@@ -33,7 +33,7 @@ SRCS    = \
 	$(SRC_DIR)/execution/builtin/ft_pwd.c \
 	$(SRC_DIR)/execution/builtin/ft_export.c \
 	$(SRC_DIR)/execution/builtin/ft_unset.c \
-	$(SRC_DIR)/execution/utils/free.c \
+	$(SRC_DIR)/execution/utils/ft_malloc.c \
 	$(SRC_DIR)/execution/utils/builtin_utils.c \
 	$(SRC_DIR)/execution/utils/utils00.c \
 	$(SRC_DIR)/execution/utils/utils01.c \

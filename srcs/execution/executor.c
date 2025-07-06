@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 21:45:12 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:31:12 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static void	execute_external_child(t_data *data, char *path)
 	envp = env_to_array(data->env);
 	execve(path, data->cmd->args, envp);
 	perror("minishell: execve");
-	cleanup_child_resources(path, envp);
 	exit(126);
 }
 
@@ -57,7 +56,7 @@ static int	launch_external_command(t_data *data)
 	}
 	pid = fork();
 	if (pid == -1)
-		return ((perror("minishell: fork"), free(path), 1));
+		return ((perror("minishell: fork"), 1));
 	if (pid == 0)
 		execute_external_child(data, path);
 	waitpid(pid, &status, 0);
@@ -65,7 +64,6 @@ static int	launch_external_command(t_data *data)
 		g_exit_status = 128 + WTERMSIG(status);
 	else
 		g_exit_status = WEXITSTATUS(status);
-	free(path);
 	return (g_exit_status);
 }
 

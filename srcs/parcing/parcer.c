@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:02:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/05 07:22:13 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:33:56 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,6 @@ bool	process_tokens(t_token **tokendd, t_command *cmd, char ***args,
 			in_red = true;
 			if (!process_redirection(*tokendd, cmd, red_head))
 			{
-				if (cmd->del)
-					free(cmd->del);
-				free(cmd);
 				return (false);
 			}
 		}
@@ -111,7 +108,6 @@ t_token	*tokenize_input(char *line, t_env *envp)
 	if (!syntaxe_error(trim))
 	{
 		write(1, "Quotes Error !\n", 15);
-		free(trim);
 		return (NULL);
 	}
 	lexer = creat_lexer(trim);

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:56:43 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/05 20:24:00 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:13:11 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char    **extracting_cmd(t_token *token, int i)
             count++;
         i++;
     }
-    args = malloc(sizeof(char *) * (count + 1));
+    args = ft_malloc(sizeof(char *) * (count + 1), 1);
     if (!args)
         return (NULL);
     j = 0;

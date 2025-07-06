@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 21:18:55 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:17:22 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,7 @@ void	reset_std_fd(int saved_in, int saved_out)
 
 void	clean_exit(t_data *data, int exit_code)
 {
-	if (data->cmd)
-		free_cmd(data->cmd);
-	if (data->env)
-		free_env(data->env);
+	(void)data; // To avoid unused parameter warning
 	g_exit_status = exit_code;
 	exit(exit_code);
 }

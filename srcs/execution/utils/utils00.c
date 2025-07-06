@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 21:21:59 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:33:21 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,8 @@ static char	*search_path(char **paths, char *cmd)
 	{
 		tmp = ft_strjoin(paths[i], "/");
 		full_path = ft_strjoin(tmp, cmd);
-		free(tmp);
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
-		free(full_path);
 		i++;
 	}
 	return (NULL);
@@ -47,7 +45,6 @@ char	*get_path(t_data *data, char *cmd)
 	if (!paths)
 		return (NULL);
 	final_path = search_path(paths, cmd);
-	free_array(paths);
 	return (final_path);
 }
 
@@ -57,7 +54,7 @@ static char	*extract_filename_content(char *files, int start, int end)
 	int		i;
 
 	i = 0;
-	file = malloc(end - start + 1);
+	file = ft_malloc(end - start + 1, 1);
 	if (!file)
 		return (NULL);
 	while (start < end)

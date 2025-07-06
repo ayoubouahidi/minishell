@@ -84,7 +84,6 @@ void	expantion_remove_quotes(t_token *token, t_env *envp)
 	if (token->type == WORD)
 	{
 		result = expanation_token_env_var(token->value, envp);
-		free(token->value);
 		token->value = result;
 	}
 }

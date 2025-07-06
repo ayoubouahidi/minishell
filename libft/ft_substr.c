@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 16:31:39 by ayouahid          #+#    #+#             */
-/*   Updated: 2024/11/14 16:02:13 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/06 09:23:38 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	if (len > s_len - start)
 		len = s_len - start;
-	newstr = malloc(len * sizeof(char) + 1);
+	newstr = ft_malloc(len * sizeof(char) + 1, 1);
 	if (newstr == NULL)
 		return (NULL);
 	ft_strlcpy(newstr, s + start, len + 1);

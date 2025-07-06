@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 11:59:18 by ayouahid          #+#    #+#             */
-/*   Updated: 2024/11/14 16:10:35 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:11:17 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 static char	*mallocatehaha(char *newstr)
 {
-	newstr = malloc(sizeof(char) * 1);
+	newstr = ft_malloc(sizeof(char) * 1, 1);
 	if (newstr != NULL)
 		newstr[0] = '\0';
 	return (newstr);
@@ -66,7 +66,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 		return (ft_strdup(""));
 	j = ft_strlen(s1) - 1;
 	cmpt = mokana(s1, set, cmpt, j);
-	newstr = (char *)malloc(sizeof(char) * (ft_strlen(s1) - cmpt + 1));
+	newstr = (char *)ft_malloc(sizeof(char) * (ft_strlen(s1) - cmpt + 1), 1);
 	if (newstr == NULL)
 		return (NULL);
 	ft_strlcpy(newstr, s1 + i, (ft_strlen(s1) - cmpt + 1));

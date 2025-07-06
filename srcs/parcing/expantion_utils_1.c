@@ -12,7 +12,7 @@ char	*join_char(char *str, char c)
 	int		i;
 
 	i = 0;
-	newstr = malloc(sizeof(char) * ft_strlen(str) + 2);
+	newstr = ft_malloc(sizeof(char) * ft_strlen(str) + 2, 1);
 	while (str[i] != '\0')
 	{
 		newstr[i] = str[i];
@@ -21,7 +21,6 @@ char	*join_char(char *str, char c)
 	newstr[i] = c;
 	i++;
 	newstr[i] = '\0';
-	free(str);
 	return (newstr);
 }
 
@@ -32,8 +31,6 @@ char	*handle_exit_code(int *i, char *final)
 
 	exit_str = ft_itoa(g_exit_status);
 	temp_final = ft_strjoin(final, exit_str);
-	free(final);
-	free(exit_str);
 	final = temp_final;
 	(*i) += 2;
 	return (final);
@@ -65,16 +62,12 @@ char	*normal_var(int *i, char *result, t_env *envp, char *final)
 	}
 	var = ft_substr(result, pos, count);
 	tmp1 = ft_strdup(get_env_value(envp, var));
-	free(var);
 	if (tmp1)
 	{
 		new_final = ft_strjoin(final, tmp1);
-		free(tmp1);
-		free(final);
 	}
 	else
 	{
-		free(tmp1);
 		return (final);
 	}
 	return (new_final);

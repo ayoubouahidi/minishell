@@ -57,12 +57,12 @@ char	**to_arg(t_token *token, char **arg)
 	i = 0;
 	if (!arg)
 	{
-		result = malloc(sizeof(char *) + 2);
+		result = ft_malloc(sizeof(char *) + 2, 1);
 		result[0] = ft_strdup(token->value);
 		result[1] = NULL;
 		return (result);
 	}
-	result = malloc(sizeof(char *) * (len_of_2d_array(arg) + 2));
+	result = ft_malloc(sizeof(char *) * (len_of_2d_array(arg) + 2), 1);
 	while (arg[i])
 	{
 		result[i] = arg[i];
