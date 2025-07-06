@@ -116,4 +116,6 @@ char	*expand_here_doc(char *line_heredoc, t_env *env);
 void	handle_child_process(char *filename, char *del, t_env *env);
 char	*randome_generate(void);
 void	heredocprocess(t_command *cmd, t_env *env);
+t_command	*init_and_validate_command(t_token **tokendd);
+
 #endif

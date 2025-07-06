@@ -40,8 +40,7 @@ SRCS    = \
 	$(SRC_DIR)/execution/utils/env_utils.c \
 	$(SRC_DIR)/parcing/expantion.c \
 	$(SRC_DIR)/parcing/expantion_utils_1.c \
-	$(SRC_DIR)/parcing/expantion_utils_2.c \
-	$(SRC_DIR)/parcing/newsplit.c  
+	$(SRC_DIR)/parcing/expantion_utils_2.c 
 
 
 	# $(SRC_DIR)/execution/redirections.c \

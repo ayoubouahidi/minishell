@@ -69,7 +69,7 @@ char	**to_arg(t_token *token, char **arg)
 	i = 0;
 	if (!arg)
 	{
-		result = ft_malloc(sizeof(char *) + 2, 1);
+		result = ft_malloc(sizeof(char *) * 2, 1);
 		result[0] = ft_strdup(token->value);
 		result[1] = NULL;
 		return (result);
