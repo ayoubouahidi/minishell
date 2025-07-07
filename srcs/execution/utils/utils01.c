@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 19:12:42 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:18:04 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	clean_exit(t_data *data, int exit_code)
 {
 	(void)data;
 	ft_malloc(0, 0);
+	clear_history();
 	g_exit_status = exit_code;
 	exit(exit_code);
 }

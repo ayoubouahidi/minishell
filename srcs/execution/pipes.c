@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 21:44:09 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 08:27:27 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	execute_pipe(t_data *data)
 		p.i++;
 		if (p.pid == 0)
 		{
+			signal_child_handler();
 			setup_child_io(p.pre_fd, p.fd, p.cur);
 			exec_ch_process(data, p.cur);
 		}
@@ -119,5 +120,7 @@ void	execute_pipe(t_data *data)
 			p.cur = p.cur->next;
 		}
 	}
+	signal(SIGINT, SIG_IGN);
 	wait_for_children(&p, data);
+	signal_parent_handler();
 }

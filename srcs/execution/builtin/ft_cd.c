@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 12:31:58 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:49:30 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static int	count_args(char **args)
 static int	handle_cd_error(char *oldpwd, char *error_msg, t_data *data)
 {
 	(void)data;
-	free(oldpwd);
+	if (oldpwd)
+		free(oldpwd);
 	ft_putstr_fd(error_msg, 2);
 	g_exit_status = FAILURE;
 	return (FAILURE);
@@ -91,7 +92,9 @@ int	ft_cd(t_data *data, char **args)
 		return (perror("cd"), FAILURE);
 	path = get_target_path(data, args, oldpwd);
 	if (!path)
+	{
 		return (FAILURE);
+	}
 	if (change_directory(path, oldpwd, data) == FAILURE)
 		return (FAILURE);
 	free(oldpwd);

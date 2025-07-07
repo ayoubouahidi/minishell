@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 11:54:34 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 17:55:43 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 08:42:51 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,20 @@ void	*ft_malloc(size_t size, int mode)
 		head_list = NULL;
 	}
 	return (content);
+}
+
+int	handle_single_cmd(t_data *data)
+{
+	int	redir_status;
+
+	if (is_builtin(data->cmd->args[0]))
+	{
+		redir_status = setup_redirections(data->cmd);
+		if (redir_status < 0)
+			return (FAILURE);
+		handle_builtin(data);
+		return (g_exit_status);
+	}
+	g_exit_status = launch_external_command(data);
+	return (g_exit_status);
 }

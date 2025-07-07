@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 19:39:18 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 08:59:40 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ int							ft_env(t_data *data, char **args);
 int							ft_export(t_data *data, char **args);
 int							ft_unset(t_data *data, char **args);
 int							handle_builtin(t_data *data);
+int							handle_single_cmd(t_data *data);
+int							launch_external_command(t_data *data);
 
 int							executer(t_data *data);
 char						*get_path(t_data *data, char *cmd);

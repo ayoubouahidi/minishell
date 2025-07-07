@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parcer_utils_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 14:57:19 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 14:57:20 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:21:01 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../includes/minishell.h"
+
 #include "../../libft/libft.h"
 #include "parser.h"
 #include <stdbool.h>
@@ -20,7 +20,7 @@ t_command	*ft_lstnew_cmd(void *content)
 {
 	t_command	*tmp;
 
-	tmp = (t_command *)malloc(sizeof(t_command));
+	tmp = (t_command *)ft_malloc(sizeof(t_command), 1);
 	if (!tmp)
 		return (NULL);
 	tmp->args = content;

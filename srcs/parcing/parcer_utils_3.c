@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer_utils_3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 14:57:39 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 14:57:40 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:20:48 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ char	*tostr(char c)
 {
 	char	*val;
 
-	val = (char *)malloc(2);
+	val = (char *)ft_malloc(2, 1);
+	if (!val)
+		return (NULL);
 	val[0] = c;
 	val[1] = '\0';
 	return (val);

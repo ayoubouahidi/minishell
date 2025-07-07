@@ -1,7 +1,7 @@
 NAME    = minishell
 
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -fsanitize=address -g -Iincludes -I$(LIBFT_DIR)
+CFLAGS  = -Wall -Wextra -Werror -g -Iincludes -I$(LIBFT_DIR)
 
 SRC_DIR = srcs
 OBJ_DIR = objs

@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 20:27:10 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 08:43:28 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static void	execute_external_child(t_data *data, char *path)
 {
 	char	**envp;
 
-	signal_child_handler();
 	if (setup_redirections(data->cmd) < 0)
 		exit(1);
 	envp = env_to_array(data->env);
@@ -40,7 +39,19 @@ static void	execute_external_child(t_data *data, char *path)
 	exit(126);
 }
 
-static int	launch_external_command(t_data *data)
+static void	handle_signal_status(int status)
+{
+	if (WIFEXITED(status))
+		g_exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		g_exit_status = 128 + WTERMSIG(status);
+	if (g_exit_status == 130)
+		printf("\n");
+	if (g_exit_status == 131)
+		printf("Quit (core dumped)\n");
+}
+
+int	launch_external_command(t_data *data)
 {
 	char	*path;
 	pid_t	pid;
@@ -58,28 +69,11 @@ static int	launch_external_command(t_data *data)
 	if (pid == -1)
 		return ((perror("minishell: fork"), 1));
 	if (pid == 0)
-		execute_external_child(data, path);
+		(signal_child_handler(), execute_external_child(data, path));
+	signal (SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status))
-		g_exit_status = 128 + WTERMSIG(status);
-	else
-		g_exit_status = WEXITSTATUS(status);
-	return (g_exit_status);
-}
-
-static int	handle_single_cmd(t_data *data)
-{
-	int	redir_status;
-
-	if (is_builtin(data->cmd->args[0]))
-	{
-		redir_status = setup_redirections(data->cmd);
-		if (redir_status < 0)
-			return (FAILURE);
-		handle_builtin(data);
-		return (g_exit_status);
-	}
-	g_exit_status = launch_external_command(data);
+	signal_parent_handler();
+	handle_signal_status(status);
 	return (g_exit_status);
 }
 

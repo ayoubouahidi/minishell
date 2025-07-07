@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcer_utils_5.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 14:57:56 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 14:57:57 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:19:57 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_redirections	*creat_red(char *file, t_TYPE_TOKEN type)
 {
 	t_redirections	*red;
 
-	red = (t_redirections *)malloc(sizeof(t_redirections));
+	red = (t_redirections *)ft_malloc(sizeof(t_redirections), 1);
 	if (!red)
 		return (NULL);
 	red->file = file;

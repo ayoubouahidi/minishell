@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 14:56:05 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 14:56:08 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/07 08:59:31 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	handle_child_process(char *filename, char *del, t_env *env)
 			result = line_heredoc;
 		if (ft_strcmp(result, del) == 0)
 		{
+			ft_malloc(0, 0);
 			close(fd);
 			exit(0);
 		}
