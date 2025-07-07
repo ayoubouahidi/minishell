@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 11:54:34 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 09:17:05 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 11:58:34 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,28 @@ int	handle_single_cmd(t_data *data)
 	}
 	g_exit_status = launch_external_command(data);
 	return (g_exit_status);
+}
+
+int	handle_cmd_not_found(t_data *data)
+{
+	char	*cmd;
+
+	if (!data->cmd || !data->cmd->args || !data->cmd->args[0])
+		return (0);
+	cmd = data->cmd->args[0];
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, F_OK) != 0)
+		{
+			ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
+			return (127);
+		}
+		if (access(cmd, X_OK) != 0)
+			return ((ft_putstr_fd("Permission denied\n", STDERR_FILENO)), 126);
+		return ((ft_putstr_fd("Command not executable\n", STDERR_FILENO)), 126);
+	}
+	return ((ft_putstr_fd("command not found\n", STDERR_FILENO)), 127);
 }

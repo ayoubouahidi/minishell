@@ -6,39 +6,30 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 10:09:26 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 11:58:16 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	handle_cmd_not_found(t_data *data)
+int	ft_stat(t_data *data)
 {
-	char	*cmd;
+	t_command		*cmd;
+	struct stat		file_info;
 
-	cmd = data->cmd->args[0];
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	(ft_putstr_fd(cmd, STDERR_FILENO), ft_putstr_fd(": ", STDERR_FILENO));
-	if (ft_strchr(cmd, '/'))
+	cmd = data->cmd;
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (0);
+	if (stat(cmd->args[0], &file_info) == -1)
+		return (0);
+	if (S_ISDIR(file_info.st_mode))
 	{
-		if (access(cmd, F_OK) != 0)
-		{
-			ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
-			return (127);
-		}
-		else if (access(cmd, X_OK) != 0)
-			return ((ft_putstr_fd("Permission denied\n", STDERR_FILENO)), 126);
-		else
-		{
-			ft_putstr_fd("Command not executabl\n", STDERR_FILENO);
-			return (126);
-		}
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		exit(126);
 	}
-	else
-	{
-		ft_putstr_fd("command not found\n", STDERR_FILENO);
-		return (127);
-	}
+	return (-1);
 }
 
 static void	execute_external_child(t_data *data, char *path)
@@ -49,7 +40,8 @@ static void	execute_external_child(t_data *data, char *path)
 		exit(1);
 	envp = env_to_array(data->env);
 	execve(path, data->cmd->args, envp);
-	perror("minishell: execve");
+	ft_stat(data);
+	perror("minishell");
 	exit(126);
 }
 
@@ -72,7 +64,7 @@ int	launch_external_command(t_data *data)
 	int		status;
 
 	if (!data->cmd->args || !data->cmd->args[0])
-		return (0);
+		return ((g_exit_status = 0), 0);
 	path = get_command_path(data);
 	if (!path)
 	{
@@ -83,8 +75,11 @@ int	launch_external_command(t_data *data)
 	if (pid == -1)
 		return ((perror("minishell: fork"), 1));
 	if (pid == 0)
-		(signal_child_handler(), execute_external_child(data, path));
-	signal (SIGINT, SIG_IGN);
+	{
+		signal_child_handler();
+		execute_external_child(data, path);
+	}
+	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	signal_parent_handler();
 	handle_signal_status(status);

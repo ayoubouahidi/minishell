@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "struct_stat_time64_helper.h": "c",
+    "stat.h": "c"
+  }
+}
