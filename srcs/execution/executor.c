@@ -6,25 +6,39 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 08:43:28 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/07 10:09:26 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	handle_cmd_not_found(t_data *data)
+static int	handle_cmd_not_found(t_data *data)
 {
+	char	*cmd;
+
+	cmd = data->cmd->args[0];
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	if (data->cmd->args && data->cmd->args[0])
+	(ft_putstr_fd(cmd, STDERR_FILENO), ft_putstr_fd(": ", STDERR_FILENO));
+	if (ft_strchr(cmd, '/'))
 	{
-		ft_putstr_fd(data->cmd->args[0], STDERR_FILENO);
-		if (ft_strchr(data->cmd->args[0], '/'))
-			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		if (access(cmd, F_OK) != 0)
+		{
+			ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
+			return (127);
+		}
+		else if (access(cmd, X_OK) != 0)
+			return ((ft_putstr_fd("Permission denied\n", STDERR_FILENO)), 126);
 		else
-			ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		{
+			ft_putstr_fd("Command not executabl\n", STDERR_FILENO);
+			return (126);
+		}
 	}
 	else
+	{
 		ft_putstr_fd("command not found\n", STDERR_FILENO);
+		return (127);
+	}
 }
 
 static void	execute_external_child(t_data *data, char *path)
@@ -62,8 +76,8 @@ int	launch_external_command(t_data *data)
 	path = get_command_path(data);
 	if (!path)
 	{
-		handle_cmd_not_found(data);
-		return (127);
+		g_exit_status = handle_cmd_not_found(data);
+		return (g_exit_status);
 	}
 	pid = fork();
 	if (pid == -1)
