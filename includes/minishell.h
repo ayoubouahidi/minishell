@@ -83,6 +83,7 @@ typedef struct s_command
 	char					*here_doc_file;
 	bool					is_heredoc;
 	char					**heredoc_delimiters;
+	bool					*heredoc_quoted;
 	int						heredoc_count;
 	t_redirections			*redirections;
 	struct s_command		*next;

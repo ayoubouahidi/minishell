@@ -38,20 +38,11 @@ void	here_doc_signal(int signum)
 	}
 }
 
-bool	check_quotes(char *del)
+bool	check_quotes(bool *heredoc_quoted, int index)
 {
-	int	i;
-
-	if (!del)
+	if (!heredoc_quoted)
 		return (false);
-	i = 0;
-	while (del[i])
-	{
-		if (del[i] == '\'' || del[i] == '"')
-			return (true);
-		i++;
-	}
-	return (false);
+	return (heredoc_quoted[index]);
 }
 
 char	*expand_here_doc(char *line_heredoc, t_env *env)

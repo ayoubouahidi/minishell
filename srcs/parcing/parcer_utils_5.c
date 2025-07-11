@@ -17,9 +17,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool	heredoc_check_append(t_token *token, char ***heredoc_delimiters, int *heredoc_count)
+bool	heredoc_check_append(t_token *token, char ***heredoc_delimiters, int *heredoc_count, bool **heredoc_quoted)
 {
 	char	**new_delimiters;
+	bool	*new_quoted;
 	int		i;
 
 	token = token->next;
@@ -29,17 +30,21 @@ bool	heredoc_check_append(t_token *token, char ***heredoc_delimiters, int *hered
 		return (false);
 	}
 	new_delimiters = (char **)ft_malloc(sizeof(char *) * ((*heredoc_count) + 2), 1);
-	if (!new_delimiters)
+	new_quoted = (bool *)ft_malloc(sizeof(bool) * ((*heredoc_count) + 1), 1);
+	if (!new_delimiters || !new_quoted)
 		return (false);
 	i = 0;
 	while (i < *heredoc_count)
 	{
 		new_delimiters[i] = (*heredoc_delimiters)[i];
+		new_quoted[i] = (*heredoc_quoted)[i];
 		i++;
 	}
 	new_delimiters[*heredoc_count] = token->value;
 	new_delimiters[*heredoc_count + 1] = NULL;
+	new_quoted[*heredoc_count] = (token->is_quoted == QUOTED);
 	*heredoc_delimiters = new_delimiters;
+	*heredoc_quoted = new_quoted;
 	(*heredoc_count)++;
 	return (true);
 }
@@ -84,6 +89,7 @@ t_command	*init_command(void)
 	cmd->args = NULL;
 	cmd->is_heredoc = false;
 	cmd->heredoc_delimiters = NULL;
+	cmd->heredoc_quoted = NULL;
 	cmd->heredoc_count = 0;
 	cmd->next = NULL;
 	cmd->redirections = NULL;

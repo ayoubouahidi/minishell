@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void	handle_child_process(char *filename, char **delimiters, int count, t_env *env)
+void	handle_child_process(char *filename, char **delimiters, int count, t_env *env, bool *heredoc_quoted)
 {
 	char	*line_heredoc;
 	char	*result;
@@ -41,7 +41,7 @@ void	handle_child_process(char *filename, char **delimiters, int count, t_env *e
 				exit(0);
 			}
 			
-			if (!check_quotes(delimiters[i]))
+			if (!check_quotes(heredoc_quoted, i))
 			{
 				result = expand_here_doc(line_heredoc, env);
 				free(line_heredoc);
@@ -104,7 +104,7 @@ void	heredocprocess(t_command *cmd, t_env *env)
 	if (pid == 0)
 	{
 		signal_child_handler();
-		handle_child_process(filename, cmd->heredoc_delimiters, cmd->heredoc_count, env);
+		handle_child_process(filename, cmd->heredoc_delimiters, cmd->heredoc_count, env, cmd->heredoc_quoted);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
