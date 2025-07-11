@@ -34,7 +34,7 @@ bool	process_redirection(t_token *token, t_command *cmd,
 		ft_lstadd_back_red(red_head, red);
 	}
 	else if (token->type == HEREDOC)
-		cmd->is_heredoc = heredoc_check_append(token, &cmd->del);
+		cmd->is_heredoc = heredoc_check_append(token, &cmd->heredoc_delimiters, &cmd->heredoc_count);
 	else if (token->type == APPEND)
 	{
 		red = creat_red(token->next->value, APPEND);

@@ -17,33 +17,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void	handle_child_process(char *filename, char *del, t_env *env)
+void	handle_child_process(char *filename, char **delimiters, int count, t_env *env)
 {
 	char	*line_heredoc;
 	char	*result;
 	int		fd;
+	int		i;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0766);
-	while (1)
+	
+	// Process each heredoc delimiter in sequence
+	i = 0;
+	while (i < count)
 	{
-		line_heredoc = readline("> ");
-		if (!check_quotes(del))
+		while (1)
 		{
-			result = expand_here_doc(line_heredoc, env);
-			free(line_heredoc);
+			line_heredoc = readline("> ");
+			if (!line_heredoc)
+			{
+				ft_malloc(0, 0);
+				close(fd);
+				exit(0);
+			}
+			
+			if (!check_quotes(delimiters[i]))
+			{
+				result = expand_here_doc(line_heredoc, env);
+				free(line_heredoc);
+			}
+			else
+				result = line_heredoc;
+			
+			if (ft_strcmp(result, delimiters[i]) == 0)
+			{
+				break;
+			}
+			
+			// Only write to file if this is the last heredoc
+			if (i == count - 1)
+				ft_putendl_fd(result, fd);
 		}
-		else
-			result = line_heredoc;
-		if (ft_strcmp(result, del) == 0)
-		{
-			ft_malloc(0, 0);
-			close(fd);
-			exit(0);
-		}
-		ft_putendl_fd(result, fd);
+		i++;
 	}
+	ft_malloc(0, 0);
+	close(fd);
+	exit(0);
 }
 
 char	*randome_generate(void)
@@ -77,17 +97,17 @@ void	heredocprocess(t_command *cmd, t_env *env)
 	int		pid;
 	int		status;
 	char	*filename;
-	char	*tmp;
+	// char	*tmp;
 
 	filename = randome_generate();
-	tmp = filename;
+	// tmp = filename;
 	filename = ft_strjoin("/tmp/", filename);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
 		signal_child_handler();
-		handle_child_process(filename, cmd->del, env);
+		handle_child_process(filename, cmd->heredoc_delimiters, cmd->heredoc_count, env);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))

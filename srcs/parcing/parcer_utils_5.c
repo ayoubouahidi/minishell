@@ -17,18 +17,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool	heredoc_check_append(t_token *token, char **del)
+bool	heredoc_check_append(t_token *token, char ***heredoc_delimiters, int *heredoc_count)
 {
-	t_token	*prev;
+	char	**new_delimiters;
+	int		i;
 
-	prev = token;
 	token = token->next;
 	if ((token)->type != WORD)
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
 		return (false);
 	}
-	*del = token->value;
+	
+	// Allocate new array with one more element
+	new_delimiters = (char **)ft_malloc(sizeof(char *) * ((*heredoc_count) + 2), 1);
+	if (!new_delimiters)
+		return (false);
+	
+	// Copy existing delimiters
+	i = 0;
+	while (i < *heredoc_count)
+	{
+		new_delimiters[i] = (*heredoc_delimiters)[i];
+		i++;
+	}
+	
+	// Add new delimiter
+	new_delimiters[*heredoc_count] = token->value;
+	new_delimiters[*heredoc_count + 1] = NULL;
+	
+	// Update the command's delimiters
+	*heredoc_delimiters = new_delimiters;
+	(*heredoc_count)++;
+	
 	return (true);
 }
 
@@ -62,7 +83,6 @@ void	ft_lstadd_back_red(t_redirections **lst, t_redirections *new)
 		*lst = new;
 }
 
-// Initialize command structure
 t_command	*init_command(void)
 {
 	t_command	*cmd;
@@ -72,7 +92,8 @@ t_command	*init_command(void)
 		return (NULL);
 	cmd->args = NULL;
 	cmd->is_heredoc = false;
-	cmd->del = NULL;
+	cmd->heredoc_delimiters = NULL;
+	cmd->heredoc_count = 0;
 	cmd->next = NULL;
 	cmd->redirections = NULL;
 	return (cmd);

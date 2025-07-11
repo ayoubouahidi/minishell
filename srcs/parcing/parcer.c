@@ -44,11 +44,11 @@ t_command	*parser_commande(t_token **tokendd)
 {
 	t_command		*cmd;
 	char			**args;
-	bool			in_red;
+	// bool			in_red;
 	t_redirections	*red_head;
 
 	args = NULL;
-	in_red = false;
+	// in_red = false;
 	red_head = NULL;
 	cmd = init_and_validate_command(tokendd);
 	if (!cmd)
@@ -72,7 +72,15 @@ bool	validate_pipe_parse(t_token *token)
 	}
 	while (current_token && current_token->type != ENDF)
 	{
-		if (current_token->type != WORD)
+		if (current_token->type == PIPE)
+		{
+			if (current_token->next->type == PIPE || (!current_token->next || current_token->next->type == ENDF))
+			{
+				print_syntax_error(current_token);
+				return (false);
+			}
+		}
+		else if (current_token->type != WORD)
 		{
 			if (current_token->next && current_token->next->type != WORD)
 			{
