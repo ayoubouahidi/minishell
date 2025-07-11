@@ -28,28 +28,19 @@ bool	heredoc_check_append(t_token *token, char ***heredoc_delimiters, int *hered
 		ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
 		return (false);
 	}
-	
-	// Allocate new array with one more element
 	new_delimiters = (char **)ft_malloc(sizeof(char *) * ((*heredoc_count) + 2), 1);
 	if (!new_delimiters)
 		return (false);
-	
-	// Copy existing delimiters
 	i = 0;
 	while (i < *heredoc_count)
 	{
 		new_delimiters[i] = (*heredoc_delimiters)[i];
 		i++;
 	}
-	
-	// Add new delimiter
 	new_delimiters[*heredoc_count] = token->value;
 	new_delimiters[*heredoc_count + 1] = NULL;
-	
-	// Update the command's delimiters
 	*heredoc_delimiters = new_delimiters;
 	(*heredoc_count)++;
-	
 	return (true);
 }
 

@@ -28,7 +28,6 @@ void	handle_child_process(char *filename, char **delimiters, int count, t_env *e
 	signal(SIGQUIT, SIG_IGN);
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0766);
 	
-	// Process each heredoc delimiter in sequence
 	i = 0;
 	while (i < count)
 	{
@@ -54,8 +53,6 @@ void	handle_child_process(char *filename, char **delimiters, int count, t_env *e
 			{
 				break;
 			}
-			
-			// Only write to file if this is the last heredoc
 			if (i == count - 1)
 				ft_putendl_fd(result, fd);
 		}
