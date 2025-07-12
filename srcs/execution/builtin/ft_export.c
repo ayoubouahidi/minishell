@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 11:37:14 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/11 19:47:17 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,15 @@ bool	is_valid_key(const char *arg)
 	i = 1;
 	while (arg[i] && arg[i] != '=')
 	{
+		if ((arg[i + 1] == '\0' && (arg[i] == '-' || arg[i] == '-'))
+			|| (arg[i - 1] == '\0' && (arg[i] == '-' || arg[i] == '-')))
+			return (false);
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')
 			return (false);
 		i++;
 	}
+	if (arg[i] == '=' && arg[i - 1] == '-')
+		return (false);
 	return (true);
 }
 
@@ -53,8 +58,7 @@ static int	process_export_arg(t_data *data, char *arg)
 		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-		g_exit_status = 1;
-		return (FAILURE);
+		return ((g_exit_status = 1), FAILURE);
 	}
 	key = extract_key_until_equal(arg);
 	if (!key)
@@ -67,6 +71,8 @@ static int	process_export_arg(t_data *data, char *arg)
 			return (FAILURE);
 		update_or_add_env(&data->env, key, value);
 	}
+	else
+		update_or_add_env(&data->env, key, NULL);
 	return (SUCCESS);
 }
 

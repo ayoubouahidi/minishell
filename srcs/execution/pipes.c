@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 10:25:21 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/11 09:04:06 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	exec_ch_process(t_data *data, t_command *cmd)
 		exit(1);
 	if (cmd->args && is_builtin(cmd->args[0]))
 	{
-		execute_builtin(data);
+		execute_builtin(data, cmd);
 		exit(g_exit_status);
 	}
 	if (!cmd->args || !cmd->args[0])

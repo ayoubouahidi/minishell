@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 07:18:06 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/10 09:06:29 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ void	update_or_add_env(t_env **env, const char *key, const char *new_value)
 	while (current)
 	{
 		if (ft_strcmp(current->key, key) == 0)
+		{
+			update_env(*env, key, new_value);
 			return ;
+		}
 		current = current->next;
 	}
 	add_env_node(env, new_env_node((char *)key, (char *)new_value));

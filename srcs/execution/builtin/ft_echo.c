@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/05 08:16:41 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/10 09:04:45 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ int	ft_echo(char **args)
 	int	i;
 	int	j;
 
+	if (!args[1])
+	{
+		ft_putchar_fd('\n', 1);
+		return (0);
+	}
 	n_flag = 0;
 	i = 1;
 	j = 0;

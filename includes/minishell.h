@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:51:49 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 11:57:59 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 09:41:23 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,13 @@ int							ft_pwd(t_data *data);
 int							ft_env(t_data *data, char **args);
 int							ft_export(t_data *data, char **args);
 int							ft_unset(t_data *data, char **args);
-int							handle_builtin(t_data *data);
+int							handle_builtin(t_data *data, t_command *cmd);
 int							handle_single_cmd(t_data *data);
 int							launch_external_command(t_data *data);
 
 int							executer(t_data *data);
 char						*get_path(t_data *data, char *cmd);
-int							execute_builtin(t_data *data);
+int							execute_builtin(t_data *data, t_command *cmd);
 void						execute_pipe(t_data *data);
 int							execute_single_command(t_data *data);
 char						*get_command_path(t_data *data);
@@ -135,8 +135,6 @@ int							handle_cmd_not_found(t_data *data);
 /* ======================== REDIRECTIONS FUNCTIONS ======================== */
 int							setup_redirections(t_command *cmd);
 int							is_empty_or_whitespace(char *str);
-int							check_input_redirections(t_command *cmd,
-								int *has_input);
 
 /* ======================== ENVIRONMENT FUNCTIONS ======================== */
 void						init_env(t_data *data, char **envp);

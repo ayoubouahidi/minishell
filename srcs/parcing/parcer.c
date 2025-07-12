@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 14:56:59 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/07 11:16:41 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 10:55:44 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ t_command	*parcer(char *line, t_env *envp)
 	head = NULL;
 	head_token = tokenize_input(line, envp);
 	if (!head_token)
-		return (NULL);
+		return ((g_exit_status = 2), NULL);
 	while (head_token && head_token->type != ENDF)
 	{
 		commande = parser_commande(&head_token);

@@ -6,22 +6,27 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 11:58:16 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/10 09:10:29 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_stat(t_data *data)
+static void	execute_external_child(t_data *data, char *path)
 {
+	char			**envp;
 	t_command		*cmd;
 	struct stat		file_info;
 
 	cmd = data->cmd;
+	if (setup_redirections(data->cmd) < 0)
+		exit(1);
+	envp = env_to_array(data->env);
+	execve(path, data->cmd->args, envp);
 	if (!cmd || !cmd->args || !cmd->args[0])
-		return (0);
+		return ;
 	if (stat(cmd->args[0], &file_info) == -1)
-		return (0);
+		return ;
 	if (S_ISDIR(file_info.st_mode))
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -29,18 +34,6 @@ int	ft_stat(t_data *data)
 		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
 		exit(126);
 	}
-	return (-1);
-}
-
-static void	execute_external_child(t_data *data, char *path)
-{
-	char	**envp;
-
-	if (setup_redirections(data->cmd) < 0)
-		exit(1);
-	envp = env_to_array(data->env);
-	execve(path, data->cmd->args, envp);
-	ft_stat(data);
 	perror("minishell");
 	exit(126);
 }
@@ -98,12 +91,12 @@ int	executer(t_data *data)
 		if (save_std_fd(&saved_in, &saved_out) < 0)
 			return (FAILURE);
 		if (setup_redirections(data->cmd) < 0)
-			return (reset_std_fd(saved_in, saved_out), FAILURE);
+			return (FAILURE);
 		reset_std_fd(saved_in, saved_out);
 		return (SUCCESS);
 	}
 	if (!data->cmd->next)
-		return (handle_single_cmd(data));
+		return (g_exit_status = handle_single_cmd(data));
 	execute_pipe(data);
 	return (g_exit_status);
 }

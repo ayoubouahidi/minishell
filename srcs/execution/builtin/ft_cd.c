@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/07 09:17:34 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/10 09:20:04 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,12 @@ int	ft_cd(t_data *data, char **args)
 	}
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
+		oldpwd = ft_strdup(get_env_value(data->env, "PWD"));
+	if (!oldpwd)
 		return (perror("cd"), FAILURE);
 	path = get_target_path(data, args, oldpwd);
 	if (!path)
-	{
 		return (FAILURE);
-	}
 	if (change_directory(path, oldpwd, data) == FAILURE)
 		return (FAILURE);
 	free(oldpwd);

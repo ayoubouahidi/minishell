@@ -6,13 +6,13 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 13:11:46 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 10:23:26 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	handle_input_redirection(t_redirections *redir)
+static int	handle_input_redirection(t_redirections *redir, int *i)
 {
 	int	fd;
 
@@ -29,11 +29,15 @@ static int	handle_input_redirection(t_redirections *redir)
 		perror(redir->file);
 		return (-1);
 	}
-	if (dup2(fd, STDIN_FILENO) < 0)
+	if (*i <= 0)
 	{
-		close(fd);
-		perror("minishell: dup2");
-		return (-1);
+		if (dup2(fd, STDIN_FILENO) < 0)
+		{
+			close(fd);
+			perror("minishell: dup2");
+			return (-1);
+		}
+		(*i)--;
 	}
 	close(fd);
 	return (0);
@@ -104,14 +108,14 @@ static int	handle_heredoc_file(t_command *cmd)
 int	setup_redirections(t_command *cmd)
 {
 	t_redirections	*redir;
-	int				has_input_redirection;
+	int				i;
 
+	i = cmd->heredoc_count;
 	if (!cmd)
 		return (0);
-	check_input_redirections(cmd, &has_input_redirection);
-	if (cmd->is_heredoc && cmd->here_doc_file && !has_input_redirection)
+	if (cmd->is_heredoc && cmd->here_doc_file)
 	{
-		if (handle_heredoc_file(cmd) < 0)
+		if (handle_heredoc_file(cmd) < 0 && i++)
 			return (-1);
 	}
 	if (!cmd->redirections)
@@ -119,7 +123,7 @@ int	setup_redirections(t_command *cmd)
 	redir = cmd->redirections;
 	while (redir)
 	{
-		if (redir->type == INTPUT_RED && handle_input_redirection(redir) < 0)
+		if (redir->type == INTPUT_RED && handle_input_redirection(redir, &i) < 0)
 			return (-1);
 		else if ((redir->type == OUTPUT_RED || redir->type == APPEND)
 			&& handle_output_redirection(redir) < 0)
