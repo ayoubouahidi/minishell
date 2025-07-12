@@ -73,9 +73,7 @@ char	*expanation_token_env_var(char *str, t_env *envp)
 	t_env	*tmp1;
 	char	*final;
 	int		i;
-	// int		count;
 
-	// count = 0;
 	i = 0;
 	result = ft_strdup(str);
 	tmp1 = envp;

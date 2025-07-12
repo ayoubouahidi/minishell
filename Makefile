@@ -37,6 +37,7 @@ SRCS = \
 	srcs/parcing/parcer_utils_6.c \
 	srcs/parcing/heredoc.c \
 	srcs/parcing/heredoc_utils.c \
+	srcs/parcing/heredoc_utils_1.c \
 	srcs/parcing/expantion.c \
 	srcs/parcing/expantion_utils_1.c \
 	srcs/parcing/expantion_utils_2.c

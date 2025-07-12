@@ -53,11 +53,11 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	ft_memset(&data, 0, sizeof(t_data));
 	(init_data(&data, envp), signal_parent_handler());
-	// if (!isatty(STDIN_FILENO))
-	// {
-	// 	ft_putstr_fd("minishell: stdin is not a terminal\n", STDERR_FILENO);
-	// 	clean_exit(&data, FAILURE);
-	// }
+	if (!isatty(STDIN_FILENO))
+	{
+		ft_putstr_fd("minishell: stdin is not a terminal\n", STDERR_FILENO);
+		clean_exit(&data, FAILURE);
+	}
 	while (1)
 	{
 		line = readline("minishell$ ");

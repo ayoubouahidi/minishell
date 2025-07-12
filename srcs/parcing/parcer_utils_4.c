@@ -19,11 +19,6 @@
 
 t_token	*tokenize(t_lexer *lexer)
 {
-	// bool	isword;
-	// bool	isdouble;
-
-	// isdouble = false;
-	// isword = false;
 	while (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content))
 	{
 		if (lexer->c == ' ' || lexer->c == '\t' || lexer->c == '\n'

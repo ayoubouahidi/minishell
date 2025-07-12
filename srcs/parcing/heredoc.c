@@ -17,45 +17,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void	handle_child_process(char *filename, char **delimiters, int count, t_env *env, bool *heredoc_quoted)
+void	handle_each_heredoc(t_command *cmd, t_env *env, int fd, int i)
 {
 	char	*line_heredoc;
 	char	*result;
-	int		fd;
-	int		i;
+
+	while (1)
+	{
+		line_heredoc = readline("> ");
+		if (!line_heredoc)
+		{
+			ft_malloc(0, 0);
+			close(fd);
+			exit(0);
+		}
+		if (!check_quotes(cmd->heredoc_quoted, i))
+		{
+			result = expand_here_doc(line_heredoc, env);
+			free(line_heredoc);
+		}
+		else
+			result = line_heredoc;
+		if (ft_strcmp(result, cmd->heredoc_delimiters[i]) == 0)
+			break ;
+		if (i == cmd->heredoc_count - 1)
+			ft_putendl_fd(result, fd);
+	}
+}
+
+void	handle_child_process(char *filename, t_command *cmd, t_env *env)
+{
+	int	fd;
+	int	i;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0766);
-	
 	i = 0;
-	while (i < count)
+	while (i < cmd->heredoc_count)
 	{
-		while (1)
-		{
-			line_heredoc = readline("> ");
-			if (!line_heredoc)
-			{
-				ft_malloc(0, 0);
-				close(fd);
-				exit(0);
-			}
-			
-			if (!check_quotes(heredoc_quoted, i))
-			{
-				result = expand_here_doc(line_heredoc, env);
-				free(line_heredoc);
-			}
-			else
-				result = line_heredoc;
-			
-			if (ft_strcmp(result, delimiters[i]) == 0)
-			{
-				break;
-			}
-			if (i == count - 1)
-				ft_putendl_fd(result, fd);
-		}
+		handle_each_heredoc(cmd, env, fd, i);
 		i++;
 	}
 	ft_malloc(0, 0);
@@ -94,17 +95,15 @@ void	heredocprocess(t_command *cmd, t_env *env)
 	int		pid;
 	int		status;
 	char	*filename;
-	// char	*tmp;
 
 	filename = randome_generate();
-	// tmp = filename;
 	filename = ft_strjoin("/tmp/", filename);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
 		signal_child_handler();
-		handle_child_process(filename, cmd->heredoc_delimiters, cmd->heredoc_count, env, cmd->heredoc_quoted);
+		handle_child_process(filename, cmd, env);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
@@ -115,19 +114,6 @@ void	heredocprocess(t_command *cmd, t_env *env)
 	}
 	signal_parent_handler();
 	cmd->here_doc_file = filename;
-}
-
-void	unlink_heredoc_files(t_command *cmd)
-{
-	t_command	*current;
-
-	current = cmd;
-	while (current)
-	{
-		if (current->is_heredoc && current->here_doc_file)
-			unlink(current->here_doc_file);
-		current = current->next;
-	}
 }
 
 int	run_heredoc(t_command *cmd, t_env *env)

@@ -17,19 +17,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool	heredoc_check_append(t_token *token, char ***heredoc_delimiters, int *heredoc_count, bool **heredoc_quoted)
+bool	heredoc_check_append(t_token *token, char ***heredoc_delimiters, \
+		int *heredoc_count, bool **heredoc_quoted)
 {
 	char	**new_delimiters;
 	bool	*new_quoted;
 	int		i;
 
 	token = token->next;
-	if ((token)->type != WORD)
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
-		return (false);
-	}
-	new_delimiters = (char **)ft_malloc(sizeof(char *) * ((*heredoc_count) + 2), 1);
+	new_delimiters = (char **)ft_malloc(sizeof(char *) * \
+		((*heredoc_count) + 2), 1);
 	new_quoted = (bool *)ft_malloc(sizeof(bool) * ((*heredoc_count) + 1), 1);
 	if (!new_delimiters || !new_quoted)
 		return (false);

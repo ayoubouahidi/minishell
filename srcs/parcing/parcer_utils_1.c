@@ -77,7 +77,7 @@ int	ft_lstsize_parce(t_command *lst)
 
 t_IS_QUOTED	is_token_quoted(const char *str, int len)
 {
-	int i;
+	int	i;
 
 	if (!str || len < 2)
 		return (NOT_QUOTED);
@@ -87,7 +87,6 @@ t_IS_QUOTED	is_token_quoted(const char *str, int len)
 	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') || (str[0] == '\''
 				&& str[len - 1] == '\'')))
 		return (QUOTED);
-
 	i = 0;
 	while (i < len)
 	{
