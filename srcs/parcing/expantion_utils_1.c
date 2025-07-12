@@ -69,7 +69,7 @@ char	*normal_var(int *i, char *result, t_env *envp, char *final)
 	count = 0;
 	(*i)++;
 	pos = *i;
-	while (result[*i] && ft_isalnum(result[*i]) && result[*i] != '.'
+	while (result[*i] && (ft_isalpha(result[*i]) || result[*i] == '_') && result[*i] != '.'
 		&& result[*i] != '"')
 	{
 		(*i)++;

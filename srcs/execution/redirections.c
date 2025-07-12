@@ -29,7 +29,7 @@ static int	handle_input_redirection(t_redirections *redir, int *i)
 		perror(redir->file);
 		return (-1);
 	}
-	if (*i <= 0)
+	if (*i > 0)
 	{
 		if (dup2(fd, STDIN_FILENO) < 0)
 		{

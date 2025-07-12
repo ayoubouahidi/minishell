@@ -1,0 +1,99 @@
+## SYNTAX ERROR
+- $
+- echo hi | >
+-  | > file.txt             # (pipe at first not valid all cases)
+-  < > file.txt             # Invalid
+-  > | ls                   # Invalid
+-  >> | ls                  # Invalid
+-  << | ls                  # Invalid
+-  < | ls                   # Invalid
+-  ls >                     # Invalid
+- ls || ls                 (ERROR)
+- ls | > out.txt          ✅ (file created but no data in it)
+- ls | < in.txt           ✅ (if the file exits nothing happend)
+- > outfile  or  < infile  or   << d    ✅
+- ls -ramQ                              ✅
+- ls -r > out1 -a > out2 -m > out3 -Q    ✅
+- >out.txt echo hello                   ✅
+- ls -r > o1 -a >  o2 -m < file1 > o3 -Q > o4        (it stops error when not found file1, if found works normal)
+- cat out > out2 > /dev/stdout          (ignores last files )
+-  ls > o1 < in > o2                      (creates first o1, then error if in file not found)
+- cat /dev/random |  head -n 5
+- echo life  > o >> o2   OR    echo life  >> o > o2
+
+
+## expansion 
+- $$USER
+- $jdjssd                     (ingore it)
+- commandnotexits    --> $djsd --->  echo $?          (exit = 0)
+- cat << $USER | cat > out      (do not expand heredoc ❌)
+- cat << delim | cat > $USER     (expand ✅)
+- cat << hello
+> $USER               (not expanded ❌)    
+
+## echo 
+- echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $ \ <<"
+- echo hi'young'""novice
+- echo "User: '$USER'"        
+- echo 'User: "'$USER'"'  
+- $EMPTY echo beautiful lie    
+- echo file_$USER.TXT
+- echo path=$PATH
+- echo $HOME_ 
+- echo $USER '' '' '' '' $USER   or   echo $USER $dfj $dfj $dfj $dfj $USER   or   echo "$USER $dfj $dfj $dfj $dfj $USER" 
+- echo "hello $jsd $sdds"   
+- echo $PWD $OLDPWD       (keep track of old working directory)
+-  echo wach > file1 >file2 >/dev/stdout    (last file is simbolic-link to the file2 )
+- echo -n - n -nnnnnnnnnnnn hi
+
+
+## export 
+/bin/export
+export
+export A=1 B           (be exported but without value)
+export "test=a" "" 
+export 0          (not a valid identifier : must be character UP, loWER) ❌ 
+export 0hi=testtest     (did not work) ❌ 
+export hi+hi=testtest     (did not work) ❌ 
+export h0i=testtest     (works)
+export =value           ❌ 
+export hi=yo=yo	          ✅
+export hi==yo	✅
+export hi4= 0   ❌       (even if 0 not valid , hi4 get exported)
+
+# unset 
+- unset va1 va2 va3            (should unset all three if they exist)
+- export a         unset a 
+- unset PATH && echo $PATH
+- unset PATH    --> ls --> /bin/ls
+- unset HOME   --- > cd $HOME        (HOME not set)
+
+- /bin/unset
+
+## cd 
+- cd                       (`cd` moves to home)
+- cd dfjd kdfjdk        (bash: cd: too many arguments)
+- cd | ls        or    ls | cd
+
+## pwd
+- pwd df 24254 1f 1d0f  ✅
+- rm -rf /home/eamchart/Minishell/dir
+-   Minishell -> pwd           (mmm gives an error message, cd does not work anymore)
+- cd dir      mv ../dir ../dir789          pwd          (change name of dir, my shell fix it it showed the new path )
+
+
+## Heredoc
+- The heredoc operates within its own subshell, similar to a child process
+- echo $?          (exits 130)
+- cat << $
+- cat > out << d          ✅
+- << d ls      (enter d, it runs ls inside heredoc)
+- cat out1 << d out2      (enter d, it runs `cat out1 out2` inside heredoc)
+  > '$USER'            (inside heredoc always expand)
+- cat << "d"           (in all cases if delim has quote do not expand inside heredoc)
+  > $HOME
+- ls << d -l << bb -d | grep candidates           (should work like bash, joind -l -d to ls)
+- ls | cat << d       (ls output is ignored (piped into cat, but cat is busy reading from << d)
+- cat << d | ls
+- cat << t << s | cat << y << o
+- cat < f << d < filesf << d2 | echo high_hopes
