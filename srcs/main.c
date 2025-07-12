@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/12 09:38:27 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 18:23:49 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	ft_memset(&data, 0, sizeof(t_data));
 	(init_data(&data, envp), signal_parent_handler());
-	if (!isatty(STDIN_FILENO))
-	{
-		ft_putstr_fd("minishell: stdin is not a terminal\n", STDERR_FILENO);
-		clean_exit(&data, FAILURE);
-	}
+	// if (!isatty(STDIN_FILENO))
+	// {
+	// 	ft_putstr_fd("minishell: stdin is not a terminal\n", STDERR_FILENO);
+	// 	clean_exit(&data, FAILURE);
+	// }
 	while (1)
 	{
 		line = readline("minishell$ ");

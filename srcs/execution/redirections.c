@@ -6,7 +6,7 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/12 12:49:15 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 17:42:37 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,11 @@ int	setup_redirections(t_command *cmd)
 
 	if (!cmd)
 		return (0);
+	if (cmd->is_heredoc && cmd->here_doc_file)
+	{
+		if (handle_heredoc_file(cmd) < 0)
+			return (-1);
+	}
 	if (!cmd->redirections)
 		return (0);
 	redir = cmd->redirections;
@@ -116,11 +121,6 @@ int	setup_redirections(t_command *cmd)
 		if (redir->type == INTPUT_RED
 			&& handle_input_redirection(redir) < 0)
 			return (-1);
-		if (cmd->is_heredoc && cmd->here_doc_file)
-		{
-			if (handle_heredoc_file(cmd) < 0)
-				return (-1);
-		}
 		else if ((redir->type == OUTPUT_RED || redir->type == APPEND)
 			&& handle_output_redirection(redir) < 0)
 			return (-1);

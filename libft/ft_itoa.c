@@ -6,11 +6,12 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 20:06:36 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 09:27:47 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 18:15:28 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
+#include "libft.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -54,7 +55,7 @@ char	*ft_itoa(int n)
 
 	number = n;
 	numdi = countdigits(number);
-	str = (char *)malloc(sizeof(char) * numdi + 1);
+	str = (char *)ft_malloc(sizeof(char) * numdi + 1, 1);
 	if (!str)
 		return (NULL);
 	if (number < 0)

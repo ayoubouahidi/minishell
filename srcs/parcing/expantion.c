@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expantion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayouahid <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 14:55:07 by ayouahid          #+#    #+#             */
-/*   Updated: 2025/07/06 14:55:09 by ayouahid         ###   ########.fr       */
+/*   Updated: 2025/07/12 18:31:35 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*expand_process(int *i, char *result, t_env *envp, char *final)
 	{
 		if (result[*i] == '\'')
 			final = squotes_expand(i, result, final);
-		else if (result[*i] == '$' && (ft_isalpha(result[*i + 1]) || result[*i \
+		else if (result[*i] == '$' && ((ft_isalpha(result[*i + 1]) || ft_isdigit(result[*i + 1])) || result[*i \
 				+ 1] == '_'))
 			final = normal_var(i, result, envp, final);
 		else if (result[*i] == '"')

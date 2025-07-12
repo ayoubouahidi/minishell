@@ -6,11 +6,29 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/06 12:32:34 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 18:22:25 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+static bool	is_valid_unset_key(const char *key)
+{
+	int	i;
+
+	if (!key || !key[0])
+		return (false);
+	if (!ft_isalpha(key[0]) && key[0] != '_')
+		return (false);
+	i = 1;
+	while (key[i])
+	{
+		if (!ft_isalnum(key[i]) && key[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
+}
 
 static t_env	*exist(t_data *data, char *key)
 {
@@ -50,36 +68,27 @@ static void	remove_env(t_data *data, t_env *target)
 	}
 }
 
-static int	process_unset_arg(t_data *data, char *arg)
+static void	process_unset_arg(t_data *data, char *arg)
 {
 	t_env	*found;
 
-	if (!is_valid_key(arg))
-	{
-		ft_putstr_fd("unset: `", STDERR_FILENO);
-		ft_putstr_fd(arg, STDERR_FILENO);
-		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-		return (FAILURE);
-	}
+	if (!is_valid_unset_key(arg))
+		return ;
 	found = exist(data, arg);
 	if (found)
 		remove_env(data, found);
-	return (SUCCESS);
 }
 
 int	ft_unset(t_data *data, char **args)
 {
-	int		i;
-	int		exit_status;
+	int	i;
 
 	i = 1;
-	exit_status = SUCCESS;
 	while (args[i])
 	{
-		if (process_unset_arg(data, args[i]) == FAILURE)
-			exit_status = FAILURE;
+		process_unset_arg(data, args[i]);
 		i++;
 	}
-	g_exit_status = exit_status;
-	return (exit_status);
+	g_exit_status = 0;
+	return (0);
 }
