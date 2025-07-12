@@ -6,19 +6,20 @@
 /*   By: elkharti <elkharti@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:00:00 by elkharti          #+#    #+#             */
-/*   Updated: 2025/07/12 10:23:26 by elkharti         ###   ########.fr       */
+/*   Updated: 2025/07/12 12:49:15 by elkharti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	handle_input_redirection(t_redirections *redir, int *i)
+static int	handle_input_redirection(t_redirections *redir)
 {
 	int	fd;
 
-	if (is_empty_or_whitespace(redir->file))
+	if (!redir || !redir->file || is_empty_or_whitespace(redir->file))
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'",
+		ft_putstr_fd(
+			"minishell: syntax error near unexpected token `newline'\n",
 			STDERR_FILENO);
 		return (-1);
 	}
@@ -29,15 +30,11 @@ static int	handle_input_redirection(t_redirections *redir, int *i)
 		perror(redir->file);
 		return (-1);
 	}
-	if (*i > 0)
+	if (dup2(fd, STDIN_FILENO) < 0)
 	{
-		if (dup2(fd, STDIN_FILENO) < 0)
-		{
-			close(fd);
-			perror("minishell: dup2");
-			return (-1);
-		}
-		(*i)--;
+		perror("minishell: dup2");
+		close(fd);
+		return (-1);
 	}
 	close(fd);
 	return (0);
@@ -108,23 +105,22 @@ static int	handle_heredoc_file(t_command *cmd)
 int	setup_redirections(t_command *cmd)
 {
 	t_redirections	*redir;
-	int				i;
 
-	i = cmd->heredoc_count;
 	if (!cmd)
 		return (0);
-	if (cmd->is_heredoc && cmd->here_doc_file)
-	{
-		if (handle_heredoc_file(cmd) < 0 && i++)
-			return (-1);
-	}
 	if (!cmd->redirections)
 		return (0);
 	redir = cmd->redirections;
 	while (redir)
 	{
-		if (redir->type == INTPUT_RED && handle_input_redirection(redir, &i) < 0)
+		if (redir->type == INTPUT_RED
+			&& handle_input_redirection(redir) < 0)
 			return (-1);
+		if (cmd->is_heredoc && cmd->here_doc_file)
+		{
+			if (handle_heredoc_file(cmd) < 0)
+				return (-1);
+		}
 		else if ((redir->type == OUTPUT_RED || redir->type == APPEND)
 			&& handle_output_redirection(redir) < 0)
 			return (-1);
